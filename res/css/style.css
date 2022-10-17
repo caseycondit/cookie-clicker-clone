@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@900&display=swap');
+
+html{
+    font-size: 100%;
+    box-sizing: border-box;
+}
+*, *::before, *::after{
+    box-sizing: inherit;
+}
+body{
+    margin: 0;
+    padding: 0;
+    font-family: 'Merriweather', serif;
+    font-weight: 900;
+    font-size: 1rem;
+}
+
+h1,h2,h3,h4,h5,h6,p{
+    margin: 0;
+    color: rgba(255,255,255,0.8);
+    background-color: rgba(0,0,0,0.4);
+}
+
+
+/* Cookie section */
+.cookie{
+    width: 30%;
+    height: 100vh;
+    background-image: url("../img/background.jpg");
+    padding: 4rem 0;
+}
+.cookie__name{
+    font-size: 20px;
+    width: 75%;
+    margin: 0 auto 1rem auto;
+    border-radius: 10px;
+    padding: 1px 6px;
+    text-align: center;
+    letter-spacing: -0.5px;
+    cursor: pointer;
+}
+.cookie__name:hover{
+    color: white;
+    text-shadow: 1px 1px 9px white;
+}
+.cookie__countBx{
+    text-align: center;
+}
+.cookie__text{
+    font-size: 26px;
+    line-height: 30px;
+}
+.cookie__sec{
+    font-size: 14px;
+}
+
+
+.cookie__imgBx{
+    text-align: center;
+}
+.cookie__img{
+    width: 256px;
+    height: 256px;
+}
