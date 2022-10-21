@@ -17,8 +17,8 @@ body{
 
 h1,h2,h3,h4,h5,h6,p{
     margin: 0;
-    color: rgba(255,255,255,0.8);
     background-color: rgba(0,0,0,0.4);
+    color: rgb(255,255,255);
 }
 
 
@@ -27,7 +27,12 @@ h1,h2,h3,h4,h5,h6,p{
     width: 30%;
     height: 100vh;
     background-image: url("../img/background.jpg");
+}
+.cookie__container{
     padding: 4rem 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(transparent 44%, black);
 }
 .cookie__name{
     font-size: 20px;
@@ -37,6 +42,7 @@ h1,h2,h3,h4,h5,h6,p{
     padding: 1px 6px;
     text-align: center;
     letter-spacing: -0.5px;
+    color: rgba(255,255,255,0.8);
     cursor: pointer;
 }
 .cookie__name:hover{
@@ -45,20 +51,59 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .cookie__countBx{
     text-align: center;
+    position: relative;
+    z-index: 3;
 }
 .cookie__text{
     font-size: 26px;
     line-height: 30px;
 }
 .cookie__sec{
-    font-size: 14px;
+    font-size: 13px;
 }
-
-
 .cookie__imgBx{
     text-align: center;
-}
-.cookie__img{
+    margin-top: 2.375rem;
     width: 256px;
     height: 256px;
+    margin-inline: auto;
+    display: grid;
+}
+.cookie__img{
+    width: 100%;
+    height: 100%;
+    grid-column: 1;
+    grid-row: 1;
+    z-index: 2;
+}
+
+.cookie__anima.normal{
+    animation: cookieAni 20s linear infinite;
+}
+.cookie__anima.reverse{
+    animation: cookieAni 20s linear reverse infinite;
+}
+.cookie__anima{
+    z-index: 1;
+    display: block;
+    width: 140%;
+    height: 140%;
+    border-radius: 50%;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    background: repeating-conic-gradient(from 0deg, #ffffff54 -18deg 0deg, transparent 0deg 14deg);
+}
+
+@keyframes cookieAni {
+    0%{
+        transform: rotate(0deg);
+    }
+    50%{
+        transform: rotate(180deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
 }
