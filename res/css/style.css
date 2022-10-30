@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700;900&display=swap');
 
 html{
     font-size: 100%;
@@ -13,36 +13,41 @@ body{
     font-family: 'Merriweather', serif;
     font-weight: 900;
     font-size: 1rem;
+    display: flex;
+    flex-direction: row;
+    background-image: url("../img/background.jpg");
 }
 
 h1,h2,h3,h4,h5,h6,p{
     margin: 0;
-    background-color: rgba(0,0,0,0.4);
     color: rgb(255,255,255);
 }
 
 
 /* Cookie section */
 .cookie{
-    width: 30%;
+    width: calc(30% + 16px);
     height: 100vh;
-    background-image: url("../img/background.jpg");
 }
 .cookie__container{
-    padding: 4rem 0;
+    display: flex;
+    flex-direction: column;
+    padding: 94px 0 5px 0;
     width: 100%;
     height: 100%;
     background: radial-gradient(transparent 44%, black);
+    border-right: 16px solid transparent;
+    border-image: url("../img/wooden_line_y.png") 1% 100% repeat;
 }
 .cookie__name{
-    font-size: 20px;
     width: 75%;
-    margin: 0 auto 1rem auto;
-    border-radius: 10px;
+    margin: 0 auto 10px auto;
     padding: 1px 6px;
+    font-size: 20px;
     text-align: center;
-    letter-spacing: -0.5px;
+    border-radius: 10px;
     color: rgba(255,255,255,0.8);
+    background-color: rgba(0,0,0,0.4);
     cursor: pointer;
 }
 .cookie__name:hover{
@@ -53,17 +58,19 @@ h1,h2,h3,h4,h5,h6,p{
     text-align: center;
     position: relative;
     z-index: 3;
+    background-color: rgba(0,0,0,0.4);
 }
 .cookie__text{
-    font-size: 26px;
-    line-height: 30px;
+    font-size: 28px;
+    line-height: 1;
 }
 .cookie__sec{
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 700;
 }
 .cookie__imgBx{
     text-align: center;
-    margin-top: 2.375rem;
+    margin-top: 117px;
     width: 256px;
     height: 256px;
     margin-inline: auto;
@@ -75,25 +82,46 @@ h1,h2,h3,h4,h5,h6,p{
     grid-column: 1;
     grid-row: 1;
     z-index: 2;
+    filter: drop-shadow(1px 6px 6px black);
+    border-radius: 50%;
+    cursor: pointer;
 }
 
-.cookie__anima.normal{
-    animation: cookieAni 20s linear infinite;
-}
-.cookie__anima.reverse{
-    animation: cookieAni 20s linear reverse infinite;
-}
-.cookie__anima{
+.cookie__bgAni{
     z-index: 1;
     display: block;
-    width: 140%;
-    height: 140%;
-    border-radius: 50%;
-    grid-column: 1;
-    grid-row: 1;
+    position: relative;
+    width: 200%;
+    height: 200%;
     align-self: center;
     justify-self: center;
-    background: repeating-conic-gradient(from 0deg, #ffffff54 -18deg 0deg, transparent 0deg 14deg);
+    grid-column: 1;
+    grid-row: 1;
+    mask-image: radial-gradient(white 34%, transparent 66%);
+    -webkit-mask-image: radial-gradient(white 34%, transparent 66%);
+    background: #ffffff7a;
+}
+.cookie__ani{
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+.cookie__ani.normal{
+    animation: cookieAni 30s linear infinite;
+    background: repeating-conic-gradient(from 0deg, #ffffff99 -25deg 0deg, transparent 0deg 26deg);
+}
+.cookie__ani.reverse{
+    /* display: none; */
+    animation: cookieAni 40s linear reverse infinite;
+    background: repeating-conic-gradient(from 0deg, #ffffff99 -46deg 0deg, transparent 0deg 26deg);
+}
+.cookie__path{
+    margin-top: auto;
+    color: #ffffff98;
+    font-size: 22px;
+    padding-left: 8px;
 }
 
 @keyframes cookieAni {
@@ -106,4 +134,60 @@ h1,h2,h3,h4,h5,h6,p{
     100%{
         transform: rotate(360deg);
     }
+}
+
+@keyframes cookieHoverIn {
+    0%{
+        transform: scale(1);
+    }
+    20%{
+        transform: scale(1.09);
+    }
+    40%{
+        transform: scale(1.05);
+    }
+    60%{
+        transform: scale(1.09);
+    }
+    80%{
+        transform: scale(1.07);
+    }
+    100%{
+        transform: scale(1.1);
+    }
+}
+
+@keyframes cookieHoverOut {
+    0%{
+        transform: scale(1.1);
+    }
+    20%{
+        transform: scale(1);
+    }
+    40%{
+        transform: scale(0.95);
+    }
+    60%{
+        transform: scale(0.99);
+    }
+    80%{
+        transform: scale(0.97);
+    }
+    100%{
+        transform: scale(1);
+    }
+}
+
+
+/* Middle Section */
+.middle{
+    width: calc(70% - 334px - 16px);
+}
+
+
+/* Store section */
+.store{
+    width: 334px;
+    border-left: 16px solid transparent;
+    border-image: url("../img/wooden_line_y.png") 1% 100% repeat;
 }
