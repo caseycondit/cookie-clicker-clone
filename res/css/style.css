@@ -16,6 +16,7 @@ body{
     display: flex;
     flex-direction: row;
     background-image: url("../img/background.jpg");
+    user-select: none;
 }
 
 h1,h2,h3,h4,h5,h6,p{
@@ -38,6 +39,7 @@ h1,h2,h3,h4,h5,h6,p{
     background: radial-gradient(transparent 44%, black);
     border-right: 16px solid transparent;
     border-image: url("../img/wooden_line_y.png") 1% 100% repeat;
+    overflow: hidden;
 }
 .cookie__name{
     width: 75%;
@@ -48,6 +50,7 @@ h1,h2,h3,h4,h5,h6,p{
     border-radius: 10px;
     color: rgba(255,255,255,0.8);
     background-color: rgba(0,0,0,0.4);
+    z-index: 3;
     cursor: pointer;
 }
 .cookie__name:hover{
@@ -81,10 +84,42 @@ h1,h2,h3,h4,h5,h6,p{
     height: 100%;
     grid-column: 1;
     grid-row: 1;
-    z-index: 2;
+    z-index: 3;
     filter: drop-shadow(1px 6px 6px black);
     border-radius: 50%;
     cursor: pointer;
+}
+.cookie__upgradesContainer{
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    width: 120%;
+    height: 120%;
+    display: grid;
+    z-index: 2;
+    animation: cookieCursorRotateAni 150s linear forwards infinite;
+}
+.cookie__upgradesBx{
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+    align-self: center;
+    justify-self: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: 2;
+}
+.cookie__upgradesBx:nth-of-type(2n){
+    transform: rotate(89deg);
+}
+.cookie__upgrade{
+    position: absolute;
+    transition: transform 100ms ease-in;
+}
+.cookie__upgrade.active{
+    transform: translateY(-5px);
 }
 
 .cookie__bgAni{
@@ -175,6 +210,15 @@ h1,h2,h3,h4,h5,h6,p{
     }
     100%{
         transform: scale(1);
+    }
+}
+
+@keyframes cookieCursorRotateAni {
+    0%{
+        transform: rotateZ(0deg);
+    }
+    100%{
+        transform: rotateZ(-359deg);
     }
 }
 
