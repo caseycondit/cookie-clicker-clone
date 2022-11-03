@@ -234,4 +234,96 @@ h1,h2,h3,h4,h5,h6,p{
     width: 334px;
     border-left: 16px solid transparent;
     border-image: url("../img/wooden_line_y.png") 1% 100% repeat;
+    padding: 50px 0;
+    background: linear-gradient(black -10%, transparent 18%, transparent 63%, black 107%);
+}
+.store__title{
+    position: relative;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 900;
+    border-bottom: 16px solid transparent;
+    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
+    padding-bottom: 6px;
+}
+.store__upgrades{
+    position: relative;
+    border-bottom: 16px solid transparent;
+    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
+}
+.store__title::before, .store__upgrades::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 16px;
+    left: 0;
+    bottom: -16px;
+    background: linear-gradient(90deg, black -4%, transparent 15%, transparent 84%, black);
+}
+.upgrade__info, .buy__info{
+    position: absolute;
+    top: -14px;
+    font-size: 13px;
+    font-variant: small-caps;
+    color: #f6dab8;
+}
+.upgrade__container{
+    display: flex;
+}
+.upgrade__bx{
+    position: relative;
+    display: grid;
+    place-items: center;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(0,0,0,0.25);
+}
+.upgrade__bx::before{
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-image: url("../img/upgradeFrame.png");
+    background-position: 0px 0px;
+}
+.upgrade__bx:hover::before{
+    background-position: 60px 0;
+}
+.upgrade__bx:hover .upgrade__item{
+    transform: translateY(-1px);
+}
+.upgrade__item{
+    width: 38px;
+    height: 38px;
+    object-fit: cover;
+    transition: transform 150ms ease-in-out;
+}
+.store__buy{
+    position: relative;
+}
+.buy__selection{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: center;
+    background-color: #000000a6;
+    padding-left: 6px;
+    font-variant: small-caps;
+}
+.selection__textBx{
+    font-size: 14px;
+}
+.selection__number{
+    font-size: 15px;
+}
+.selection__number, .selection__text{
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 150ms ease-in-out, text-shadow 150ms ease-in-out;
+    cursor: pointer;
+}
+.selection__number:hover, .selection__number.active,
+.selection__text:hover, .selection__text.active{
+    color: rgb(255,255,255);
+    text-shadow: 1px 1px 6px white;
 }
