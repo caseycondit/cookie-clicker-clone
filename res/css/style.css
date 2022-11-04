@@ -269,20 +269,38 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .upgrade__container{
     display: flex;
+    flex-direction: column;
+    position: relative;
+    border-right: 18px solid transparent;
+    border-image: url("../img/wooden_line_y.png") 0% 100% repeat;
+}
+.upgrade__container::before{
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 100%;
+    right: -18px;
+    top: 0;
+    background: linear-gradient(180deg, black 5%, transparent 50%, transparent 50%, black);
+}
+.upgrade__bxRow{
+    display: flex;
+    position: relative;
 }
 .upgrade__bx{
-    position: relative;
     display: grid;
     place-items: center;
     width: 60px;
     height: 60px;
     background-color: rgba(0,0,0,0.25);
+    cursor: pointer;
 }
 .upgrade__bx::before{
     content: '';
-    position: absolute;
     width: 100%;
     height: 100%;
+    grid-row: 1;
+    grid-column: 1;
     left: 0;
     top: 0;
     background-image: url("../img/upgradeFrame.png");
@@ -297,7 +315,10 @@ h1,h2,h3,h4,h5,h6,p{
 .upgrade__item{
     width: 38px;
     height: 38px;
-    object-fit: cover;
+    grid-row: 1;
+    grid-column: 1;
+    object-fit: none;
+    object-position: -5px -3px;
     transition: transform 150ms ease-in-out;
 }
 .store__buy{
@@ -308,14 +329,16 @@ h1,h2,h3,h4,h5,h6,p{
     grid-template-columns: repeat(4, 1fr);
     align-items: center;
     background-color: #000000a6;
-    padding-left: 6px;
+    padding: 2px 20px 2px 6px;
     font-variant: small-caps;
 }
 .selection__textBx{
     font-size: 14px;
+    justify-self: flex-start;
 }
 .selection__number{
     font-size: 15px;
+    justify-self: flex-start;
 }
 .selection__number, .selection__text{
     color: rgba(255, 255, 255, 0.5);
@@ -326,4 +349,232 @@ h1,h2,h3,h4,h5,h6,p{
 .selection__text:hover, .selection__text.active{
     color: rgb(255,255,255);
     text-shadow: 1px 1px 6px white;
+}
+
+/* Buy item */
+.buy__itemBx{
+    display: flex;
+    flex-direction: column;
+}
+.buy__item{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-right: 8px;
+    background-image: url("../img/storeTile.jpg");
+    background-position: 0 128px;
+    background-size: 320px 258px;
+    box-shadow: inset 0 0 0 100px #00000033;
+    cursor: pointer;
+    position: relative;
+}
+.buy__item:hover{
+    box-shadow: 0px 0px 16px #fed inset, inset 0 0 0 100px #00000033;
+}
+.buy__item:active{
+    box-shadow: 0px 0px 16px #000 inset, inset 0 0 0 100px #00000033;
+}
+.item__icon{
+    width: 64px;
+    height: 64px;
+    object-fit: none;
+    object-position: 0px 0px;
+}
+.item__textBx{
+    display: flex;
+    flex-direction: column;
+}
+.item__name{
+    font-size: 28px;
+    line-height: 1;
+    text-shadow: 1px 1px 4px black;
+}
+.item__info{
+    display: flex;
+    flex-direction: row;
+}
+.info__amount{
+    margin-right: 4px;
+    font-size: 13px;
+    font-variant: small-caps;
+    color: #ffc;
+    text-shadow: 2px 2px 6px black;
+}
+.info__prize{
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    text-shadow: 2px 2px 6px black;
+}
+.prizeGreen{
+    color: #12df12;
+}
+.prizeRed{
+    color: red;
+}
+.prize__icon{
+    width: 16px;
+    height: 16px;
+    margin-right: 2px;
+}
+.item__count{
+    font-size: 40px;
+    margin-left: auto;
+    align-self: flex-end;
+    color: #00000061;
+    margin-bottom: 6px;
+}
+
+/* Disabled item */
+.buy__item.itemDisabled::before{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    background-color: black;
+    opacity: 0.4;
+    pointer-events: none;
+}
+.buy__item.itemDisabled .item__icon{
+    filter: brightness(0);
+}
+.buy__item.itemDisabled .prizeGreen{
+    color: #ff7070;
+}
+.buy__item.itemDisabled .desc__icon{
+    object-position: -5px -341px;
+}
+
+/* item description */
+.item__desc{
+    position: absolute;
+    right: calc(100% + 10px);
+    top: 0;
+    width: 390px;
+    padding: 8px 14px 12px 6px;
+    background-color: #111111;
+    border-radius: 3px;
+    border: 3px solid #929279;
+
+    display: none;
+}
+.desc__top{
+    display: flex;
+    flex-direction: row;
+    padding-left: 8px;
+    padding-top: 2px;
+}
+.desc__icon{
+    width: 38px;
+    height: 38px;
+    object-fit: none;
+    object-position: -5px -3px;
+}
+.desc__nameBx{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-left: 10px;
+}
+.desc__name{
+    font-size: 14px;
+    color: #ffffffe3;
+}
+.desc__own{
+    color: #0a0a0a;
+    background-color: #acacacd4;
+    padding: 2px 3px;
+    font-size: 9px;
+    border-radius: 4px;
+    width: fit-content;
+}
+.desc__countBx{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-self: flex-start;
+    margin-left: auto;
+}
+.desc__count{
+    font-size: 12px;
+    margin-left: 2px;
+}
+.desc__citation{
+    font-size: 12px;
+    text-align: right;
+    color: #646464;
+    margin-top: 6px;
+    padding-top: 8px;
+    border-top: 1px solid;
+    border-image: linear-gradient(to left, #111111 5%, #666666 50%, #111111 95%) 
+    100% 0 0 0/1px 0 0 0 stretch;
+}
+.desc__infoBx{
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+    padding-left: 10px;
+    
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid;
+    border-image: linear-gradient(to left, #111111 5%, #666666 50%, #111111 95%) 
+    100% 0 0 0/1px 0 0 0 stretch;
+}
+.desc__info{
+    position: relative;
+    font-size: 10px;
+    color: #a3a3a3;
+    background-color: #323232;
+    margin-left: 6px;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+.desc__info::before{
+    content: '';
+    display: block;
+    position: absolute;;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #aaa;
+    pointer-events: none;
+}
+.whiteT{
+    color: white;
+}
+
+/* Upgrade description */
+.desc__upgTitle{
+    font-size: 12px;
+    font-weight: 600;
+    color: #a0a0a0;
+    padding-left: 10px;
+    
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid;
+    border-image: linear-gradient(to left, #111111 5%, #666666 50%, #111111 95%) 
+    100% 0 0 0/1px 0 0 0 stretch;
+}
+.desc__upgClick{
+    font-size: 10px;
+    font-weight: 600;
+    color: #a0a0a0;
+    text-align: center;
+    
+    margin-top: 20px;
+    padding-top: 6px;
+    border-top: 1px solid;
+    border-image: linear-gradient(to left, #111111 5%, #666666 50%, #111111 95%) 
+    100% 0 0 0/1px 0 0 0 stretch;
 }

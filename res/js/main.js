@@ -82,3 +82,40 @@ window.onload = () => {
 
     const one = document.querySelector('.cookie__upgrade.id0').style.display = "block";
 }
+
+// Mooving building description
+const buildings = document.querySelectorAll('.buy__item');
+
+buildings.forEach((building) => {
+    let buildingDesc = building.querySelector('.item__desc');
+
+    building.addEventListener('mouseenter', () => {
+        buildingDesc.style.display = "block";
+    })
+
+    building.addEventListener('mousemove', (e) => {
+        let currentY = e.layerY;
+        let updatedY = currentY - 32;
+
+        buildingDesc.style.top = `${updatedY}px`;
+    })
+
+    building.addEventListener('mouseleave', () => {
+        buildingDesc.style.display = "none";
+    })
+})
+
+// Mooving upgrades description
+const upgrades = document.querySelectorAll('.upgrade__bx');
+
+upgrades.forEach((upgrade) => {
+    let upgradeDesc = upgrade.querySelector('.item__desc');
+
+    upgrade.addEventListener('mouseenter', () => {
+        upgradeDesc.style.display = "block";
+    })
+
+    upgrade.addEventListener('mouseleave', () => {
+        upgradeDesc.style.display = "none";
+    })
+})
