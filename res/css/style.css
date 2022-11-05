@@ -226,7 +226,257 @@ h1,h2,h3,h4,h5,h6,p{
 /* Middle Section */
 .middle{
     width: calc(70% - 334px - 16px);
+    overflow: hidden;
 }
+.middle__attr{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    background: linear-gradient(0deg, black -12%, #00000052 18%, #00000052 89%, black 104%);
+
+    border-bottom: 16px solid transparent;
+    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
+}
+.middle__attr::before{
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    width: 100%;
+    height: 16px;
+    background: linear-gradient(90deg, black -2%, transparent 8%, transparent 92%, black 102%);
+    pointer-events: none;
+}
+.attr__bx{
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background-image: url("../img/panelMenu.png");
+    z-index: 0;
+}
+.attrLeft{
+    align-items: flex-start;
+    padding: 14px 5px;
+}
+.attrRight{
+    background-position: -100px 0px;
+    padding: 14px 10px;
+}
+.attr__cleanBtn, .attr__roundedBtn{
+    padding: 0;
+    margin: 0;
+    background-color: transparent;
+    border: none;
+    outline: none;
+    color: #8b8b8b;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 160ms ease-in-out;
+}
+.attr__roundedBtn{
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 15px;
+    box-shadow: 0px 1px 0px rgb(250 180 150 / 75%) inset, 0px 0px 0px 1px rgb(0 0 0 / 75%), 0px 2px 3px rgb(250 180 150 / 50%) inset, 0px 1px 0px 1px rgb(250 180 150 / 25%);
+}
+.attr__cleanBtn{
+    font-size: 18px;
+}
+.attr__cleanBtn:last-of-type{
+    margin: 14px 0px 0px 11px;
+}
+.attr__roundedBtn:last-of-type{
+    margin: 14px 0px 0px 11px;
+}
+
+/* Btns animation */
+.attr__cleanBtn::before{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background-image: url("../img/panelMenu.png");
+    pointer-events: none;
+    filter: brightness(1.1);
+    opacity: 0;
+    z-index: -1;
+    transition: opacity 160ms ease-in-out;
+}
+.attr__cleanBtn:first-of-type::before{
+    /* left top one */
+    top: 0;
+    background-position: -100px 96px;
+}
+.attr__cleanBtn:last-of-type::before{
+    bottom: 0;
+    background-position: 0px -140px;
+}
+.attr__cleanBtn:hover{
+    color: white;
+}
+.attr__cleanBtn:hover::before{
+    opacity: 1;
+}
+.attr__roundedBtn:hover{
+    color: white;
+}
+
+.attr__citate{
+    color: #e5e5e5;
+    font-size: 16px;
+    margin-top: 16px;
+    height: max-content;
+    transition: text-shadow 200ms ease-in-out;
+}
+.attr__citate:hover{
+    text-shadow: 6px 6px 5px black;
+}
+
+/* middle buildings */
+.middle__buildings{
+    position: relative;
+    margin-top: 18px;
+
+    border-top: 16px solid transparent;
+    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
+}
+.middle__buildings::before{
+    content: '';
+    display: block;
+    position: absolute;
+    top: -16px;
+    left: 0;
+    width: 100%;
+    height: 16px;
+    background: linear-gradient(90deg, black -2%, transparent 8%, transparent 92%, black 102%);
+    pointer-events: none;
+}
+.middle__buildings::after{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: -34px;
+    width: 100%;
+    height: 18px;
+    background-color: #000000db;
+}
+.buildBx{
+    height: 128px;
+    background-repeat: repeat no-repeat;
+    position: relative;
+    
+    border-bottom: 16px solid transparent;
+    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
+}
+.buildBx::before{
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    width: 100%;
+    height: 16px;
+    background: linear-gradient(90deg, black -2%, transparent 8%, transparent 92%, black 102%);
+    pointer-events: none;
+}
+
+/* grandmas */
+.build__grandmaContainer{
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.grandmaImgBx{
+    position: absolute;
+    display: flex;
+    top: 28%;
+    left: 0;
+    margin-left: calc(var(--idk) * 16px);
+    cursor: pointer;
+
+    width: 32px;
+    height: 50px;
+    align-items: flex-end;
+    justify-content: center;
+}
+.grandmaImgBx img{
+    width: 32px;
+    height: 50px;
+    object-fit: none;
+    object-position: center bottom;
+    z-index: 1;
+}
+.grandmaImgBx:nth-child(3n - 1){
+    top: 66%;
+    transform: translateY(-50%);
+    left: 0;
+}
+.grandmaImgBx:nth-child(3n){
+    top: unset;
+    transform: translateY(0);
+    bottom: 0;
+    left: 0;
+}
+.grandmaImgBx::before{
+    content: var(--graName);
+    display: block;
+    position: absolute;
+    top: -26px;
+    right: -40px;
+    width: max-content;
+    font-size: 12px;
+    background-color: #000000b8;
+    color: #c0c0c0;
+    padding: 4px 5px;
+    pointer-events: none;
+    z-index: 1;
+    visibility: hidden;
+}
+.grandmaImgBx:nth-child(3n -1)::before{
+    top: calc(-100% + 11px);
+}
+.grandmaImgBx:nth-child(3n)::before{
+    top: calc(-156% + 18px);
+    right: -54px;
+}
+.grandmaImgBx::after{
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 8px;
+    background-color: #000000ad;
+    pointer-events: none;
+    z-index: 0;
+    visibility: hidden;
+
+    width: 100%;
+    transform: rotate(125deg) translate(-6px, -10px);
+}
+.grandmaImgBx:nth-child(3n - 1)::after{
+    width: 150%;
+    transform: rotate(125deg) translate(-14px, -18px);
+}
+.grandmaImgBx:nth-child(3n)::after{
+    width: 225%;
+    transform: rotate(99deg) translate(-11px, -21px);
+}
+
+
+.grandmaImgBx:hover::before{
+    visibility: visible;
+}
+.grandmaImgBx:hover::after{
+    visibility: visible;
+}
+
+
 
 
 /* Store section */
@@ -234,8 +484,8 @@ h1,h2,h3,h4,h5,h6,p{
     width: 334px;
     border-left: 16px solid transparent;
     border-image: url("../img/wooden_line_y.png") 1% 100% repeat;
-    padding: 50px 0;
     background: linear-gradient(black -10%, transparent 18%, transparent 63%, black 107%);
+    padding: 50px 0;
 }
 .store__title{
     position: relative;
