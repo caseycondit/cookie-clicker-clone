@@ -85,7 +85,6 @@ window.onload = () => {
 
 // Mooving building description
 const buildings = document.querySelectorAll('.buy__item');
-
 buildings.forEach((building) => {
     let buildingDesc = building.querySelector('.item__desc');
 
@@ -94,8 +93,8 @@ buildings.forEach((building) => {
     })
 
     building.addEventListener('mousemove', (e) => {
-        let currentY = e.layerY;
-        let updatedY = currentY - 32;
+        let currentY = e.clientY;
+        let updatedY = currentY - 344;
 
         buildingDesc.style.top = `${updatedY}px`;
     })
