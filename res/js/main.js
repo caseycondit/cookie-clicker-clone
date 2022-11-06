@@ -1,3 +1,6 @@
+import { bakeryNames } from "./bakeryNames.js";
+
+
 const cookie = document.querySelector('.cookie__img');
 
 // Cookie hover animation
@@ -118,3 +121,84 @@ upgrades.forEach((upgrade) => {
         upgradeDesc.style.display = "none";
     })
 })
+
+// BAKERY NAME - GENERATE AND CHANGE
+const bakeryNameBx = document.querySelector('.cookie__name');
+const bakeryName = document.querySelector('.cookie__bakeryName');
+const customBakery = document.querySelector('.customBakeryName');
+const customBInput = document.querySelector('.custom__input');
+const customSubmitBtn = document.querySelector('.custom__btn.customSubmit');
+const customRandomBtn = document.querySelector('.custom__btn.customRandom');
+const customEscBtn = document.querySelector('.custom__btn.customEsc');
+const customCloseIcon = document.querySelector('.custom__close');
+const customBakeryError = document.querySelector('.custom__error');
+
+function randomBakeryName(){
+    return bakeryNames[(Math.random() * bakeryNames.length) | 0];
+};
+
+let onLoadBakeryName = randomBakeryName();
+bakeryName.innerText = onLoadBakeryName;
+
+
+// Bakery event listeners
+bakeryNameBx.addEventListener('click', () => {
+    customBakery.style.animation = "fadeIn 200ms ease-in-out forwards";
+    customBInput.value = onLoadBakeryName;
+
+    setTimeout(() => {
+        customBInput.focus();
+        customBInput.select();
+    }, 20);
+
+    document.body.addEventListener('keydown', checkBakeryEsc);
+})
+
+customBakery.addEventListener('click', (e) => {
+    if(e.target === customBakery){
+        customBakeryEsc();
+    }
+})
+
+customEscBtn.addEventListener('click', customBakeryEsc);
+customCloseIcon.addEventListener('click', customBakeryEsc);
+
+customRandomBtn.addEventListener('click', () => {
+    customBInput.value = randomBakeryName();
+})
+
+customSubmitBtn.addEventListener('click', customBNameValidation);
+customBInput.addEventListener('keydown', (e) => {
+    e.key === "Enter" ? customBNameValidation() : null;
+})
+
+
+// Bakery functions
+function checkBakeryEsc(e){
+    if(e.key === "Escape"){
+        customBakeryEsc();
+    }
+}
+
+function customBakeryEsc(){
+    customBakery.style.animation = "fadeOut 200ms ease-in-out forwards";
+
+    document.body.removeEventListener('keydown', checkBakeryEsc);
+
+    setTimeout(() => {
+        customBakeryError.style.display = "none";
+    }, 150);
+}
+
+function customBNameValidation(){
+    if(customBInput.value.length <= 2){
+        customBakeryError.style.display = "block";
+    }
+    else{
+        customBakeryError.style.display = "none";
+
+        bakeryName.innerText = customBInput.value;
+
+        customBakeryEsc();
+    }
+}

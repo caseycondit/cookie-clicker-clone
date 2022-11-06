@@ -11,7 +11,7 @@
 <body>
     <main class="cookie">
         <div class="cookie__container">
-            <p class="cookie__name">pekárna uživatele Zmrzlá Pirátská</p>
+            <p class="cookie__name">pekárna uživatele <span class="cookie__bakeryName">Zmrzlá Pirátská</span></p>
             <div class="cookie__countBx">
                 <h3 class="cookie__text"><span class="cookie__count">0</span> keksy</h3>
                 <p class="cookie__sec">za sekundu: 0</p>
@@ -529,7 +529,26 @@
         </div>
     </section>
 
-    <script src="./res/js/main.js"></script>
+    <div class="customBakeryName">
+        <div class="customBakery__container">
+            <h3 class="custom__title">Pojmenujte svou pekárnu</h3>
+            <span class="custom__close"></span>
+            <div class="custom__inputContainer">
+                <p class="custom__text">Jak by se měla vaše pekárna jmenovat?</p>
+                <div class="custom__inputBx">
+                    <input type="text" class="custom__input">
+                    <p class="custom__error">Zde musí být jméno</p>
+                </div>
+                <div class="custom__btnBx">
+                    <div class="custom__btn customSubmit">Potvrdit</div>
+                    <div class="custom__btn customRandom">Náhodně</div>
+                    <div class="custom__btn customEsc">Zrušit</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./res/js/main.js" type="module"></script>
     
 </body>
 </html>
