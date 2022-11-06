@@ -30,6 +30,7 @@ h1,h2,h3,h4,h5,h6,p{
 .cookie{
     width: calc(30% + 16px);
     height: 100vh;
+    position: relative;
 }
 .cookie__container{
     display: flex;
@@ -827,7 +828,7 @@ h1,h2,h3,h4,h5,h6,p{
     flex-direction: column;
     border-right: 12px solid transparent;
     border-image: url("../img/wooden_line_y.png") 0% 100% repeat;
-    max-height: 180px;
+    height: 180px;
     overflow: hidden auto;
 }
 
@@ -1331,3 +1332,36 @@ h1,h2,h3,h4,h5,h6,p{
     padding: 4px 3px 0 3px;
     display: none;
 }
+
+/* Floation cookie effect */
+.floatingCookieEffect{
+    position: absolute;
+    font-size: 20px;
+    font-variant: small-caps;
+    color: white;
+    z-index: 999999999999;
+    pointer-events: none;
+}
+.floatingCookieIcon{
+    position: absolute;
+    width: 38px;
+    height: 38px;
+    object-fit: none;
+    object-position: -246px -148px;
+    pointer-events: none;
+    z-index: 99999999999;
+}
+
+/* testing animated increasing number */
+/* @property --num {
+    syntax: "<integer>";
+    initial-value: 0;
+    inherits: false;
+}
+.cookie__count{
+    transition: --num 500ms;
+    counter-set: num var(--num);
+}
+.cookie__count::after{
+    content: counter(num);
+} */

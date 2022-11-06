@@ -2,6 +2,10 @@ import { bakeryNames } from "./bakeryNames.js";
 
 
 const cookie = document.querySelector('.cookie__img');
+const cookieContainer = document.querySelector('.cookie');
+const cookieCountText = document.querySelector('.cookie__count');
+let cookieCount = 0;
+
 
 // Cookie hover animation
 cookie.addEventListener('mouseenter', () => {
@@ -201,4 +205,108 @@ function customBNameValidation(){
 
         customBakeryEsc();
     }
+}
+
+// COOKIE CLICKING
+let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
+let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
+clickInSound.volume = 0.18;
+clickOutSound.volume = 0.18;
+let cookieClickStep = 1;
+let cookieTime = 100;
+
+cookie.addEventListener('mousedown', (e) => {
+    cookie.style.animation = "cookieHoverOut 400ms linear forwards";
+    clickInSound.play();
+})
+cookie.addEventListener('mouseup', (e) => {
+    cookie.style.animation = "cookieHoverIn 400ms linear forwards";
+    clickOutSound.play();
+
+    // cookieCountText.style.setProperty('--num', cookieCount += cookieClickStep);
+    
+    cookieClickIncrease();
+    cookieClickEffect(e);
+})
+
+function cookieClickIncrease(){
+    let intervalI = 0;
+    let cookieAddInterval = setInterval(() => {
+        cookieCount += 1;
+        cookieCountText.innerText = cookieCount;
+
+        intervalI++
+        if(intervalI === cookieClickStep) clearInterval(cookieAddInterval);
+    }, (cookieTime / cookieClickStep));
+}
+
+
+function cookieClickEffect(e){
+    // Text
+    let leftPos = e.pageX;
+    let topPos = e.pageY;
+
+    let newP = document.createElement('p');
+    newP.innerText = `+${cookieClickStep}`;
+    newP.classList.add('floatingCookieEffect');
+
+    let randomPLeft = Math.floor(Math.random() * ((leftPos + 2) - (leftPos - 2) + 1) + (leftPos - 2))
+
+    newP.style.left = `${randomPLeft}px`;
+    newP.style.top = `10%`;
+    newP.style.opacity = 0;
+    
+    cookieContainer.appendChild(newP);
+
+    newP.animate([
+        // Keyframes
+        {   top: `${topPos}px`,
+            opacity: 1
+        },
+        {   top: '10%',
+            opacity: 0
+        },
+    ], {
+        duration: 4000,
+    });
+
+    setTimeout(() => {
+        newP.remove();
+    }, 4000);
+
+
+    // Cookie
+    let newCookieIcon = document.createElement('img');
+    newCookieIcon.classList.add('floatingCookieIcon');
+    newCookieIcon.src = "./res/img/icons.png";
+
+    let centeredLeftPos = leftPos - 19;
+    let randomLeftPos = Math.floor(Math.random() * ((centeredLeftPos + 5) - (centeredLeftPos - 5) + 1) + (centeredLeftPos - 5));
+
+    newCookieIcon.style.left = `${randomLeftPos}px`;
+    newCookieIcon.style.top = `${topPos}px`;
+    newCookieIcon.style.opacity = 0;
+
+    cookieContainer.appendChild(newCookieIcon);
+
+    let animateTop = Math.floor(Math.random() * ((topPos + 100) - (topPos + 50) + 1) + (topPos + 50))
+
+    newCookieIcon.animate([
+        {
+            left: `${randomLeftPos}px`,
+            top: `${topPos}px`,
+            opacity: 1
+        },
+        {
+            left: `${randomLeftPos}px`,
+            top: `${animateTop}px`,
+            opacity: 0
+        }
+    ], {
+        duration: 1000
+    })
+
+    setInterval(() => {
+        newCookieIcon.remove();
+    }, 1000);
 }
