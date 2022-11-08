@@ -4,6 +4,7 @@ import { bakeryNames } from "./bakeryNames.js";
 const cookie = document.querySelector('.cookie__img');
 const cookieContainer = document.querySelector('.cookie');
 const cookieCountText = document.querySelector('.cookie__count');
+let totalCookies = 0;
 let cookieCount = 0;
 
 
@@ -207,13 +208,13 @@ function customBNameValidation(){
     }
 }
 
+
 // COOKIE CLICKING
 let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
 let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
-clickInSound.volume = 0.18;
-clickOutSound.volume = 0.18;
-let cookieClickStep = 1;
-let cookieTime = 100;
+clickInSound.volume = 0.16;
+clickOutSound.volume = 0.16;
+let cookieClickStep = 5;
 
 cookie.addEventListener('mousedown', (e) => {
     cookie.style.animation = "cookieHoverOut 400ms linear forwards";
@@ -222,24 +223,25 @@ cookie.addEventListener('mousedown', (e) => {
 cookie.addEventListener('mouseup', (e) => {
     cookie.style.animation = "cookieHoverIn 400ms linear forwards";
     clickOutSound.play();
-
-    // cookieCountText.style.setProperty('--num', cookieCount += cookieClickStep);
     
     cookieClickIncrease();
     cookieClickEffect(e);
 })
 
+
 function cookieClickIncrease(){
     let intervalI = 0;
     let cookieAddInterval = setInterval(() => {
         cookieCount += 1;
+        totalCookies += 1;
         cookieCountText.innerText = cookieCount;
+
+        checkEnabledItems();
 
         intervalI++
         if(intervalI === cookieClickStep) clearInterval(cookieAddInterval);
-    }, (cookieTime / cookieClickStep));
+    });
 }
-
 
 function cookieClickEffect(e){
     // Text
@@ -309,4 +311,21 @@ function cookieClickEffect(e){
     setInterval(() => {
         newCookieIcon.remove();
     }, 1000);
+}
+
+
+// IF THERE IS ENOUGHT TOTAL COOKIES, ENABLE BUY ITEM
+const itemAutoClick = document.querySelector('.itemAutoClick');
+const itemGrandma = document.querySelector('.itemGrandma');
+
+function checkEnabledItems(){
+    // Autoclick
+    if(totalCookies === 15){
+        itemAutoClick.classList.remove('itemDisabled');
+    }
+
+    // Grandma
+    else if(totalCookies === 100){
+        itemGrandma.classList.remove('itemDisabled');
+    }
 }

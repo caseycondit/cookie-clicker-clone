@@ -229,8 +229,7 @@ h1,h2,h3,h4,h5,h6,p{
 .middle{
     width: calc(70% - 334px - 16px);
     height: 100vh;
-    display: flex;
-    flex-direction: column;
+    display: grid;
     overflow: hidden;
 }
 .middle__attr{
@@ -341,11 +340,32 @@ h1,h2,h3,h4,h5,h6,p{
     text-shadow: 6px 6px 5px black;
 }
 
+/* middle between */
+.middle__between{
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 18px;
+    background-color: #000000db;
+}
+.middle__between::before{
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: -16px;
+    left: 0;
+    width: 100%;
+    height: 16px;
+    background: linear-gradient(90deg, black -2%, transparent 8%, transparent 92%, black 102%);
+    z-index: 5;
+    pointer-events: none;
+}
+
 /* middle buildings */
 .middle__buildings{
     position: relative;
-    margin-top: 18px;
     overflow: hidden auto;
+    height: inherit;
 
     border-top: 16px solid transparent;
     border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
@@ -365,22 +385,11 @@ h1,h2,h3,h4,h5,h6,p{
     content: '';
     display: block;
     position: absolute;
-    top: -16px;
     left: 0;
+    top: 0;
     width: 100%;
-    height: 16px;
-    background: linear-gradient(90deg, black -2%, transparent 8%, transparent 92%, black 102%);
-    pointer-events: none;
-}
-.middle__buildings::after{
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    top: -34px;
-    width: 100%;
-    height: 18px;
-    background-color: #000000db;
+    height: 100%;
+    background-color: #00000021;
 }
 .buildBx{
     height: 144px;
@@ -807,6 +816,18 @@ h1,h2,h3,h4,h5,h6,p{
     border-bottom: 16px solid transparent;
     border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
 }
+.store__upgrades::after{
+    content: '';
+    position: absolute;
+    width: 12px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.76) 5%, rgba(0, 0, 0, 0.36) 50%, rgba(0, 0, 0, 0.36) 50%, rgba(0, 0, 0, 0.76));
+    pointer-events: none;
+    z-index: 9;
+}
+
 .store__title::before, .store__upgrades::before{
     content: '';
     position: absolute;
@@ -826,10 +847,23 @@ h1,h2,h3,h4,h5,h6,p{
 .upgrade__container{
     display: flex;
     flex-direction: column;
+    position: relative;
     border-right: 12px solid transparent;
     border-image: url("../img/wooden_line_y.png") 0% 100% repeat;
     height: 180px;
     overflow: hidden auto;
+}
+.upgrade__container::before{
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0000004a;
+    pointer-events: none;
+    z-index: -1;
 }
 
 .upgrade__container::-webkit-scrollbar{
@@ -842,15 +876,6 @@ h1,h2,h3,h4,h5,h6,p{
 .upgrade__container::-webkit-scrollbar-thumb{
     background-color: #949494;
     border-radius: 12px;
-}
-.upgrade__container::before{
-    content: '';
-    position: absolute;
-    width: 18px;
-    height: 100%;
-    right: -18px;
-    top: 0;
-    background: linear-gradient(180deg, black 5%, transparent 50%, transparent 50%, black);
 }
 .upgrade__bxRow{
     display: flex;
@@ -960,16 +985,19 @@ h1,h2,h3,h4,h5,h6,p{
     width: 64px;
     height: 64px;
     object-fit: none;
-    object-position: 0px 0px;
 }
 .item__textBx{
     display: flex;
     flex-direction: column;
 }
 .item__name{
+    display: none;
     font-size: 28px;
     line-height: 1;
     text-shadow: 1px 1px 4px black;
+}
+.item__name.itmNameDis{
+    display: block;
 }
 .item__info{
     display: flex;
@@ -1007,37 +1035,6 @@ h1,h2,h3,h4,h5,h6,p{
     margin-bottom: 6px;
 }
 
-/* Disabled item */
-.buy__item.itemDisabled{
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-}
-.buy__item.itemDisabled::before{
-    content: '';
-    grid-column: 1/6;
-    grid-row: 1;
-    width: 105%;
-    height: 100%;
-    z-index: 999;
-    background-color: #00000073;
-}
-.buy__item.itemDisabled .item__icon{
-    filter: brightness(0);
-    grid-column: 1;
-    grid-row: 1;
-}
-.buy__item.itemDisabled .item__textBx,
-.buy__item.itemDisabled .item__count{
-    grid-column: 2;
-    grid-row: 1;
-}
-
-.buy__item.itemDisabled .prizeGreen{
-    color: #ff7070;
-}
-.buy__item.itemDisabled .desc__icon{
-    object-position: -5px -341px;
-}
 
 /* item description */
 .item__desc{
@@ -1071,8 +1068,12 @@ h1,h2,h3,h4,h5,h6,p{
     margin-left: 10px;
 }
 .desc__name{
+    display: none;
     font-size: 14px;
     color: #ffffffe3;
+}
+.desc__name.descNameDis{
+    display: block;
 }
 .desc__own{
     color: #0a0a0a;
@@ -1094,6 +1095,7 @@ h1,h2,h3,h4,h5,h6,p{
     margin-left: 2px;
 }
 .desc__citation{
+    display: none;
     font-size: 12px;
     text-align: right;
     color: #646464;
@@ -1103,20 +1105,27 @@ h1,h2,h3,h4,h5,h6,p{
     border-image: linear-gradient(to left, #111111 5%, #666666 50%, #111111 95%) 
     100% 0 0 0/1px 0 0 0 stretch;
 }
+.desc__citation.descCitDis{
+    display: block;
+}
 .desc__infoBx{
     padding: 0;
     margin: 0;
     list-style-type: none;
-    display: flex;
     flex-direction: column;
     row-gap: 6px;
     padding-left: 10px;
+
+    display: none;
     
     margin-top: 8px;
     padding-top: 6px;
     border-top: 1px solid;
     border-image: linear-gradient(to left, #111111 5%, #666666 50%, #111111 95%) 
     100% 0 0 0/1px 0 0 0 stretch;
+}
+.buy__item.descInfoEnabled .desc__infoBx{
+    display: flex;
 }
 .desc__info{
     position: relative;
@@ -1139,6 +1148,15 @@ h1,h2,h3,h4,h5,h6,p{
     border-radius: 50%;
     background-color: #aaa;
     pointer-events: none;
+}
+.infoReinfBx{
+    background-color: black;
+    color: white;
+    border: 1px solid #5a5a5a;
+    border-radius: 4px;
+    padding: 1px 3px;
+    font-size: 9px;
+    font-weight: 600;
 }
 .whiteT{
     color: white;
@@ -1169,6 +1187,60 @@ h1,h2,h3,h4,h5,h6,p{
     border-image: linear-gradient(to left, #111111 5%, #666666 50%, #111111 95%) 
     100% 0 0 0/1px 0 0 0 stretch;
 }
+
+/* Disabled item */
+.buy__item.itemDisabled{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+}
+.buy__item.itemDisabled::before{
+    content: '';
+    grid-column: 1/6;
+    grid-row: 1;
+    width: 105%;
+    height: 100%;
+    z-index: 999;
+    background-color: #00000073;
+}
+.buy__item.itemDisabled .item__icon{
+    filter: brightness(0);
+    grid-column: 1;
+    grid-row: 1;
+}
+.buy__item.itemDisabled .item__textBx,
+.buy__item.itemDisabled .item__count{
+    grid-column: 2;
+    grid-row: 1;
+}
+
+.buy__item.itemDisabled .prizeGreen{
+    color: #ff7070;
+}
+.buy__item.itemDisabled .desc__icon{
+    object-position: -5px -341px;
+}
+
+
+.itemDisabled .item__name{
+    display: block;
+}
+.itemDisabled .desc__name{
+    display: block;
+}
+.itemDisabled .desc__citation{
+    display: block;
+}
+
+.itemDisabled .itmNameDis{
+    display: none;
+}
+.itemDisabled .descNameDis{
+    display: none;
+}
+.itemDisabled .descCitDis{
+    display: none;
+}
+
 
 
 /* Custom bakery name */
