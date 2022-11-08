@@ -6,6 +6,7 @@ const cookieContainer = document.querySelector('.cookie');
 const cookieCountText = document.querySelector('.cookie__count');
 let totalCookies = 0;
 let cookieCount = 0;
+let instaCookieCount = 0;
 
 
 // Cookie hover animation
@@ -88,29 +89,34 @@ window.onload = () => {
         }, 300);
     })
 
-    const one = document.querySelector('.cookie__upgrade.id0').style.display = "block";
+    // document.querySelector('.cookie__upgrade.id0').style.display = "block";
 }
 
 // Mooving building description
-const buildings = document.querySelectorAll('.buy__item');
-buildings.forEach((building) => {
-    let buildingDesc = building.querySelector('.item__desc');
-
-    building.addEventListener('mouseenter', () => {
-        buildingDesc.style.display = "block";
+function buildingsMoovingDesc(){
+    const buildings = document.querySelectorAll('.buy__item');
+    buildings.forEach((building) => {
+        let buildingDesc = building.querySelector('.item__desc');
+    
+        building.addEventListener('mouseenter', () => {
+            buildingDesc.style.display = "block";
+        })
+    
+        building.addEventListener('mousemove', (e) => {
+            let currentY = e.clientY;
+            let updatedY = currentY - 344;
+    
+            buildingDesc.style.top = `${updatedY}px`;
+        })
+    
+        building.addEventListener('mouseleave', () => {
+            buildingDesc.style.display = "none";
+        })
     })
+}
 
-    building.addEventListener('mousemove', (e) => {
-        let currentY = e.clientY;
-        let updatedY = currentY - 344;
+buildingsMoovingDesc();
 
-        buildingDesc.style.top = `${updatedY}px`;
-    })
-
-    building.addEventListener('mouseleave', () => {
-        buildingDesc.style.display = "none";
-    })
-})
 
 // Mooving upgrades description
 const upgrades = document.querySelectorAll('.upgrade__bx');
@@ -214,7 +220,7 @@ let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
 let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
 clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
-let cookieClickStep = 5;
+let cookieClickStep = 500;
 
 cookie.addEventListener('mousedown', (e) => {
     cookie.style.animation = "cookieHoverOut 400ms linear forwards";
@@ -230,13 +236,14 @@ cookie.addEventListener('mouseup', (e) => {
 
 
 function cookieClickIncrease(){
+    instaCookieCount += cookieClickStep;
+    checkEnabledItems();
+
     let intervalI = 0;
     let cookieAddInterval = setInterval(() => {
         cookieCount += 1;
         totalCookies += 1;
         cookieCountText.innerText = cookieCount;
-
-        checkEnabledItems();
 
         intervalI++
         if(intervalI === cookieClickStep) clearInterval(cookieAddInterval);
@@ -315,17 +322,83 @@ function cookieClickEffect(e){
 
 
 // IF THERE IS ENOUGHT TOTAL COOKIES, ENABLE BUY ITEM
+const itemBx = document.querySelector('.buy__itemBx');
 const itemAutoClick = document.querySelector('.itemAutoClick');
 const itemGrandma = document.querySelector('.itemGrandma');
+let itemFarm;
 
 function checkEnabledItems(){
     // Autoclick
-    if(totalCookies === 15){
+    if(instaCookieCount >= 15 && itemAutoClick.classList.contains('itemDisabled')){
         itemAutoClick.classList.remove('itemDisabled');
+
+        itemBx.insertAdjacentHTML('beforeend', newFarmHtml);
+        itemFarm = itemBx.querySelector('.itemFarm');
+
+        buildingsMoovingDesc();
     }
 
     // Grandma
-    else if(totalCookies === 100){
+    else if(instaCookieCount >= 100 && itemGrandma.classList.contains('itemDisabled')){
         itemGrandma.classList.remove('itemDisabled');
+
+        buildingsMoovingDesc();
+    }
+
+    // Farm
+    else if(instaCookieCount >= 1100 && itemFarm.classList.contains('itemDisabled')){
+        itemFarm.classList.remove('itemDisabled');
+
+        buildingsMoovingDesc();
     }
 }
+
+
+// HTML OF NEW BUILDINGS
+// Farm
+let newFarmHtml = `
+<div class="buy__item itemFarm itemDisabled">
+    <img src="./res/img/buildings.png" alt="" style="object-position: 0px -192px;" class="item__icon" draggable="false">
+    <div class="item__textBx">
+        <h4 class="item__name">???</h4>
+        <h4 class="item__name itmNameDis">Farma</h4>
+        <div class="item__info">
+            <p class="info__prize prizeGreen"><img src="./res/img/money.png" alt="" class="prize__icon" draggable="false">1,100</p>
+        </div>
+    </div>
+    <h4 class="item__count"></h4>
+    <div class="item__desc">
+        <div class="desc__top">
+            <img src="./res/img/icons.png" alt="" class="desc__icon" draggable="false">
+            <div class="desc__nameBx">
+                <p class="desc__name">???</p>
+                <p class="desc__name descNameDis">Farma</p>
+                <p class="desc__own">vlastněno: <span>0</span></p>
+            </div>
+            <div class="desc__countBx">
+                <img src="./res/img/money.png" alt="" class="desc__countImg" draggable="false">
+                <p class="desc__count prizeGreen">1,100</p>
+            </div>
+        </div>
+        <p class="desc__citation">"???"</p>
+        <p class="desc__citation descCitDis">"Tady se z keksových semínek pěstují keksové rostliny."</p>
+
+        <ul class="desc__infoBx">
+            <li class="desc__info">každé farma produkuje <span class="whiteT">234.4 keksy</span> za sekundu</li>
+            <li class="desc__info">
+                <span class="infoCount">5</span>
+                farem produkuje
+                <span class="infoPerSec whiteT">0.5</span>
+                <span class="whiteT">keksy</span>
+                za sekundu
+                (<span class="infoProduction whiteT">100</span><span class="whiteT">%</span> z celkových K/s)
+            </li>
+            <li class="desc__info">
+                <span class="infoProduces whiteT">4,277</span>
+                <span class="whiteT">keksy</span>
+                dosud vyprodukováno
+            </li>
+        </ul>
+    </div>
+</div>
+`;
