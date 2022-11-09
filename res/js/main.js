@@ -92,32 +92,6 @@ window.onload = () => {
     // document.querySelector('.cookie__upgrade.id0').style.display = "block";
 }
 
-// Mooving building description
-function buildingsMoovingDesc(){
-    const buildings = document.querySelectorAll('.buy__item');
-    buildings.forEach((building) => {
-        let buildingDesc = building.querySelector('.item__desc');
-    
-        building.addEventListener('mouseenter', () => {
-            buildingDesc.style.display = "block";
-        })
-    
-        building.addEventListener('mousemove', (e) => {
-            let currentY = e.clientY;
-            let updatedY = currentY - 344;
-    
-            buildingDesc.style.top = `${updatedY}px`;
-        })
-    
-        building.addEventListener('mouseleave', () => {
-            buildingDesc.style.display = "none";
-        })
-    })
-}
-
-buildingsMoovingDesc();
-
-
 // Mooving upgrades description
 const upgrades = document.querySelectorAll('.upgrade__bx');
 
@@ -354,51 +328,122 @@ function checkEnabledItems(){
 }
 
 
-// HTML OF NEW BUILDINGS
-// Farm
-let newFarmHtml = `
-<div class="buy__item itemFarm itemDisabled">
-    <img src="./res/img/buildings.png" alt="" style="object-position: 0px -192px;" class="item__icon" draggable="false">
-    <div class="item__textBx">
-        <h4 class="item__name">???</h4>
-        <h4 class="item__name itmNameDis">Farma</h4>
-        <div class="item__info">
-            <p class="info__prize prizeGreen"><img src="./res/img/money.png" alt="" class="prize__icon" draggable="false">1,100</p>
-        </div>
-    </div>
-    <h4 class="item__count"></h4>
-    <div class="item__desc">
-        <div class="desc__top">
-            <img src="./res/img/icons.png" alt="" class="desc__icon" draggable="false">
-            <div class="desc__nameBx">
-                <p class="desc__name">???</p>
-                <p class="desc__name descNameDis">Farma</p>
-                <p class="desc__own">vlastněno: <span>0</span></p>
-            </div>
-            <div class="desc__countBx">
-                <img src="./res/img/money.png" alt="" class="desc__countImg" draggable="false">
-                <p class="desc__count prizeGreen">1,100</p>
-            </div>
-        </div>
-        <p class="desc__citation">"???"</p>
-        <p class="desc__citation descCitDis">"Tady se z keksových semínek pěstují keksové rostliny."</p>
+// GENERATE ALL BUILDINGS
+let cursorPrize = 15;
+let grandmaPrize = 100;
+let farmPrize = 1100;
+let minePrize = 12000;
 
-        <ul class="desc__infoBx">
-            <li class="desc__info">každé farma produkuje <span class="whiteT">234.4 keksy</span> za sekundu</li>
-            <li class="desc__info">
-                <span class="infoCount">5</span>
-                farem produkuje
-                <span class="infoPerSec whiteT">0.5</span>
-                <span class="whiteT">keksy</span>
-                za sekundu
-                (<span class="infoProduction whiteT">100</span><span class="whiteT">%</span> z celkových K/s)
-            </li>
-            <li class="desc__info">
-                <span class="infoProduces whiteT">4,277</span>
-                <span class="whiteT">keksy</span>
-                dosud vyprodukováno
-            </li>
-        </ul>
-    </div>
-</div>
-`;
+let buildPrizes = [cursorPrize, grandmaPrize, farmPrize];
+
+const newFarmHtml = generateNewBuilding("Farma", "Farm", farmPrize.toLocaleString('de-DE'), "Tady se z keksových semínek pěstují keksové rostliny.", "234.4", 3);
+const newMineHtml = generateNewBuilding("Důl", "Mine", "12,000", "Těží sušenkové těsto a čokoládové střípky.", "1,065", 4);
+const newFactoryHtml = generateNewBuilding("Továrna", "Factory", "130,000", "Produkuje velké množství keksů.", "5,893", 5);
+// toLocalString(de-DE) - dot instead of comma
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+// const newMineHtml = generateNewBuilding("Důl", "mine", "12,000", ".", "234.4", 3);
+
+function generateNewBuilding(name, buildClass, prize, citation, productionPerSec, buldingIndex){
+    return (`
+        <div class="buy__item item${buildClass} itemDisabled">
+            <img src="./res/img/buildings.png" alt="" style="object-position: 0px -${buldingIndex * 64}px;" class="item__icon" draggable="false">
+            <div class="item__textBx">
+                <h4 class="item__name">???</h4>
+                <h4 class="item__name itmNameDis">${name}</h4>
+                <div class="item__info">
+                    <p class="info__prize prizeGreen"><img src="./res/img/money.png" alt="" class="prize__icon" draggable="false">${prize}</p>
+                </div>
+            </div>
+            <h4 class="item__count"></h4>
+            <div class="item__desc">
+                <div class="desc__top">
+                    <img src="./res/img/icons.png" alt="" style="object-position: -${(buldingIndex - 1) * 50}px 0px;" class="desc__icon" draggable="false">
+                    <div class="desc__nameBx">
+                        <p class="desc__name">???</p>
+                        <p class="desc__name descNameDis">${name}</p>
+                        <p class="desc__own">vlastněno: <span>0</span></p>
+                    </div>
+                    <div class="desc__countBx">
+                        <img src="./res/img/money.png" alt="" class="desc__countImg" draggable="false">
+                        <p class="desc__count prizeGreen">${prize}</p>
+                    </div>
+                </div>
+                <p class="desc__citation">"???"</p>
+                <p class="desc__citation descCitDis">"${citation}"</p>
+
+                <ul class="desc__infoBx">
+                    <li class="desc__info">každé ${name.toLowerCase()} produkuje <span class="whiteT">${productionPerSec} keksy</span> za sekundu</li>
+                    <li class="desc__info">
+                        <span class="infoCount">5</span>
+                        ${name.toLowerCase()} produkuje
+                        <span class="infoPerSec whiteT">0.5</span>
+                        <span class="whiteT">keksy</span>
+                        za sekundu
+                        (<span class="infoProduction whiteT">100</span><span class="whiteT">%</span> z celkových K/s)
+                    </li>
+                    <li class="desc__info">
+                        <span class="infoProduces whiteT">4,277</span>
+                        <span class="whiteT">keksy</span>
+                        dosud vyprodukováno
+                    </li>
+                </ul>
+            </div>
+        </div>
+    `);
+}
+
+
+
+// BUY ITEM - BUILDING
+function buyItemBuilding(buildingsNode, building){
+    building.addEventListener('click', () => {
+        const buildingsArray = Array.prototype.slice.call(buildingsNode);
+
+        let buildingIndex = buildingsArray.indexOf(building);
+
+        console.log(buildPrizes[buildingIndex]);
+
+        if(totalCookies >= buildPrizes[buildingIndex]){
+            console.log('just buy it (no, its not that simple there :()');
+        }
+    })
+}
+
+
+// MOOVING BUILDING DESCRIPTION, TRIGGERING ALSO BUY ITEMS
+function buildingsMoovingDesc(){
+    const buildings = document.querySelectorAll('.buy__item');
+    buildings.forEach((building) => {
+        let buildingDesc = building.querySelector('.item__desc');
+    
+        building.addEventListener('mouseenter', () => {
+            buildingDesc.style.display = "block";
+        })
+    
+        building.addEventListener('mousemove', (e) => {
+            let currentY = e.clientY;
+            let updatedY = currentY - 344;
+    
+            buildingDesc.style.top = `${updatedY}px`;
+        })
+    
+        building.addEventListener('mouseleave', () => {
+            buildingDesc.style.display = "none";
+        })
+
+        // Buy item function
+        buyItemBuilding(buildings, building);
+    })
+}
+
+buildingsMoovingDesc();

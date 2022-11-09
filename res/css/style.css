@@ -1057,9 +1057,8 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .desc__icon{
     width: 38px;
-    height: 38px;
+    height: 43px;
     object-fit: none;
-    object-position: -5px -3px;
 }
 .desc__nameBx{
     display: flex;
@@ -1217,7 +1216,7 @@ h1,h2,h3,h4,h5,h6,p{
     color: #ff7070;
 }
 .buy__item.itemDisabled .desc__icon{
-    object-position: -5px -341px;
+    object-position: -5px -341px !important;
 }
 
 
