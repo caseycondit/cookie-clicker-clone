@@ -595,23 +595,21 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
 
 
 // BUY ITEM - BUILDING
-function buyItemBuilding(buildingsNode, building){
-    console.log(building);
-    building.addEventListener('click', () => {
-        console.log('e');
-    })
 
+
+
+// function buyBuildingValid(building, buildingsNode){
     // const buildingsArray = Array.prototype.slice.call(buildingsNode);
-
+    
     // console.log(buildingsArray);
     // let buildingIndex = buildingsArray.indexOf(building);
-
+    
     // console.log(buildPrizes[buildingIndex]);
-
+    
     // if(totalCookies >= buildPrizes[buildingIndex]){
     //     console.log('just buy it (no, its not that simple there :()');
     // }
-}
+// }
 
 
 // MOOVING BUILDING DESCRIPTION, TRIGGERING ALSO BUY ITEMS
@@ -643,11 +641,31 @@ function buildingsMoovingDesc(){
             buildingDesc.style.display = "none";
         })
 
-        // console.log(building);
 
+        building.addEventListener('click', buyItemBuilding, false);
+        building.myParam = [buildings, building];
         // Buy item function
-        buyItemBuilding(buildings, building);
+        // buyItemBuilding(buildings, building);
     })
+}
+
+function buyItemBuilding(e){
+    let buildingsNode = e.currentTarget.myParam[0];
+    let building = e.currentTarget.myParam[1];
+    
+    const buildingsArray = Array.prototype.slice.call(buildingsNode);
+    
+    let buildingIndex = buildingsArray.indexOf(building);
+    
+    console.log(buildPrizes[buildingIndex]);
+    
+    if(instaCookieCount >= buildPrizes[buildingIndex]){
+        console.log('just buy it (no, its not that simple there :()');
+    }
+    else{
+        console.log("you dont have enought money");
+        console.log(instaCookieCount);
+    }
 }
 
 buildingsMoovingDesc();
