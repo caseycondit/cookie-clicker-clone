@@ -194,7 +194,7 @@ let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
 let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
 clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
-let cookieClickStep = 500000000000;
+let cookieClickStep = 1900000000000000000000000;
 
 cookie.addEventListener('mousedown', (e) => {
     cookie.style.animation = "cookieHoverOut 400ms linear forwards";
@@ -211,7 +211,6 @@ cookie.addEventListener('mouseup', (e) => {
 
 function cookieClickIncrease(){
     instaCookieCount += cookieClickStep;
-    console.log(instaCookieCount);
     checkEnabledItems();
 
     let intervalI = 0;
@@ -404,7 +403,7 @@ function checkEnabledItems(){
         itemShip.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newPortalHtml);
-        itemShip = itemBx.querySelector('.itemShip');
+        itemPortal = itemBx.querySelector('.itemPortal');
 
         buildingsMoovingDesc();
     }
@@ -439,7 +438,7 @@ function checkEnabledItems(){
         buildingsMoovingDesc();
     }
 
-    // Consender
+    // Condenser
     else if(instaCookieCount >= 170000000000000 && itemCondenser.classList.contains('itemDisabled')){
         itemCondenser.classList.remove('itemDisabled');
 
@@ -524,7 +523,7 @@ let jsconsolePrize = 71000000000000000000;
 let idlePrize = 12000000000000000000000;
 let cortexPrize = 1900000000000000000000000;
 
-let buildPrizes = [cursorPrize, grandmaPrize, farmPrize];
+let buildPrizes = [cursorPrize, grandmaPrize, farmPrize, minePrize, factoryPrize, bankPrize, templePrize, wizardPrize, shipPrize, alchemyPrize, portalPrize, timePrize, condenserPrize, prismPrize, chancePrize, enginePrize, jsconsolePrize, idlePrize, cortexPrize];
 
 const newFarmHtml = generateNewBuilding("Farma", "Farm", farmPrize.toLocaleString('en-Us'), "Tady se z keksových semínek pěstují keksové rostliny.", "234.4", 3, -101);
 const newMineHtml = generateNewBuilding("Důl", "Mine", minePrize.toLocaleString('en-Us'), "Těží sušenkové těsto a čokoládové střípky.", "1,065", 4, -148);
@@ -597,17 +596,21 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
 
 // BUY ITEM - BUILDING
 function buyItemBuilding(buildingsNode, building){
+    console.log(building);
     building.addEventListener('click', () => {
-        const buildingsArray = Array.prototype.slice.call(buildingsNode);
-
-        let buildingIndex = buildingsArray.indexOf(building);
-
-        console.log(buildPrizes[buildingIndex]);
-
-        if(totalCookies >= buildPrizes[buildingIndex]){
-            console.log('just buy it (no, its not that simple there :()');
-        }
+        console.log('e');
     })
+
+    // const buildingsArray = Array.prototype.slice.call(buildingsNode);
+
+    // console.log(buildingsArray);
+    // let buildingIndex = buildingsArray.indexOf(building);
+
+    // console.log(buildPrizes[buildingIndex]);
+
+    // if(totalCookies >= buildPrizes[buildingIndex]){
+    //     console.log('just buy it (no, its not that simple there :()');
+    // }
 }
 
 
@@ -624,13 +627,23 @@ function buildingsMoovingDesc(){
         building.addEventListener('mousemove', (e) => {
             let currentY = e.clientY;
             let updatedY = currentY - 344;
-    
-            buildingDesc.style.top = `${updatedY}px`;
+            let updatedBodyHeight = document.body.scrollHeight - buildingDesc.offsetHeight + 40;
+
+            if(updatedBodyHeight > currentY){
+                buildingDesc.style.bottom = "";
+                buildingDesc.style.top = `${updatedY}px`;
+            }
+            else{
+                buildingDesc.style.top = "";
+                buildingDesc.style.bottom = 0;
+            }
         })
     
         building.addEventListener('mouseleave', () => {
             buildingDesc.style.display = "none";
         })
+
+        // console.log(building);
 
         // Buy item function
         buyItemBuilding(buildings, building);
