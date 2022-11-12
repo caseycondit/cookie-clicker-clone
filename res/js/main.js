@@ -194,7 +194,10 @@ let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
 let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
 clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
-let cookieClickStep = 5;
+let intervalsCount = 0;
+let cookieClickStep = 300;
+let remainingCookies = 0;
+let disableCookieInterval = false;
 
 cookie.addEventListener('mousedown', (e) => {
     cookie.style.animation = "cookieHoverOut 400ms linear forwards";
@@ -212,20 +215,39 @@ cookie.addEventListener('mouseup', (e) => {
 function cookieClickIncrease(){
     instaCookieCount += cookieClickStep;
     totalCookies += cookieClickStep;
+    remainingCookies += cookieClickStep;
     checkEnabledItems();
     checkItemPrize();
 
     let intervalI = 0;
-    let cookieAddInterval = setInterval(() => {
+    intervalsCount++;
+
+    window['cookieAddInterval' + intervalsCount] = setInterval(() => {
         cookieCount += 1;
-        totalCookies += 1;
+        remainingCookies -= 1;
         cookieCountText.innerText = cookieCount;
 
         intervalI++
-        if(intervalI === cookieClickStep) clearInterval(cookieAddInterval);
+        if(intervalI === cookieClickStep) clearAllCookieIntervals(intervalsCount);
+        if(disableCookieInterval === true){
+            clearAllCookieIntervals(intervalsCount);
+            disableCookieInterval = false;
+
+            cookieCount += remainingCookies;
+            cookieCountText.innerText = cookieCount
+        }
     });
 }
 
+// Disable all intervals
+function clearAllCookieIntervals(intervalIndex){
+    for (let i = 1; i <= intervalIndex; i++) {
+        clearInterval(window['cookieAddInterval' + i]);
+    }
+}
+
+
+// COOKIE CLICK EFFECT
 function cookieClickEffect(e){
     // Text
     let leftPos = e.pageX;
@@ -679,6 +701,7 @@ function buyItemBuilding(e){
         // Cookie count
         decrementCookies(buildPrizesArr[buildingIndex]);
         checkItemPrize();
+        disableCookieInterval = true;
 
         // Prize
         let minusCookies = Math.round(buildPrizesArr[buildingIndex] / 5);
