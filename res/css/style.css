@@ -978,8 +978,8 @@ h1,h2,h3,h4,h5,h6,p{
     border-radius: 12px;
 }
 .buy__item{
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
     align-items: center;
     padding-right: 8px;
     background-image: url("../img/storeTile.jpg");
@@ -998,10 +998,14 @@ h1,h2,h3,h4,h5,h6,p{
     width: 64px;
     height: 64px;
     object-fit: none;
+    grid-column: 1;
+    grid-row: 1;
 }
 .item__textBx{
     display: flex;
     flex-direction: column;
+    grid-column: 2;
+    grid-row: 1;
 }
 .item__name{
     display: none;
@@ -1046,6 +1050,8 @@ h1,h2,h3,h4,h5,h6,p{
     align-self: flex-end;
     color: #00000061;
     margin-bottom: 6px;
+    grid-column: 5;
+    grid-row: 1;
 }
 
 
@@ -1202,10 +1208,6 @@ h1,h2,h3,h4,h5,h6,p{
 }
 
 /* Disabled item */
-.buy__item.itemDisabled{
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-}
 .buy__item.itemDisabled::before{
     content: '';
     grid-column: 1/6;
@@ -1217,15 +1219,7 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .buy__item.itemDisabled .item__icon{
     filter: brightness(0);
-    grid-column: 1;
-    grid-row: 1;
 }
-.buy__item.itemDisabled .item__textBx,
-.buy__item.itemDisabled .item__count{
-    grid-column: 2;
-    grid-row: 1;
-}
-
 .buy__item.itemDisabled .prizeGreen{
     color: #ff7070;
 }
@@ -1253,6 +1247,22 @@ h1,h2,h3,h4,h5,h6,p{
 .itemDisabled .descCitDis{
     display: none;
 }
+
+
+/* If there is not enought cookies */
+.buy__item.noEnoughtCookies::before{
+    content: '';
+    grid-column: 1/6;
+    grid-row: 1;
+    width: 105%;
+    height: 100%;
+    z-index: 999;
+    background-color: #00000073;
+}
+.buy__item.noEnoughtCookies .prizeGreen{
+    color: #ff7070;
+}
+
 
 
 

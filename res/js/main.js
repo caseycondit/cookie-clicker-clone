@@ -213,6 +213,7 @@ function cookieClickIncrease(){
     instaCookieCount += cookieClickStep;
     totalCookies += cookieClickStep;
     checkEnabledItems();
+    checkItemPrize();
 
     let intervalI = 0;
     let cookieAddInterval = setInterval(() => {
@@ -319,7 +320,7 @@ let itemFarm,
     itemCortex;
 
 
-let itemCursorCount = 1,
+let itemCursorCount = 0,
     itemGrandmaCount = 0,
     itemFarmCount = 0,
     itemMineCount = 0,
@@ -339,28 +340,7 @@ let itemCursorCount = 1,
     itemIdleCount = 0,
     itemCortexCount = 0;
 
-let buildCountObject = {
-    "cursor": itemCursorCount,
-    "grandma": itemGrandmaCount,
-    "farm": itemFarmCount,
-    "mine": itemMineCount,
-    "factory": itemFactoryCount,
-    "bank": itemBankCount,
-    "temple": itemTempleCount,
-    "wizard": itemWizardCount,
-    "ship": itemShipCount,
-    "alchemy": itemAlchemyCount,
-    "portal": itemPortalCount,
-    "time": itemTimeCount,
-    "condenser": itemCondenserCount,
-    "prism": itemPrismCount,
-    "chance": itemChanceCount,
-    "engine": itemEngineCount,
-    "jsconsole": itemJsconsoleCount,
-    "idle": itemIdleCount,
-    "cortex": itemCortexCount
-}
-let buildCountDataArray = Object.keys(buildCountObject).map(val => buildCountObject[val]);
+let buildCountArr = [itemCursorCount, itemGrandmaCount, itemFarmCount, itemMineCount, itemFactoryCount, itemBankCount, itemTempleCount, itemWizardCount, itemShipCount, itemAlchemyCount, itemPortalCount, itemTimeCount, itemCondenserCount, itemPrismCount, itemChanceCount, itemEngineCount, itemJsconsoleCount, itemIdleCount, itemCortexCount];
 
 
 function checkEnabledItems(){
@@ -549,48 +529,27 @@ function checkEnabledItems(){
 
 
 // GENERATE ALL BUILDINGS
-let cursorPrize = 15;
-let grandmaPrize = 100;
-let farmPrize = 1100;
-let minePrize = 12000;
-let factoryPrize = 130000;
-let bankPrize = 1400000;
-let templePrize = 20000000;
-let wizardPrize = 330000000;
-let shipPrize = 5100000000;
-let alchemyPrize = 75000000000;
-let portalPrize = 1000000000000;
-let timePrize = 14000000000000;
-let condenserPrize = 170000000000000;
-let prismPrize = 2100000000000000;
-let chancePrize = 26000000000000000;
-let enginePrize = 310000000000000000;
-let jsconsolePrize = 71000000000000000000;
-let idlePrize = 12000000000000000000000;
-let cortexPrize = 1900000000000000000000000;
+let cursorPrize = 15,
+    grandmaPrize = 100,
+    farmPrize = 1100,
+    minePrize = 12000,
+    factoryPrize = 130000,
+    bankPrize = 1400000,
+    templePrize = 20000000,
+    wizardPrize = 330000000,
+    shipPrize = 5100000000,
+    alchemyPrize = 75000000000,
+    portalPrize = 1000000000000,
+    timePrize = 14000000000000,
+    condenserPrize = 170000000000000,
+    prismPrize = 2100000000000000,
+    chancePrize = 26000000000000000,
+    enginePrize = 310000000000000000,
+    jsconsolePrize = 71000000000000000000,
+    idlePrize = 12000000000000000000000,
+    cortexPrize = 1900000000000000000000000;
 
-let buildPrizesObject = {
-    "cursor": cursorPrize,
-    "grandma": grandmaPrize,
-    "farm": farmPrize,
-    "mine": minePrize,
-    "factory": factoryPrize,
-    "bank": bankPrize,
-    "temple": templePrize,
-    "wizard": wizardPrize,
-    "ship": shipPrize,
-    "alchemy": alchemyPrize,
-    "portal": portalPrize,
-    "time": timePrize,
-    "condenser": condenserPrize,
-    "prism": prismPrize,
-    "chance": chancePrize,
-    "engine": enginePrize,
-    "jsconsole": jsconsolePrize,
-    "idle": idlePrize,
-    "cortex": cortexPrize
-}
-let buildPrizesDataArray = Object.keys(buildPrizesObject).map(val => buildPrizesObject[val]);
+let buildPrizesArr = [cursorPrize, grandmaPrize, farmPrize, minePrize, factoryPrize, bankPrize, templePrize, wizardPrize, shipPrize, alchemyPrize, portalPrize, timePrize, condenserPrize, prismPrize, chancePrize, enginePrize, jsconsolePrize, idlePrize, cortexPrize];
 
 
 // Generate all buildings
@@ -666,28 +625,12 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
 
 
 
-// BUY ITEM - BUILDING
-
-
-
-// function buyBuildingValid(building, buildingsNode){
-    // const buildingsArray = Array.prototype.slice.call(buildingsNode);
-    
-    // console.log(buildingsArray);
-    // let buildingIndex = buildingsArray.indexOf(building);
-    
-    // console.log(buildPrizes[buildingIndex]);
-    
-    // if(totalCookies >= buildPrizes[buildingIndex]){
-    //     console.log('just buy it (no, its not that simple there :()');
-    // }
-// }
-
-
 // MOOVING BUILDING DESCRIPTION, TRIGGERING ALSO BUY ITEMS
+let buildings = function(){ return document.querySelectorAll('.buy__item')};
+
+
 function buildingsMoovingDesc(){
-    const buildings = document.querySelectorAll('.buy__item');
-    buildings.forEach((building) => {
+    buildings().forEach((building) => {
         let buildingDesc = building.querySelector('.item__desc');
     
         building.addEventListener('mouseenter', () => {
@@ -715,24 +658,38 @@ function buildingsMoovingDesc(){
 
 
         building.addEventListener('click', buyItemBuilding, false);
-        building.myParam = [buildings, building];
+        building.myParam = [building];
         // Buy item function
         // buyItemBuilding(buildings, building);
     })
 }
 
 function buyItemBuilding(e){
-    let buildingsNode = e.currentTarget.myParam[0];
-    let building = e.currentTarget.myParam[1];
+    let building = e.currentTarget.myParam[0];
     
-    const buildingsArray = Array.prototype.slice.call(buildingsNode);
+    const buildingsArray = Array.prototype.slice.call(buildings());
     
-    let buildingIndex = buildingsArray.indexOf(building);
+    let buildingIndex = buildingsArray.indexOf(building); // 0
     
-    console.log(buildPrizesDataArray[buildingIndex]);
-    
-    if(instaCookieCount >= buildPrizesDataArray[buildingIndex]){
-        console.log('just buy it (no, its not that simple there :()');
+    if(instaCookieCount >= buildPrizesArr[buildingIndex]){
+        let infoPrizeText = building.querySelector('.info__prizeText');
+        let descPrizeText = building.querySelector('.desc__count');
+        let itemCountText = building.querySelector('.item__count');
+
+        // Cookie count
+        decrementCookies(buildPrizesArr[buildingIndex]);
+        checkItemPrize();
+
+        // Prize
+        let minusCookies = Math.round(buildPrizesArr[buildingIndex] / 5);
+        buildPrizesArr[buildingIndex] += minusCookies;
+        
+        infoPrizeText.innerText = buildPrizesArr[buildingIndex];
+        descPrizeText.innerText = buildPrizesArr[buildingIndex];
+        
+        // Count
+        buildCountArr[buildingIndex]++;
+        itemCountText.innerText = buildCountArr[buildingIndex];
     }
     else{
         console.log("you dont have enought money");
@@ -741,3 +698,27 @@ function buyItemBuilding(e){
 }
 
 buildingsMoovingDesc();
+
+
+function decrementCookies(cookies){
+    cookieCount -= cookies;
+    instaCookieCount -= cookies;
+
+    cookieCountText.innerText = cookieCount;
+}
+
+
+// CHECK ITEM COST - IF THERE IS ENOUGHT COOKIES, THE PRIZE TEXT WILL BE GREEN AND VICE-VERSA
+function checkItemPrize(){
+    buildings().forEach((building) => {
+        const buildingsArray = Array.prototype.slice.call(buildings());
+        let buildingIndex = buildingsArray.indexOf(building);
+
+        if(instaCookieCount < buildPrizesArr[buildingIndex]){
+            building.classList.add('noEnoughtCookies');
+        }
+        else{
+            building.classList.remove('noEnoughtCookies');
+        }
+    })
+}
