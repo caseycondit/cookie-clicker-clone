@@ -194,7 +194,7 @@ let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
 let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
 clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
-let cookieClickStep = 1900000000000000000000000;
+let cookieClickStep = 5;
 
 cookie.addEventListener('mousedown', (e) => {
     cookie.style.animation = "cookieHoverOut 400ms linear forwards";
@@ -211,6 +211,7 @@ cookie.addEventListener('mouseup', (e) => {
 
 function cookieClickIncrease(){
     instaCookieCount += cookieClickStep;
+    totalCookies += cookieClickStep;
     checkEnabledItems();
 
     let intervalI = 0;
@@ -297,7 +298,7 @@ function cookieClickEffect(e){
 
 // IF THERE IS ENOUGHT TOTAL COOKIES, ENABLE BUY ITEM
 const itemBx = document.querySelector('.buy__itemBx');
-const itemAutoClick = document.querySelector('.itemAutoClick');
+const itemCursor = document.querySelector('.itemCursor');
 const itemGrandma = document.querySelector('.itemGrandma');
 let itemFarm,
     itemMine,
@@ -317,10 +318,55 @@ let itemFarm,
     itemIdle,
     itemCortex;
 
+
+let itemCursorCount = 1,
+    itemGrandmaCount = 0,
+    itemFarmCount = 0,
+    itemMineCount = 0,
+    itemFactoryCount = 0,
+    itemBankCount = 0,
+    itemTempleCount = 0,
+    itemWizardCount = 0,
+    itemShipCount = 0,
+    itemAlchemyCount = 0,
+    itemPortalCount = 0,
+    itemTimeCount = 0,
+    itemCondenserCount = 0,
+    itemPrismCount = 0,
+    itemChanceCount = 0,
+    itemEngineCount = 0,
+    itemJsconsoleCount = 0,
+    itemIdleCount = 0,
+    itemCortexCount = 0;
+
+let buildCountObject = {
+    "cursor": itemCursorCount,
+    "grandma": itemGrandmaCount,
+    "farm": itemFarmCount,
+    "mine": itemMineCount,
+    "factory": itemFactoryCount,
+    "bank": itemBankCount,
+    "temple": itemTempleCount,
+    "wizard": itemWizardCount,
+    "ship": itemShipCount,
+    "alchemy": itemAlchemyCount,
+    "portal": itemPortalCount,
+    "time": itemTimeCount,
+    "condenser": itemCondenserCount,
+    "prism": itemPrismCount,
+    "chance": itemChanceCount,
+    "engine": itemEngineCount,
+    "jsconsole": itemJsconsoleCount,
+    "idle": itemIdleCount,
+    "cortex": itemCortexCount
+}
+let buildCountDataArray = Object.keys(buildCountObject).map(val => buildCountObject[val]);
+
+
 function checkEnabledItems(){
     // Autoclick
-    if(instaCookieCount >= 15 && itemAutoClick.classList.contains('itemDisabled')){
-        itemAutoClick.classList.remove('itemDisabled');
+    if(instaCookieCount >= 15 && itemCursor.classList.contains('itemDisabled')){
+        itemCursor.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newFarmHtml);
         itemFarm = itemBx.querySelector('.itemFarm');
@@ -523,8 +569,31 @@ let jsconsolePrize = 71000000000000000000;
 let idlePrize = 12000000000000000000000;
 let cortexPrize = 1900000000000000000000000;
 
-let buildPrizes = [cursorPrize, grandmaPrize, farmPrize, minePrize, factoryPrize, bankPrize, templePrize, wizardPrize, shipPrize, alchemyPrize, portalPrize, timePrize, condenserPrize, prismPrize, chancePrize, enginePrize, jsconsolePrize, idlePrize, cortexPrize];
+let buildPrizesObject = {
+    "cursor": cursorPrize,
+    "grandma": grandmaPrize,
+    "farm": farmPrize,
+    "mine": minePrize,
+    "factory": factoryPrize,
+    "bank": bankPrize,
+    "temple": templePrize,
+    "wizard": wizardPrize,
+    "ship": shipPrize,
+    "alchemy": alchemyPrize,
+    "portal": portalPrize,
+    "time": timePrize,
+    "condenser": condenserPrize,
+    "prism": prismPrize,
+    "chance": chancePrize,
+    "engine": enginePrize,
+    "jsconsole": jsconsolePrize,
+    "idle": idlePrize,
+    "cortex": cortexPrize
+}
+let buildPrizesDataArray = Object.keys(buildPrizesObject).map(val => buildPrizesObject[val]);
 
+
+// Generate all buildings
 const newFarmHtml = generateNewBuilding("Farma", "Farm", farmPrize.toLocaleString('en-Us'), "Tady se z keksových semínek pěstují keksové rostliny.", "234.4", 3, -101);
 const newMineHtml = generateNewBuilding("Důl", "Mine", minePrize.toLocaleString('en-Us'), "Těží sušenkové těsto a čokoládové střípky.", "1,065", 4, -148);
 const newFactoryHtml = generateNewBuilding("Továrna", "Factory", factoryPrize.toLocaleString('en-Us'), "Produkuje velké množství keksů.", "5,893", 5, -196);
@@ -551,7 +620,10 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
                 <h4 class="item__name">???</h4>
                 <h4 class="item__name itmNameDis">${name}</h4>
                 <div class="item__info">
-                    <p class="info__prize prizeGreen"><img src="./res/img/money.png" alt="" class="prize__icon" draggable="false">${prize}</p>
+                    <p class="info__prize prizeGreen">
+                        <img src="./res/img/money.png" alt="" class="prize__icon" draggable="false">
+                        <span class="info__prizeText">${prize}</span>
+                    </p>
                 </div>
             </div>
             <h4 class="item__count"></h4>
@@ -657,9 +729,9 @@ function buyItemBuilding(e){
     
     let buildingIndex = buildingsArray.indexOf(building);
     
-    console.log(buildPrizes[buildingIndex]);
+    console.log(buildPrizesDataArray[buildingIndex]);
     
-    if(instaCookieCount >= buildPrizes[buildingIndex]){
+    if(instaCookieCount >= buildPrizesDataArray[buildingIndex]){
         console.log('just buy it (no, its not that simple there :()');
     }
     else{

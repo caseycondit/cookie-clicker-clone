@@ -797,7 +797,7 @@ h1,h2,h3,h4,h5,h6,p{
     border-left: 16px solid transparent;
     border-image: url("../img/wooden_line_y.png") 1% 100% repeat;
     background: linear-gradient(black -10%, transparent 18%, transparent 63%, black 107%);
-    padding: 50px 0 254px 0;
+    padding: 50px 0 238px 0;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -807,14 +807,10 @@ h1,h2,h3,h4,h5,h6,p{
     text-align: center;
     font-size: 28px;
     font-weight: 900;
-    border-bottom: 16px solid transparent;
-    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
     padding-bottom: 6px;
 }
 .store__upgrades{
     position: relative;
-    border-bottom: 16px solid transparent;
-    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
 }
 .store__upgrades::after{
     content: '';
@@ -825,7 +821,9 @@ h1,h2,h3,h4,h5,h6,p{
     top: 0;
     background: linear-gradient(180deg, rgba(0, 0, 0, 0.76) 5%, rgba(0, 0, 0, 0.36) 50%, rgba(0, 0, 0, 0.36) 50%, rgba(0, 0, 0, 0.76));
     pointer-events: none;
-    z-index: 9;
+    z-index: -2;
+    border-right: 12px solid transparent;
+    border-image: url("../img/wooden_line_y.png") 0% 100% repeat;
 }
 
 .store__title::before, .store__upgrades::before{
@@ -835,7 +833,9 @@ h1,h2,h3,h4,h5,h6,p{
     height: 16px;
     left: 0;
     bottom: -16px;
-    background: linear-gradient(90deg, black -4%, transparent 15%, transparent 84%, black);
+    background: linear-gradient(90deg, black -8%, transparent 35%, transparent 84%, black);
+    z-index: 2;
+    pointer-events: none;
 }
 .upgrade__info, .buy__info{
     position: absolute;
@@ -843,15 +843,26 @@ h1,h2,h3,h4,h5,h6,p{
     font-size: 13px;
     font-variant: small-caps;
     color: #f6dab8;
+    display: none;
+    z-index: 99;
 }
+.upgrade__info{
+    top: 1px;
+}
+.store__upgrades:hover .upgrade__info,
+.store__buy:hover .buy__info{
+    display: block;
+}
+
 .upgrade__container{
     display: flex;
     flex-direction: column;
     position: relative;
-    border-right: 12px solid transparent;
-    border-image: url("../img/wooden_line_y.png") 0% 100% repeat;
+    border-top: 16px solid transparent;
+    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
     height: 180px;
     overflow: hidden auto;
+    box-sizing: content-box;
 }
 .upgrade__container::before{
     content: '';
@@ -916,9 +927,11 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .store__buy{
     position: relative;
-    height: 100%;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
+    border-top: 16px solid transparent;
+    border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
 }
 .buy__selection{
     display: grid;
@@ -1046,6 +1059,7 @@ h1,h2,h3,h4,h5,h6,p{
     border-radius: 3px;
     border: 3px solid #929279;
     pointer-events: none;
+    z-index: 9999999;
 
     display: none;
 }
