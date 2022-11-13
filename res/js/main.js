@@ -195,9 +195,11 @@ let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
 clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
 let intervalsCount = 0;
+let intervalsCountArray = [];
 let cookieClickStep = 300;
 let remainingCookies = 0;
 let disableCookieInterval = false;
+let runningCookieInterval = false;
 
 cookie.addEventListener('mousedown', (e) => {
     cookie.style.animation = "cookieHoverOut 400ms linear forwards";
@@ -220,7 +222,10 @@ function cookieClickIncrease(){
     checkItemPrize();
 
     let intervalI = 0;
+    runningCookieInterval = true;
+
     intervalsCount++;
+    intervalsCountArray.push(intervalsCount);
 
     window['cookieAddInterval' + intervalsCount] = setInterval(() => {
         cookieCount += 1;
@@ -228,13 +233,22 @@ function cookieClickIncrease(){
         cookieCountText.innerText = cookieCount;
 
         intervalI++
-        if(intervalI === cookieClickStep) clearAllCookieIntervals(intervalsCount);
+        if(intervalI === cookieClickStep){
+            clearInterval(window['cookieAddInterval' + intervalsCountArray[0]]);
+            intervalsCountArray.shift();
+            disableCookieInterval = false;
+            if(intervalsCountArray.length === 0){
+                runningCookieInterval = false;
+            }
+        }
         if(disableCookieInterval === true){
             clearAllCookieIntervals(intervalsCount);
+            intervalsCountArray = [];
             disableCookieInterval = false;
 
             cookieCount += remainingCookies;
-            cookieCountText.innerText = cookieCount
+            remainingCookies = 0;
+            cookieCountText.innerText = cookieCount;
         }
     });
 }
@@ -244,6 +258,8 @@ function clearAllCookieIntervals(intervalIndex){
     for (let i = 1; i <= intervalIndex; i++) {
         clearInterval(window['cookieAddInterval' + i]);
     }
+
+    runningCookieInterval = false;
 }
 
 
@@ -701,7 +717,8 @@ function buyItemBuilding(e){
         // Cookie count
         decrementCookies(buildPrizesArr[buildingIndex]);
         checkItemPrize();
-        disableCookieInterval = true;
+
+        if(runningCookieInterval === true) disableCookieInterval = true;
 
         // Prize
         let minusCookies = Math.round(buildPrizesArr[buildingIndex] / 5);
