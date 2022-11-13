@@ -9,6 +9,43 @@ let totalCookies = 0;
 let cookieCount = 0;
 let instaCookieCount = 0;
 
+// FORMAT NUMBERS
+function formatNum(num, digits){
+    let lookup = [
+        { value: 1, symbol: ""},
+        { value: 1e6, symbol: " milion"},
+        { value: 1e9, symbol: " billion"},
+        { value: 1e12, symbol: " trillion"},
+        { value: 1e15, symbol: " quadrillion"},
+        { value: 1e18, symbol: " quantillion"},
+        { value: 1e21, symbol: " sextillion"},
+        { value: 1e24, symbol: " septillion"},
+        { value: 1e27, symbol: " octillion"},
+        { value: 1e30, symbol: " nonillion"},
+        { value: 1e33, symbol: " decillion"},
+        { value: 1e36, symbol: " undecillion"},
+        { value: 1e39, symbol: " duodecillion"},
+        { value: 1e42, symbol: " tredecillion"},
+        { value: 1e45, symbol: " quattuordecillion"},
+    ];
+
+    let rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+
+    let item = lookup.slice().reverse().find((item) => {
+        return num >= item.value;
+    });
+
+    if(num < 1e6){
+        return num.toLocaleString('en-Us');
+    }
+    else if(item){
+        return (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol;
+    }
+    else{
+        return "0";
+    }
+}
+
 
 // Cookie hover animation
 cookie.addEventListener('mouseenter', () => {
@@ -198,12 +235,13 @@ clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
 let intervalsCount = 0;
 let intervalsCountArray = [];
-let cookieClickStep = 300;
+let cookieClickStep = 50;
 let remainingCookies = 0;
+let remainingIntervalCount = 0;
 let disableCookieInterval = false;
 let runningCookieInterval = false;
 
-cookie.addEventListener('mousedown', (e) => {
+cookie.addEventListener('mousedown', () => {
     cookie.style.animation = "cookieHoverOut 400ms linear forwards";
     clickInSound.play();
 })
@@ -223,24 +261,46 @@ function cookieClickIncrease(){
     checkEnabledItems();
     checkItemPrize();
 
+    remainingIntervalCount++;
+
     let intervalI = 0;
+    let numDiff = 0;
     runningCookieInterval = true;
 
     intervalsCount++;
     intervalsCountArray.push(intervalsCount);
 
     window['cookieAddInterval' + intervalsCount] = setInterval(() => {
-        cookieCount += 1;
-        remainingCookies -= 1;
-        cookieCountText.innerText = cookieCount;
+        if(cookieClickStep < 10000){
+            cookieCount += 1;
+            remainingCookies -= 1;
 
-        intervalI++
-        if(intervalI === cookieClickStep){
+            intervalI++;
+        }
+        else{
+            let numberLength = cookieClickStep.toString().length;
+            let numberIncrement = Math.round(cookieClickStep / (numberLength * 100));
+
+            cookieCount += numberIncrement;
+            remainingCookies -= numberIncrement;
+            intervalI += numberIncrement;
+        }
+
+        cookieCountText.innerText = formatNum(cookieCount, 3);
+
+        if(intervalI >= cookieClickStep){
             clearInterval(window['cookieAddInterval' + intervalsCountArray[0]]);
+            
+            numDiff = intervalI % cookieClickStep;
+
             intervalsCountArray.shift();
             disableCookieInterval = false;
             if(intervalsCountArray.length === 0){
                 runningCookieInterval = false;
+
+                cookieCount -= remainingIntervalCount * numDiff;
+
+                cookieCountText.innerText = formatNum(cookieCount, 3);
             }
         }
         if(disableCookieInterval === true){
@@ -250,7 +310,8 @@ function cookieClickIncrease(){
 
             cookieCount += remainingCookies;
             remainingCookies = 0;
-            cookieCountText.innerText = cookieCount;
+            cookieCountText.innerText = formatNum(cookieCount, 3);
+            console.log(cookieCount);
         }
     });
 }
@@ -272,7 +333,7 @@ function cookieClickEffect(e){
     let topPos = e.pageY;
 
     let newP = document.createElement('p');
-    newP.innerText = `+${cookieClickStep}`;
+    newP.innerText = `+${formatNum(cookieClickStep, 3)}`;
     newP.classList.add('floatingCookieEffect');
 
     let randomPLeft = Math.floor(Math.random() * ((leftPos + 2) - (leftPos - 2) + 1) + (leftPos - 2))
@@ -772,7 +833,7 @@ function decrementCookies(cookies){
     cookieCount -= cookies;
     instaCookieCount -= cookies;
 
-    cookieCountText.innerText = cookieCount;
+    cookieCountText.innerText = formatNum(cookieCount, 3);
 }
 
 
@@ -957,7 +1018,7 @@ function setBuildingInterval(buildingNameUpper, buildingIndex, cookieClickPerSec
         buildCookieCount[buildingIndex] += 1;
 
         infoProducesCookies.innerText = buildCookieCount[buildingIndex];
-        cookieCountText.innerText = instaCookieCount;
+        cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
         checkItemPrize();
 
