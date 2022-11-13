@@ -369,6 +369,7 @@ h1,h2,h3,h4,h5,h6,p{
 
     border-top: 16px solid transparent;
     border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
+    padding-bottom: 121px;
 }
 .middle__buildings::-webkit-scrollbar{
     width: 8px;
@@ -658,7 +659,7 @@ h1,h2,h3,h4,h5,h6,p{
 
 /* building - time */
 .build__timeContainer{
-    transform: translateX(-84px);
+    transform: translateX(-56px);
 }
 .build__timeContainer img{
     width: 64px;
@@ -788,6 +789,77 @@ h1,h2,h3,h4,h5,h6,p{
     transform: translateY(-13%);
 }
 
+/* building -  idle*/
+.build__idleContainer{
+    transform: translateX(-38px);
+    overflow: hidden;
+}
+.build__idleContainer img{
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    transform: translateY(-50%);
+    object-fit: none;
+    z-index: var(--idleNum);
+}
+.build__idleContainer img:nth-child(3n - 2){
+   top: 50%;
+   margin-left: calc(var(--idleNum) * 35px);
+}
+.build__idleContainer img:nth-child(3n - 1){
+    top: 42%;
+    margin-left: calc(var(--idleNum) * 33px);
+}
+.build__idleContainer img:nth-child(3n){
+    top: 4%;
+    margin-left: calc(var(--idleNum) * 32px);
+}
+.build__idleContainer img:nth-child(4n - 3){
+    object-position: -128px 0;
+}
+.build__idleContainer img:nth-child(4n - 2){
+    object-position: -69px 0;
+}
+.build__idleContainer img:nth-child(4n - 1){
+    object-position: 0px 0;
+}
+.build__idleContainer img:nth-child(4n){
+    object-position: -189px 0;
+}
+
+/* building - cortex */
+.build__cortexContainer{
+    transform: translateX(-42px);
+    overflow: hidden;
+}
+.build__cortexContainer img{
+    width: 64px;
+    height: 64px;
+    position: absolute;
+    transform: translateY(-50%);
+    object-fit: none;
+    margin-left: calc(var(--cortexNum) * 44px);
+}
+.build__cortexContainer img:nth-child(5n - 4){
+    top: 30%;
+    object-position: -128px 0;
+}
+.build__cortexContainer img:nth-child(5n - 3){
+    top: 75%;
+    object-position: -195px 0;
+}
+.build__cortexContainer img:nth-child(5n - 2){
+    top: 12%;
+    object-position: -195px 0;
+}
+.build__cortexContainer img:nth-child(5n - 1){
+    top: 58%;
+    object-position: -128px 0;
+}
+.build__cortexContainer img:nth-child(5n){
+    top: 37%;
+    object-position: -62px 0;
+}
 
 
 

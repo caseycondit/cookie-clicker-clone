@@ -1,4 +1,5 @@
 import { bakeryNames } from "./bakeryNames.js";
+import { grandmaNames } from "./grandmaNames.js";
 
 
 const cookie = document.querySelector('.cookie__img');
@@ -106,6 +107,7 @@ upgrades.forEach((upgrade) => {
         upgradeDesc.style.display = "none";
     })
 })
+
 
 // BAKERY NAME - GENERATE AND CHANGE
 const bakeryNameBx = document.querySelector('.cookie__name');
@@ -717,6 +719,7 @@ function buyItemBuilding(e){
         // Cookie count
         decrementCookies(buildPrizesArr[buildingIndex]);
         checkItemPrize();
+        buyBuilding(buildingsArray[buildingIndex], buildCountArr[buildingIndex]);
 
         if(runningCookieInterval === true) disableCookieInterval = true;
 
@@ -761,4 +764,92 @@ function checkItemPrize(){
             building.classList.remove('noEnoughtCookies');
         }
     })
+}
+
+
+// BUY BUILDING - ADD UTILS
+const middleBuildingsBx = document.querySelector('.middle__buildings');
+
+// Generate random age for grandmas
+function generateRandomGrandma(){
+    let minAge = 80;
+    let maxAge = 115;
+    let randomAge = Math.floor(Math.random() * (maxAge - minAge)) + minAge;
+
+    let randomGrandmaName = grandmaNames[(Math.random() * grandmaNames.length) | 0];
+    
+    return {
+        age: randomAge,
+        name: randomGrandmaName
+    };
+}
+
+function buyBuilding(building, buildingCount){
+    let buildingNameUpper = building.classList[1].replace('item', '');
+    let buildingNameLow = building.classList[1].replace('item', '').toLowerCase();
+
+    // Only cursor
+    if(buildingNameLow === "cursor"){
+        let currentCursor = document.querySelector(`.cookie__upgrade.id${buildingCount}`);
+
+        currentCursor.style.display = "block";
+    }
+
+    // Create buildings background - only grandmas
+    else if(buildingCount === 0 && buildingNameLow === "grandma"){
+        let grandmaInfo = generateRandomGrandma();
+
+        let grandmaBx = `
+            <div class="buildBx buildGrandma" style="background-image: url('./res/img/buildings/grandmaBg.png');">
+                <div class="buildContainer build__grandmaContainer">
+                    <div class="grandmaImgBx" style="--graNum: 1; --graName: '${grandmaInfo.name}, věk ${grandmaInfo.age}'">
+                        <img src="./res/img/buildings/grandma.png" alt="" draggable="false">
+                    </div>
+                </div>
+            </div>
+        `;
+
+        middleBuildingsBx.insertAdjacentHTML('beforeend', grandmaBx);
+    }
+    
+    // Create buildings background - not cursor and grandmas
+    else if(buildingCount === 0){
+        let buildingBx = `
+            <div class="buildBx build${buildingNameUpper}" style="background-image: url('./res/img/buildings/${buildingNameLow}Bg.png');">
+                <div class="buildContainer build__${buildingNameLow}Container">
+                    <img src="./res/img/buildings/${buildingNameLow}.png" alt="" style="--${buildingNameLow}Num: 1;" draggable="false">
+                </div>
+            </div>
+        `;
+
+        middleBuildingsBx.insertAdjacentHTML('beforeend', buildingBx);
+    }
+
+    // IF THERE IS BUILDING BACKGROUND - just add building
+    // Add building - Only grandmas
+    else if(buildingCount > 0 && buildingNameLow === "grandma"){
+        let grandmaBuildingBx = middleBuildingsBx.querySelector('.buildGrandma .build__grandmaContainer');
+        let grandmaInfo = generateRandomGrandma();
+
+        let newGrandma = `
+            <div class="grandmaImgBx" style="--graNum: ${buildingCount + 1}; --graName: '${grandmaInfo.name}, věk ${grandmaInfo.age}'">
+                <img src="./res/img/buildings/grandma.png" alt="" draggable="false">
+            </div>
+        `;
+
+        grandmaBuildingBx.insertAdjacentHTML('beforeend', newGrandma);
+    }
+
+
+    // Add building - not cursor and grandmas
+    else if(buildingCount > 0){
+        let currentBuildingBgBx = middleBuildingsBx.querySelector(`.buildBx.build${buildingNameUpper}`);
+        let currentBuildingBg = currentBuildingBgBx.querySelector('.buildContainer');
+
+        let newBuilding = `
+            <img src="./res/img/buildings/${buildingNameLow}.png" alt="" style="--${buildingNameLow}Num: ${buildingCount + 1};" draggable="false">;
+        `;
+
+        currentBuildingBg.insertAdjacentHTML('beforeend', newBuilding);
+    }
 }
