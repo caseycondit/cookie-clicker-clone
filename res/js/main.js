@@ -383,6 +383,31 @@ let itemCursorCount = 0,
 let buildCountArr = [itemCursorCount, itemGrandmaCount, itemFarmCount, itemMineCount, itemFactoryCount, itemBankCount, itemTempleCount, itemWizardCount, itemShipCount, itemAlchemyCount, itemPortalCount, itemTimeCount, itemCondenserCount, itemPrismCount, itemChanceCount, itemEngineCount, itemJsconsoleCount, itemIdleCount, itemCortexCount];
 
 
+// Total cookies produces by each building
+let itemCursorCookieCount = 0,
+    itemGrandmaCookieCount = 0,
+    itemFarmCookieCount = 0,
+    itemMineCookieCount = 0,
+    itemFactoryCookieCount = 0,
+    itemBankCookieCount = 0,
+    itemTempleCookieCount = 0,
+    itemWizardCookieCount = 0,
+    itemShipCookieCount = 0,
+    itemAlchemyCookieCount = 0,
+    itemPortalCookieCount = 0,
+    itemTimeCookieCount = 0,
+    itemCondenserCookieCount = 0,
+    itemPrismCookieCount = 0,
+    itemChanceCookieCount = 0,
+    itemEngineCookieCount = 0,
+    itemJsconsoleCookieCount = 0,
+    itemIdleCookieCount = 0,
+    itemCortexCookieCount = 0;
+
+let buildCookieCount = [itemCursorCookieCount, itemGrandmaCookieCount, itemFarmCookieCount, itemMineCookieCount, itemFactoryCookieCount, itemBankCookieCount, itemTempleCookieCount, itemWizardCookieCount, itemShipCookieCount, itemAlchemyCookieCount, itemPortalCookieCount, itemTimeCookieCount, itemCondenserCookieCount, itemPrismCookieCount, itemChanceCookieCount, itemEngineCookieCount, itemJsconsoleCookieCount, itemIdleCookieCount, itemCortexCookieCount];
+
+
+
 function checkEnabledItems(){
     // Autoclick
     if(instaCookieCount >= 15 && itemCursor.classList.contains('itemDisabled')){
@@ -653,7 +678,7 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
                         (<span class="infoProduction whiteT">100</span><span class="whiteT">%</span> z celkových K/s)
                     </li>
                     <li class="desc__info">
-                        <span class="infoProduces whiteT">4,277</span>
+                        <span class="infoProduces whiteT">0</span>
                         <span class="whiteT">keksy</span>
                         dosud vyprodukováno
                     </li>
@@ -719,7 +744,7 @@ function buyItemBuilding(e){
         // Cookie count
         decrementCookies(buildPrizesArr[buildingIndex]);
         checkItemPrize();
-        buyBuilding(buildingsArray[buildingIndex], buildCountArr[buildingIndex]);
+        buyBuilding(buildingsArray[buildingIndex], buildCountArr[buildingIndex], buildingIndex);
 
         if(runningCookieInterval === true) disableCookieInterval = true;
 
@@ -784,7 +809,7 @@ function generateRandomGrandma(){
     };
 }
 
-function buyBuilding(building, buildingCount){
+function buyBuilding(building, buildingCount, buildingIndex){
     let buildingNameUpper = building.classList[1].replace('item', '');
     let buildingNameLow = building.classList[1].replace('item', '').toLowerCase();
 
@@ -793,6 +818,8 @@ function buyBuilding(building, buildingCount){
         let currentCursor = document.querySelector(`.cookie__upgrade.id${buildingCount}`);
 
         currentCursor.style.display = "block";
+
+        setBuildingInterval(buildingNameUpper, buildingIndex, 0.1);
     }
 
     // Create buildings background - only grandmas
@@ -853,3 +880,121 @@ function buyBuilding(building, buildingCount){
         currentBuildingBg.insertAdjacentHTML('beforeend', newBuilding);
     }
 }
+
+
+// BUILDING INTERVALS
+// Variables - check if there is interval
+let runningCursorInterval = false,
+    runningGrandmaInterval = false,
+    runningFarmInterval = false,
+    runningMineInterval = false,
+    runningFactoryInterval = false,
+    runningBankInterval = false,
+    runningTempleInterval = false,
+    runningWizardInterval = false,
+    runningShipInterval = false,
+    runningAlchemyInterval = false,
+    runningPortalInterval = false,
+    runningTimeInterval = false,
+    runningCondenserInterval = false,
+    runningPrismInterval = false,
+    runningChanceInterval = false,
+    runningEngineInterval = false,
+    runningJsconsoleInterval = false,
+    runningIdleInterval = false,
+    runningCortexInterval = false;
+
+let runningIntervalsArr = [runningCursorInterval, runningGrandmaInterval, runningFarmInterval, runningMineInterval, runningFactoryInterval, runningBankInterval, runningTempleInterval, runningWizardInterval, runningShipInterval, runningAlchemyInterval, runningPortalInterval, runningTimeInterval, runningCondenserInterval, runningPrismInterval, runningChanceInterval, runningEngineInterval, runningJsconsoleInterval, runningIdleInterval, runningCortexInterval];
+
+// Variables for each building interval
+let cursorInterval = false,
+    grandmaInterval = false,
+    farmInterval = false,
+    mineInterval = false,
+    factoryInterval = false,
+    bankInterval = false,
+    templeInterval = false,
+    wizardInterval = false,
+    shipInterval = false,
+    alchemyInterval = false,
+    portalInterval = false,
+    timeInterval = false,
+    condenserInterval = false,
+    prismInterval = false,
+    chanceInterval = false,
+    engineInterval = false,
+    jsconsoleInterval = false,
+    idleInterval = false,
+    cortexInterval = false;
+
+let buildingIntervals = [cursorInterval, grandmaInterval, farmInterval, mineInterval, factoryInterval, bankInterval, templeInterval, wizardInterval, shipInterval, alchemyInterval, portalInterval, timeInterval, condenserInterval, prismInterval, chanceInterval, engineInterval, jsconsoleInterval, idleInterval, cortexInterval];
+
+// SET BUILDINGS INTERVAL
+function setBuildingInterval(buildingNameUpper, buildingIndex, cookieClickPerSec){
+    let infoItemCount = document.querySelector(`.item${buildingNameUpper} .infoCount`);
+    let infoPerSec = document.querySelector(`.item${buildingNameUpper} .infoPerSec`);
+    let infoProducesCookies = document.querySelector(`.item${buildingNameUpper} .infoProduces`);
+
+    let itemBuildCount = (buildCountArr[buildingIndex] + 1);
+
+    infoItemCount.innerText = itemBuildCount;
+    infoPerSec.innerText = (itemBuildCount * cookieClickPerSec).toFixed(1);
+    
+    // Show information
+    buildings()[buildingIndex].classList.add('descInfoEnabled');
+
+    // Cookie incrementing
+    if(runningIntervalsArr[buildingIndex] === true){
+        clearInterval(buildingIntervals[buildingIndex]);
+    }
+
+    runningIntervalsArr[buildingIndex] = true;
+
+    buildingIntervals[buildingIndex] = setInterval(() => {
+        totalCookies += 1;
+        cookieCount += 1;
+        instaCookieCount += 1;
+        buildCookieCount[buildingIndex] += 1;
+
+        infoProducesCookies.innerText = buildCookieCount[buildingIndex];
+        cookieCountText.innerText = instaCookieCount;
+
+        checkItemPrize();
+
+    }, ((cookieClickPerSec * 100000) / itemBuildCount));
+}
+
+// function setCursorInterval(){
+//     // name, index
+
+//     let infoItemCount = document.querySelector('.itemCursor .infoCount');
+//     let infoPerSec = document.querySelector('.itemCursor .infoPerSec');
+//     let infoProducesCookies = document.querySelector('.itemCursor .infoProduces');
+
+//     let itemBuildCount = (buildCountArr[itemCursorCount] + 1);
+
+//     infoItemCount.innerText = itemBuildCount;
+//     infoPerSec.innerText = (itemBuildCount / 10);
+    
+//     // Show information
+//     buildings()[0].classList.add('descInfoEnabled');
+
+//     // Cookie incrementing
+//     if(runningCursorInterval === true){
+//         clearInterval(cursorInterval);
+//     }
+
+//     runningCursorInterval = true;
+
+//     cursorInterval = setInterval(() => {
+//         totalCookies += 1;
+//         cookieCount += 1;
+//         instaCookieCount += 1;
+//         itemCursorCookieCount += 1;
+
+//         infoProducesCookies.innerText = itemCursorCookieCount
+//         cookieCountText.innerText = instaCookieCount;
+
+//         checkItemPrize();
+//     }, (10000 / itemBuildCount));
+// }
