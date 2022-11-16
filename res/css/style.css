@@ -549,12 +549,12 @@ h1,h2,h3,h4,h5,h6,p{
 }
 
 /* building - factory */
-.build__factContainer{
+.build__factoryContainer{
     display: flex;
     flex-direction: row;
     transform: translate(2px, 9px);
 }
-.build__factContainer img{
+.build__factoryContainer img{
     width: 64px;
     height: 64px;
     margin-left: -1px;

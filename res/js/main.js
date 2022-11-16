@@ -235,7 +235,7 @@ clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
 let intervalsCount = 0;
 let intervalsCountArray = [];
-let cookieClickStep = 50;
+let cookieClickStep = 50000897847494;
 let remainingCookies = 0;
 let remainingIntervalCount = 0;
 let disableCookieInterval = false;
@@ -311,7 +311,7 @@ function cookieClickIncrease(){
             cookieCount += remainingCookies;
             remainingCookies = 0;
             cookieCountText.innerText = formatNum(cookieCount, 3);
-            console.log(cookieCount);
+            // console.log(cookieCount);
         }
     });
 }
@@ -880,7 +880,7 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         currentCursor.style.display = "block";
 
-        setBuildingInterval(buildingNameUpper, buildingIndex, 0.1);
+        setBuildingInterval(buildingNameUpper, buildingIndex);
     }
 
     // Create buildings background - only grandmas
@@ -898,6 +898,8 @@ function buyBuilding(building, buildingCount, buildingIndex){
         `;
 
         middleBuildingsBx.insertAdjacentHTML('beforeend', grandmaBx);
+
+        setBuildingInterval(buildingNameUpper, buildingIndex);
     }
     
     // Create buildings background - not cursor and grandmas
@@ -911,6 +913,8 @@ function buyBuilding(building, buildingCount, buildingIndex){
         `;
 
         middleBuildingsBx.insertAdjacentHTML('beforeend', buildingBx);
+
+        setBuildingInterval(buildingNameUpper, buildingIndex);
     }
 
     // IF THERE IS BUILDING BACKGROUND - just add building
@@ -926,6 +930,8 @@ function buyBuilding(building, buildingCount, buildingIndex){
         `;
 
         grandmaBuildingBx.insertAdjacentHTML('beforeend', newGrandma);
+
+        setBuildingInterval(buildingNameUpper, buildingIndex);
     }
 
 
@@ -935,10 +941,12 @@ function buyBuilding(building, buildingCount, buildingIndex){
         let currentBuildingBg = currentBuildingBgBx.querySelector('.buildContainer');
 
         let newBuilding = `
-            <img src="./res/img/buildings/${buildingNameLow}.png" alt="" style="--${buildingNameLow}Num: ${buildingCount + 1};" draggable="false">;
+            <img src="./res/img/buildings/${buildingNameLow}.png" alt="" style="--${buildingNameLow}Num: ${buildingCount + 1};" draggable="false">
         `;
 
         currentBuildingBg.insertAdjacentHTML('beforeend', newBuilding);
+
+        setBuildingInterval(buildingNameUpper, buildingIndex);
     }
 }
 
@@ -990,8 +998,35 @@ let cursorInterval = false,
 
 let buildingIntervals = [cursorInterval, grandmaInterval, farmInterval, mineInterval, factoryInterval, bankInterval, templeInterval, wizardInterval, shipInterval, alchemyInterval, portalInterval, timeInterval, condenserInterval, prismInterval, chanceInterval, engineInterval, jsconsoleInterval, idleInterval, cortexInterval];
 
+// Variables for buildings - cookies per second
+let cursorPerSecond = 0.1,
+    grandmaPerSecond = 1,
+    farmPerSecond = 8,
+    minePerSecond = 47,
+    factoryPerSecond = 260,
+    bankPerSecond = 1400,
+    templePerSecond = 7800,
+    wizardPerSecond = 44000,
+    shipPerSecond = 260000,
+    alchemyPerSecond = 1600000,
+    portalPerSecond = 10000000,
+    timePerSecond = 65000000,
+    condenserPerSecond = 430000000,
+    prismPerSecond = 2900000000,
+    chancePerSecond = 21000000000,
+    enginePerSecond = 150000000000,
+    jsconsolePerSecond = 1100000000000,
+    idlePerSecond = 8300000000000,
+    cortexPerSecond = 64000000000000;
+
+let buildingsPerSecond = [cursorPerSecond, grandmaPerSecond, farmPerSecond, minePerSecond, factoryPerSecond, bankPerSecond, templePerSecond, wizardPerSecond, shipPerSecond, alchemyPerSecond, portalPerSecond, timePerSecond, condenserPerSecond, prismPerSecond, chancePerSecond, enginePerSecond, jsconsolePerSecond, idlePerSecond, cortexPerSecond];
+
+
+
 // SET BUILDINGS INTERVAL
-function setBuildingInterval(buildingNameUpper, buildingIndex, cookieClickPerSec){
+function setBuildingInterval(buildingNameUpper, buildingIndex){
+    // console.log(buildingNameUpper, buildingIndex);
+
     let infoItemCount = document.querySelector(`.item${buildingNameUpper} .infoCount`);
     let infoPerSec = document.querySelector(`.item${buildingNameUpper} .infoPerSec`);
     let infoProducesCookies = document.querySelector(`.item${buildingNameUpper} .infoProduces`);
@@ -999,7 +1034,7 @@ function setBuildingInterval(buildingNameUpper, buildingIndex, cookieClickPerSec
     let itemBuildCount = (buildCountArr[buildingIndex] + 1);
 
     infoItemCount.innerText = itemBuildCount;
-    infoPerSec.innerText = (itemBuildCount * cookieClickPerSec).toFixed(1);
+    infoPerSec.innerText = (itemBuildCount * buildingsPerSecond[buildingIndex]).toFixed(1);
     
     // Show information
     buildings()[buildingIndex].classList.add('descInfoEnabled');
@@ -1011,51 +1046,80 @@ function setBuildingInterval(buildingNameUpper, buildingIndex, cookieClickPerSec
 
     runningIntervalsArr[buildingIndex] = true;
 
-    buildingIntervals[buildingIndex] = setInterval(() => {
-        totalCookies += 1;
-        cookieCount += 1;
-        instaCookieCount += 1;
-        buildCookieCount[buildingIndex] += 1;
 
-        infoProducesCookies.innerText = buildCookieCount[buildingIndex];
-        cookieCountText.innerText = formatNum(instaCookieCount, 3);
-
-        checkItemPrize();
-
-    }, ((cookieClickPerSec * 100000) / itemBuildCount));
-}
-
-// function setCursorInterval(){
-//     // name, index
-
-//     let infoItemCount = document.querySelector('.itemCursor .infoCount');
-//     let infoPerSec = document.querySelector('.itemCursor .infoPerSec');
-//     let infoProducesCookies = document.querySelector('.itemCursor .infoProduces');
-
-//     let itemBuildCount = (buildCountArr[itemCursorCount] + 1);
-
-//     infoItemCount.innerText = itemBuildCount;
-//     infoPerSec.innerText = (itemBuildCount / 10);
+    if((1000 / (Math.round(buildingsPerSecond[buildingIndex] * itemBuildCount * 10) / 10)) > 6){
+        buildingIntervals[buildingIndex] = setInterval(() => {
+            totalCookies += 1;
+            cookieCount += 1;
+            instaCookieCount += 1;
+            buildCookieCount[buildingIndex] += 1;
     
-//     // Show information
-//     buildings()[0].classList.add('descInfoEnabled');
+            infoProducesCookies.innerText = formatNum(buildCookieCount[buildingIndex], 3);
+            cookieCountText.innerText = formatNum(instaCookieCount, 3);
+    
+            checkItemPrize();
+        }, (1000 / (Math.round(buildingsPerSecond[buildingIndex] * itemBuildCount * 10) / 10)));
+    }
+    else{
+        let startNum = buildingsPerSecond[buildingIndex] * itemBuildCount;
 
-//     // Cookie incrementing
-//     if(runningCursorInterval === true){
-//         clearInterval(cursorInterval);
-//     }
+        let arr = startNum.toString().split("");
+        let lastNonzero;
 
-//     runningCursorInterval = true;
+        arr.forEach((num, index) => {
+            if(num != 0){
+                lastNonzero = index;
+            }
+        })
 
-//     cursorInterval = setInterval(() => {
-//         totalCookies += 1;
-//         cookieCount += 1;
-//         instaCookieCount += 1;
-//         itemCursorCookieCount += 1;
+        let newNumArr = arr;
+        let finalNumber = '';
+        newNumArr.length = (lastNonzero + 1);
 
-//         infoProducesCookies.innerText = itemCursorCookieCount
-//         cookieCountText.innerText = instaCookieCount;
+        newNumArr.forEach((newNum) => {
+            finalNumber += newNum;
+        })
 
-//         checkItemPrize();
-//     }, (10000 / itemBuildCount));
-// }
+        let smallerStartNum = parseInt(finalNumber);
+
+        if((1000 / (startNum / smallerStartNum)) > 6){
+            cursorInterval = setInterval(() => {
+                totalCookies += smallerStartNum;
+                cookieCount += smallerStartNum;
+                instaCookieCount += smallerStartNum;
+                itemCursorCookieCount += smallerStartNum;
+
+                infoProducesCookies.innerText = formatNum(itemCursorCookieCount, 3);
+                cookieCountText.innerText = formatNum(instaCookieCount, 3);
+
+                checkItemPrize();
+            }, (1000 / (startNum / smallerStartNum)));
+        }
+        else{
+            let whileActive = false;
+            let i = 0;
+
+            while(whileActive === false){
+                i++;
+
+                smallerStartNum *= i;
+
+                if((1000 / (startNum / smallerStartNum)) > 7){
+                    whileActive = true;
+                }
+            }
+
+            cursorInterval = setInterval(() => {
+                totalCookies += smallerStartNum;
+                cookieCount += smallerStartNum;
+                instaCookieCount += smallerStartNum;
+                itemCursorCookieCount += smallerStartNum;
+
+                infoProducesCookies.innerText = formatNum(itemCursorCookieCount, 3);
+                cookieCountText.innerText = formatNum(instaCookieCount, 3);
+
+                checkItemPrize();
+            }, (1000 / (Math.round(startNum / smallerStartNum))));
+        }
+    }
+}
