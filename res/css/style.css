@@ -454,7 +454,7 @@ h1,h2,h3,h4,h5,h6,p{
     display: block;
     position: absolute;
     top: -26px;
-    right: -40px;
+    left: 0;
     width: max-content;
     font-size: 12px;
     background-color: #000000b8;
@@ -501,6 +501,45 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .grandmaImgBx:hover::after{
     visibility: visible;
+}
+.grandmaImgBx:hover img{
+    animation: moovingGrandmaHover 700ms linear forwards infinite;
+}
+
+@keyframes moovingGrandmaHover {
+    0%{
+        transform: translate(0, 0);
+    }
+    19%{
+        transform: translate(0, 0);
+    }
+    20%{
+        transform: translate(-3px, 0);
+    }
+    39%{
+        transform: translate(-3px, 0);
+    }
+    40%{
+        transform: translate(2px, 3px);
+    }
+    59%{
+        transform: translate(2px, 3px);
+    }
+    60%{
+        transform: translate(0, -1px);
+    }
+    79%{
+        transform: translate(0, -1px);
+    }
+    80%{
+        transform: translate(4px, -3px);
+    }
+    99%{
+        transform: translate(4px, -3px);
+    }
+    100%{
+        transform: translate(0, 0);
+    }
 }
 
 /* building - farm */
@@ -596,15 +635,15 @@ h1,h2,h3,h4,h5,h6,p{
 .build__wizardContainer img{
     position: absolute;
     transform: translateY(-50%);
-    z-index: var(--wizNum);
+    z-index: var(--wizardNum);
 }
 .build__wizardContainer img:nth-child(2n - 1){
     top: 52%;
-    margin-left: calc(var(--wizNum) * 27px);
+    margin-left: calc(var(--wizardNum) * 27px);
 }
 .build__wizardContainer img:nth-child(2n){
     top: 66%;
-    margin-left: calc(var(--wizNum) * 26px);
+    margin-left: calc(var(--wizardNum) * 26px);
 }
 
 /* building - ship */
@@ -629,13 +668,13 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .build__alchemyContainer img:nth-child(2n - 1){
     top: 30%;
-    z-index: calc(var(--alchNum) + 1);
-    margin-left: calc(var(--alchNum) * 36px);
+    z-index: calc(var(--alchemyNum) + 1);
+    margin-left: calc(var(--alchemyNum) * 36px);
 }
 .build__alchemyContainer img:nth-child(2n){
     top: 40%;
-    z-index: calc(var(--alchNum) + 3);
-    margin-left: calc(var(--alchNum) * 36px - 16px);
+    z-index: calc(var(--alchemyNum) + 3);
+    margin-left: calc(var(--alchemyNum) * 36px - 16px);
 }
 
 /* Building - portal */
@@ -667,11 +706,11 @@ h1,h2,h3,h4,h5,h6,p{
     position: absolute;
     transform: translateY(-50%);
 }
-.build__timeContainer img:nth-last-child(2n - 1){
+.build__timeContainer img:nth-child(2n - 1){
     top: 40%;
     margin-left: calc(var(--timeNum) * 68px - 6px);
 }
-.build__timeContainer img:nth-last-child(2n){
+.build__timeContainer img:nth-child(2n){
     top: 55%;
     margin-left: calc(var(--timeNum) * 68px);
 }
@@ -685,7 +724,7 @@ h1,h2,h3,h4,h5,h6,p{
     height: 64px;
     position: absolute;
     transform: translateY(-50%);
-    margin-left: calc(var(--condNum) * 64px);
+    margin-left: calc(var(--condenserNum) * 64px);
 }
 .build__condenserContainer img:nth-child(3n - 2){
     top: 50%;
@@ -1076,7 +1115,7 @@ h1,h2,h3,h4,h5,h6,p{
 .item__textBx{
     display: flex;
     flex-direction: column;
-    grid-column: 2;
+    grid-column: 2/-1;
     grid-row: 1;
 }
 .item__name{
@@ -1520,16 +1559,22 @@ h1,h2,h3,h4,h5,h6,p{
     z-index: 99999999999;
 }
 
-/* testing animated increasing number */
-/* @property --num {
-    syntax: "<integer>";
-    initial-value: 0;
-    inherits: false;
+/* Smaller font size of buildings name if the name is too long */
+.buy__item.itemAlchemy .item__name{
+    font-size: 18px;
+    margin-bottom: 3px;
 }
-.cookie__count{
-    transition: --num 500ms;
-    counter-set: num var(--num);
+.buy__item.itemCondenser .item__name{
+    font-size: 17px;
+    margin-bottom: 4px;
 }
-.cookie__count::after{
-    content: counter(num);
-} */
+.buy__item.itemEngine .item__name{
+    font-size: 26px;
+}
+.buy__item.itemJsconsole .item__name{
+    font-size: 24px;
+    margin-bottom: 1px;
+}
+.buy__item.itemCortex .item__name{
+    font-size: 26px;
+}

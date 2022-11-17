@@ -235,7 +235,7 @@ clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
 let intervalsCount = 0;
 let intervalsCountArray = [];
-let cookieClickStep = 50000897847494;
+let cookieClickStep = 500008978474455465456156416594;
 let remainingCookies = 0;
 let remainingIntervalCount = 0;
 let disableCookieInterval = false;
@@ -679,23 +679,23 @@ let buildPrizesArr = [cursorPrize, grandmaPrize, farmPrize, minePrize, factoryPr
 
 
 // Generate all buildings
-const newFarmHtml = generateNewBuilding("Farma", "Farm", farmPrize.toLocaleString('en-Us'), "Tady se z keksových semínek pěstují keksové rostliny.", "234.4", 3, -101);
-const newMineHtml = generateNewBuilding("Důl", "Mine", minePrize.toLocaleString('en-Us'), "Těží sušenkové těsto a čokoládové střípky.", "1,065", 4, -148);
-const newFactoryHtml = generateNewBuilding("Továrna", "Factory", factoryPrize.toLocaleString('en-Us'), "Produkuje velké množství keksů.", "5,893", 5, -196);
-const newBankHtml = generateNewBuilding("Banka", "Bank", bankPrize.toLocaleString('de-De'), "Generuje keksy z úroku.", "31,733", 6, -726);
-const newTempleHtml = generateNewBuilding("Chrám", "Temple", templePrize.toLocaleString('de-De'), "Plné vzácné, starodávné čokolády.", "176,802", 7, -774);
-const newWizardHtml = generateNewBuilding("Čarodějná věž", "Wizard", wizardPrize.toLocaleString('de-De'), "Vyvolává keksy pomocí kouzel.", "997,347", 8, -821);
-const newShipHtml = generateNewBuilding("Dodávka", "Ship", shipPrize.toLocaleString('de-De'), "Přiváží čerstvé keksy z keksové planety.", "2.947 milion", 9, -244);
-const newAlchemyHtml = generateNewBuilding("Alchymistická laboratoř", "Alchemy", alchemyPrize.toLocaleString('de-De'), "Přetváří zlato na keksy.", "36.267 milion", 10, -292);
-const newPortalHtml = generateNewBuilding("Portál", "Portal", portalPrize.toLocaleString('de-De'), "Otevírá brány do Keksmíru.", "113.335 milion", 11, -340);
-const newTimeHtml = generateNewBuilding("Stroj času", "Time", timePrize.toLocaleString('de-De'), "Přinášejte keksy z minulosti, které ještě nikdo nesnědl.", "736.677 milion", 12, -387);
-const newCondenserHtml = generateNewBuilding("Antihmotový kondenzátor", "Condenser", condenserPrize.toLocaleString('de-De'), "Kondenzuje antihmotu ve vesmíru na keksy.", "4.873 bilion", 13, -628);
-const newPrismHtml = generateNewBuilding("Prizma", "Prism", prismPrize.toLocaleString('de-De'), "Samotné světlo přeměňuje na keksy.", "32.867", 14, -674);
-const newChanceHtml = generateNewBuilding("Šancovač", "Chance", chancePrize.toLocaleString('de-De'), "Generuje keksy jen tak z ničeho, čistě na bázi štěstí.", "238.003 bilion", 15, -914);
-const newEngineHtml = generateNewBuilding("Fraktální motor", "Engine", enginePrize.toLocaleString('de-De'), "Přeměňuje keksy na ještě více keksů.", "1.7 trillion", 16, -966);
-const newJsconsoleHtml = generateNewBuilding("Konzole javascript", "Jsconsole", jsconsolePrize.toLocaleString('de-De'), "Vytváří keksy přímo v kódu, ve kterém je psána tato hra.", "6.233 trillion", 17, -1541);
-const newIdleHtml = generateNewBuilding("Nečinný vesmír", "Idle", idlePrize.toLocaleString('de-De'), "Vedle našeho vesmíru existuje i několik dalších, nečinných vesmírů. Konečně jste objevili způsob, jak se nabourat do jejich produkce a cokoliv, co vyrábějí, přeměnit na keksy.", "47.034 trillion", 18, -1590);
-const newCortexHtml = generateNewBuilding("Kortexový pekař", "Cortex", cortexPrize.toLocaleString('de-De'), "Tyto umělé mozky o velikosti planety jsou schopné zhmotnit sny o keksech. Čas a prostor jsou nepodstatné. Realita je svévolná.", "101.506 septillion", 19, -1637);
+const newFarmHtml = generateNewBuilding("Farma", "Farm", formatNum(farmPrize, 3), "Tady se z keksových semínek pěstují keksové rostliny.", "234.4", 3, -101);
+const newMineHtml = generateNewBuilding("Důl", "Mine", formatNum(minePrize, 3), "Těží sušenkové těsto a čokoládové střípky.", "1,065", 4, -148);
+const newFactoryHtml = generateNewBuilding("Továrna", "Factory", formatNum(factoryPrize, 3), "Produkuje velké množství keksů.", "5,893", 5, -196);
+const newBankHtml = generateNewBuilding("Banka", "Bank", formatNum(bankPrize, 3), "Generuje keksy z úroku.", "31,733", 6, -726);
+const newTempleHtml = generateNewBuilding("Chrám", "Temple", formatNum(templePrize, 3), "Plné vzácné, starodávné čokolády.", "176,802", 7, -774);
+const newWizardHtml = generateNewBuilding("Čarodějná věž", "Wizard", formatNum(wizardPrize, 3), "Vyvolává keksy pomocí kouzel.", "997,347", 8, -821);
+const newShipHtml = generateNewBuilding("Dodávka", "Ship", formatNum(shipPrize, 3), "Přiváží čerstvé keksy z keksové planety.", "2.947 milion", 9, -244);
+const newAlchemyHtml = generateNewBuilding("Alchymistická laboratoř", "Alchemy", formatNum(alchemyPrize, 3), "Přetváří zlato na keksy.", "36.267 milion", 10, -292);
+const newPortalHtml = generateNewBuilding("Portál", "Portal", formatNum(portalPrize, 3), "Otevírá brány do Keksmíru.", "113.335 milion", 11, -340);
+const newTimeHtml = generateNewBuilding("Stroj času", "Time", formatNum(timePrize, 3), "Přinášejte keksy z minulosti, které ještě nikdo nesnědl.", "736.677 milion", 12, -387);
+const newCondenserHtml = generateNewBuilding("Antihmotový kondenzátor", "Condenser", formatNum(condenserPrize, 3), "Kondenzuje antihmotu ve vesmíru na keksy.", "4.873 bilion", 13, -628);
+const newPrismHtml = generateNewBuilding("Prizma", "Prism", formatNum(prismPrize, 3), "Samotné světlo přeměňuje na keksy.", "32.867", 14, -674);
+const newChanceHtml = generateNewBuilding("Šancovač", "Chance", formatNum(chancePrize, 3), "Generuje keksy jen tak z ničeho, čistě na bázi štěstí.", "238.003 bilion", 15, -914);
+const newEngineHtml = generateNewBuilding("Fraktální motor", "Engine", formatNum(enginePrize, 3), "Přeměňuje keksy na ještě více keksů.", "1.7 trillion", 16, -966);
+const newJsconsoleHtml = generateNewBuilding("Konzole javascript", "Jsconsole", formatNum(jsconsolePrize, 3), "Vytváří keksy přímo v kódu, ve kterém je psána tato hra.", "6.233 trillion", 17, -1541);
+const newIdleHtml = generateNewBuilding("Nečinný vesmír", "Idle", formatNum(idlePrize, 3), "Vedle našeho vesmíru existuje i několik dalších, nečinných vesmírů. Konečně jste objevili způsob, jak se nabourat do jejich produkce a cokoliv, co vyrábějí, přeměnit na keksy.", "47.034 trillion", 18, -1590);
+const newCortexHtml = generateNewBuilding("Kortexový pekař", "Cortex", formatNum(cortexPrize, 3), "Tyto umělé mozky o velikosti planety jsou schopné zhmotnit sny o keksech. Čas a prostor jsou nepodstatné. Realita je svévolná.", "101.506 septillion", 19, -1637);
 
 function generateNewBuilding(name, buildClass, prize, citation, productionPerSec, buldingIndex, descIconPos){
     return (`
@@ -813,8 +813,8 @@ function buyItemBuilding(e){
         let minusCookies = Math.round(buildPrizesArr[buildingIndex] / 5);
         buildPrizesArr[buildingIndex] += minusCookies;
         
-        infoPrizeText.innerText = buildPrizesArr[buildingIndex];
-        descPrizeText.innerText = buildPrizesArr[buildingIndex];
+        infoPrizeText.innerText = formatNum(buildPrizesArr[buildingIndex], 3);
+        descPrizeText.innerText = formatNum(buildPrizesArr[buildingIndex], 3);
         
         // Count
         buildCountArr[buildingIndex]++;
@@ -888,7 +888,7 @@ function buyBuilding(building, buildingCount, buildingIndex){
         let grandmaInfo = generateRandomGrandma();
 
         let grandmaBx = `
-            <div class="buildBx buildGrandma" style="background-image: url('./res/img/buildings/grandmaBg.png');">
+            <div class="buildBx buildGrandma" style="background-image: url('./res/img/buildings/grandmaBg.png'); grid-row: ${buildingIndex}">
                 <div class="buildContainer build__grandmaContainer">
                     <div class="grandmaImgBx" style="--graNum: 1; --graName: '${grandmaInfo.name}, věk ${grandmaInfo.age}'">
                         <img src="./res/img/buildings/grandma.png" alt="" draggable="false">
@@ -897,22 +897,24 @@ function buyBuilding(building, buildingCount, buildingIndex){
             </div>
         `;
 
-        middleBuildingsBx.insertAdjacentHTML('beforeend', grandmaBx);
+        middleBuildingsBx.insertAdjacentHTML('afterbegin', grandmaBx);
 
         setBuildingInterval(buildingNameUpper, buildingIndex);
     }
     
     // Create buildings background - not cursor and grandmas
     else if(buildingCount === 0){
+        let currentBuildingContainer = document.querySelector(`.build${buildingNameUpper}Container`);
+
         let buildingBx = `
-            <div class="buildBx build${buildingNameUpper}" style="background-image: url('./res/img/buildings/${buildingNameLow}Bg.png');">
+            <div class="buildBx build${buildingNameUpper}" style="background-image: url('./res/img/buildings/${buildingNameLow}Bg.png'); grid-row: ${buildingIndex}">
                 <div class="buildContainer build__${buildingNameLow}Container">
                     <img src="./res/img/buildings/${buildingNameLow}.png" alt="" style="--${buildingNameLow}Num: 1;" draggable="false">
                 </div>
             </div>
         `;
 
-        middleBuildingsBx.insertAdjacentHTML('beforeend', buildingBx);
+        currentBuildingContainer.insertAdjacentHTML('beforeend', buildingBx);
 
         setBuildingInterval(buildingNameUpper, buildingIndex);
     }
@@ -1024,6 +1026,9 @@ let buildingsPerSecond = [cursorPerSecond, grandmaPerSecond, farmPerSecond, mine
 
 
 // SET BUILDINGS INTERVAL
+const cookiePerSecText = document.querySelector('.cookie__secText');
+let totalCookiesPerSec = 0;
+
 function setBuildingInterval(buildingNameUpper, buildingIndex){
     // console.log(buildingNameUpper, buildingIndex);
 
@@ -1034,7 +1039,12 @@ function setBuildingInterval(buildingNameUpper, buildingIndex){
     let itemBuildCount = (buildCountArr[buildingIndex] + 1);
 
     infoItemCount.innerText = itemBuildCount;
-    infoPerSec.innerText = (itemBuildCount * buildingsPerSecond[buildingIndex]).toFixed(1);
+    infoPerSec.innerText = formatNum((itemBuildCount * buildingsPerSecond[buildingIndex]), 3);
+
+    // Count all buildings production per second and display it in text under cookie
+    totalCookiesPerSec += (Math.round(buildingsPerSecond[buildingIndex] * 10) / 10);
+
+    cookiePerSecText.innerText = formatNum(totalCookiesPerSec, 3);
     
     // Show information
     buildings()[buildingIndex].classList.add('descInfoEnabled');
