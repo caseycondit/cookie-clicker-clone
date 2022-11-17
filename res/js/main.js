@@ -1,5 +1,6 @@
 import { bakeryNames } from "./bakeryNames.js";
 import { grandmaNames } from "./grandmaNames.js";
+import { upgradesInfo } from "./upgradesInfo.js";
 
 
 const cookie = document.querySelector('.cookie__img');
@@ -27,6 +28,13 @@ function formatNum(num, digits){
         { value: 1e39, symbol: " duodecillion"},
         { value: 1e42, symbol: " tredecillion"},
         { value: 1e45, symbol: " quattuordecillion"},
+        { value: 1e48, symbol: " quindecillion"},
+        { value: 1e51, symbol: " sexdecillion"},
+        { value: 1e54, symbol: " septendecillion"},
+        { value: 1e57, symbol: " octodecillion"},
+        { value: 1e60, symbol: " novemdecillion"},
+        { value: 1e63, symbol: " vigintillion"},
+        { value: 1e303, symbol: " centillion"},
     ];
 
     let rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
@@ -130,20 +138,39 @@ window.onload = () => {
     // document.querySelector('.cookie__upgrade.id0').style.display = "block";
 }
 
-// Mooving upgrades description
-const upgrades = document.querySelectorAll('.upgrade__bx');
-
-upgrades.forEach((upgrade) => {
-    let upgradeDesc = upgrade.querySelector('.item__desc');
-
-    upgrade.addEventListener('mouseenter', () => {
-        upgradeDesc.style.display = "block";
+// Mooving upgrade description
+function updateMoovingUpgradeDesc(){
+    const buildingUpgradeBx = document.querySelectorAll('.upgrade__bx');
+    
+    buildingUpgradeBx.forEach((upgrade) => {
+        let upgradeDesc = upgrade.querySelector('.item__desc');
+    
+        upgrade.addEventListener('mouseenter', (e) => {
+            upgradeDesc.style.display = "block";
+    
+            if(e.clientY >= 228){
+                upgradeDesc.style.top = 69 + "%";
+            }
+            else{
+                upgradeDesc.style.top = (e.clientY - 92) + "px";
+            }
+        })
+    
+        upgrade.addEventListener('mousemove', (e) => {
+    
+            if(e.clientY >= 228){
+                upgradeDesc.style.top = 69 + "%";
+            }
+            else{
+                upgradeDesc.style.top = (e.clientY - 92) + "px";
+            }
+        })
+    
+        upgrade.addEventListener('mouseleave', () => {
+            upgradeDesc.style.display = "none";
+        })
     })
-
-    upgrade.addEventListener('mouseleave', () => {
-        upgradeDesc.style.display = "none";
-    })
-})
+}
 
 
 // BAKERY NAME - GENERATE AND CHANGE
@@ -1132,4 +1159,51 @@ function setBuildingInterval(buildingNameUpper, buildingIndex){
             }, (1000 / (Math.round(startNum / smallerStartNum))));
         }
     }
+}
+
+
+
+// BUILDING UPGRADES
+const upgradeContainer = document.querySelector('.upgrade__container');
+
+let firstUpgradeInfo = upgradesInfo[0];
+console.log(upgradesInfo[0]);
+
+
+let upgradeHtml = `
+    <div class="upgrade__bx">
+        <img src="./res/img/icons.png" alt="" class="upgrade__item" draggable="false" style="object-position: -5px -3px;">
+        <div class="item__desc">
+            <div class="desc__top">
+                <img src="./res/img/icons.png" alt="" class="desc__icon" draggable="false"  style="object-position: -5px -3px;">
+                <div class="desc__nameBx">
+                    <p class="desc__name">${firstUpgradeInfo[1]}</p>
+                    <p class="desc__own">Aktualizovat</p>
+                </div>
+                <div class="desc__countBx">
+                    <img src="./res/img/money.png" alt="" class="desc__countImg" draggable="false">
+                    <p class="desc__count prizeGreen">${firstUpgradeInfo[2]}</p>
+                </div>
+            </div>
+            <p class="desc__upgTitle">${firstUpgradeInfo[3]}</p>
+            <p class="desc__upgClick">Kliknutím kupte</p>
+        </div>
+    </div>
+`;
+
+upgradeContainer.insertAdjacentHTML('beforeend', upgradeHtml);
+
+updateUpgrades();
+
+
+function updateUpgrades(){
+    updateMoovingUpgradeDesc();
+
+    let currentUpgrades = document.querySelectorAll('.upgrade__container .upgrade__bx');
+
+    currentUpgrades.forEach((upgrade, index) => {
+        upgrade.addEventListener('click', () => {
+            console.log('clicked on ' + index);
+        })
+    })
 }

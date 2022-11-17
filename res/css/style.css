@@ -966,9 +966,10 @@ h1,h2,h3,h4,h5,h6,p{
 }
 
 .upgrade__container{
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+
     border-top: 16px solid transparent;
     border-image: url("../img/wooden_line_x.png") 100% 0% repeat;
     height: 180px;
@@ -1005,7 +1006,7 @@ h1,h2,h3,h4,h5,h6,p{
 .upgrade__bx{
     display: grid;
     place-items: center;
-    width: 60px;
+    width: 62px;
     height: 60px;
     background-color: rgba(0,0,0,0.25);
     cursor: pointer;
@@ -1033,7 +1034,6 @@ h1,h2,h3,h4,h5,h6,p{
     grid-row: 1;
     grid-column: 1;
     object-fit: none;
-    object-position: -5px -3px;
     transition: transform 150ms ease-in-out;
 }
 .store__buy{
@@ -1170,6 +1170,7 @@ h1,h2,h3,h4,h5,h6,p{
 .item__desc{
     position: absolute;
     right: calc(100% + 10px);
+    top: 0;
     width: 390px;
     padding: 8px 14px 12px 6px;
     background-color: #111111;
@@ -1198,7 +1199,6 @@ h1,h2,h3,h4,h5,h6,p{
     margin-left: 10px;
 }
 .desc__name{
-    display: none;
     font-size: 14px;
     color: #ffffffe3;
 }
