@@ -262,7 +262,7 @@ clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
 let intervalsCount = 0;
 let intervalsCountArray = [];
-let cookieClickStep = 500008978474455465456156416594;
+let cookieClickStep = 1000;
 let remainingCookies = 0;
 let remainingIntervalCount = 0;
 let disableCookieInterval = false;
@@ -287,6 +287,7 @@ function cookieClickIncrease(){
     remainingCookies += cookieClickStep;
     checkEnabledItems();
     checkItemPrize();
+    checkUpgradePrize();
 
     remainingIntervalCount++;
 
@@ -811,14 +812,14 @@ function buildingsMoovingDesc(){
 
 
         building.addEventListener('click', buyItemBuilding, false);
-        building.myParam = [building];
+        building.buildingInfo = [building];
         // Buy item function
         // buyItemBuilding(buildings, building);
     })
 }
 
 function buyItemBuilding(e){
-    let building = e.currentTarget.myParam[0];
+    let building = e.currentTarget.buildingInfo[0];
     
     const buildingsArray = Array.prototype.slice.call(buildings());
     
@@ -846,6 +847,8 @@ function buyItemBuilding(e){
         // Count
         buildCountArr[buildingIndex]++;
         itemCountText.innerText = buildCountArr[buildingIndex];
+
+        showUpgrades();
     }
     else{
         console.log("you dont have enought money");
@@ -1054,6 +1057,7 @@ let buildingsPerSecond = [cursorPerSecond, grandmaPerSecond, farmPerSecond, mine
 
 // SET BUILDINGS INTERVAL
 const cookiePerSecText = document.querySelector('.cookie__secText');
+let totalCookiesPerSecArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let totalCookiesPerSec = 0;
 
 function setBuildingInterval(buildingNameUpper, buildingIndex){
@@ -1061,7 +1065,6 @@ function setBuildingInterval(buildingNameUpper, buildingIndex){
 
     let infoItemCount = document.querySelector(`.item${buildingNameUpper} .infoCount`);
     let infoPerSec = document.querySelector(`.item${buildingNameUpper} .infoPerSec`);
-    let infoProducesCookies = document.querySelector(`.item${buildingNameUpper} .infoProduces`);
 
     let itemBuildCount = (buildCountArr[buildingIndex] + 1);
 
@@ -1069,12 +1072,164 @@ function setBuildingInterval(buildingNameUpper, buildingIndex){
     infoPerSec.innerText = formatNum((itemBuildCount * buildingsPerSecond[buildingIndex]), 3);
 
     // Count all buildings production per second and display it in text under cookie
-    totalCookiesPerSec += (Math.round(buildingsPerSecond[buildingIndex] * 10) / 10);
+    totalCookiesPerSecArr[buildingIndex] = (Math.round(buildingsPerSecond[buildingIndex] * itemBuildCount * 10) / 10);
+
+    console.log(totalCookiesPerSecArr);
+
+    totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
 
     cookiePerSecText.innerText = formatNum(totalCookiesPerSec, 3);
     
     // Show information
     buildings()[buildingIndex].classList.add('descInfoEnabled');
+
+    setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCount);
+}
+
+
+// BUILDING UPGRADES
+const upgradeContainer = document.querySelector('.upgrade__container');
+let displayedUpgrades = [];
+let boughtUpgrades = [];    // For save upgrades into local storage
+let createUpgrade = true;
+
+function showUpgrades(){
+    buildCountArr.forEach((building, index) => {
+        if(building > 0 && index < 17){
+            upgradesInfo[index].arr.forEach((info, upgradeIndex) => {
+                // Index = top info, buildcountarr = downInfo
+                if(info[4] === buildCountArr[index]){
+                    createUpgrade = true;
+
+                    displayedUpgrades.forEach((displayed) => {
+                        if(displayed.upgradeType === index && displayed.upgradeIndex === upgradeIndex){
+                            createUpgrade = false;
+                        };
+                    })
+
+                    if(createUpgrade === true){
+                        displayedUpgrades.push({ upgradeType: index, upgradeIndex: upgradeIndex });
+
+                        let upgradeHtml = `
+                            <div class="upgrade__bx" data-type=${index} data-index=${upgradeIndex}>
+                                <img src="./res/img/icons.png" alt="" class="upgrade__item" draggable="false" style="object-position: -${(info[5].yPos - 1) * 48}px -${(info[5].xPos - 1) * 48}px;">
+                                <div class="item__desc">
+                                    <div class="desc__top">
+                                        <img src="./res/img/icons.png" alt="" class="desc__icon" draggable="false"  style="object-position: -${(info[5].yPos - 1) * 48}px -${(info[5].xPos - 1) * 48}px;">
+                                        <div class="desc__nameBx">
+                                            <p class="desc__name">${info[1]}</p>
+                                            <p class="desc__own">Aktualizovat</p>
+                                        </div>
+                                        <div class="desc__countBx">
+                                            <img src="./res/img/money.png" alt="" class="desc__countImg" draggable="false">
+                                            <p class="desc__count prizeGreen">${formatNum(info[2], 3)}</p>
+                                        </div>
+                                    </div>
+                                    <p class="desc__upgTitle">${(info[3])}</p>
+                                    <p class="desc__upgClick">Kliknutím kupte</p>
+                                </div>
+                            </div>
+                        `;
+    
+                        upgradeContainer.insertAdjacentHTML('beforeend', upgradeHtml);
+    
+                        checkUpgradePrize();
+                        updateUpgrades();
+                    }
+                }
+            })
+        }
+    })
+}
+
+
+function upgradesSelector(){
+    return document.querySelectorAll('.upgrade__container .upgrade__bx');
+};
+
+// CHECK UPGRADE COST - IF THERE IS ENOUGHT COOKIES, THE PRIZE TEXT WILL BE GREEN AND VICE-VERSA
+function checkUpgradePrize(){
+    upgradesSelector().forEach((upgrade) => {
+        let upgradeType = upgrade.getAttribute('data-type');
+        let upgradeIndex = upgrade.getAttribute('data-index');
+
+        let currentUpgradePrize = upgradesInfo[upgradeType].arr[upgradeIndex][2];
+
+        if(instaCookieCount < currentUpgradePrize){
+            upgrade.classList.add('noEnoughtCookies');
+        }
+        else{
+            upgrade.classList.remove('noEnoughtCookies');
+        }
+    })
+}
+
+
+// BUY UPGRADES
+function updateUpgrades(){
+    updateMoovingUpgradeDesc();
+
+    upgradesSelector().forEach((upgrade, index) => {
+        upgrade.addEventListener('click', buyUpgrade, false);
+        upgrade.upgradeInfo = [upgrade, index];
+    })
+}
+
+function buyUpgrade(e){
+    let currentUpgrade = e.currentTarget.upgradeInfo[0];
+    let currentIndex = e.currentTarget.upgradeInfo[1];
+
+    let upgradeType = currentUpgrade.getAttribute('data-type');
+    let upgradeIndex = currentUpgrade.getAttribute('data-index');
+    let currentUpgradePrize = upgradesInfo[upgradeType].arr[upgradeIndex][2];
+
+    if(instaCookieCount >= currentUpgradePrize){
+        let currentBuilding = buildings()[upgradeType];
+        let currentUpgradeName = upgradesInfo[upgradeType].type;
+        let currentUpgradeNameUpper = currentUpgradeName.charAt(0).toUpperCase() + currentUpgradeName.slice(1)
+        let productionPerText = currentBuilding.querySelector('.desc__info span');
+
+        buildingsPerSecond[upgradeType] += buildingsPerSecond[upgradeType];
+
+        productionPerText.innerText = buildingsPerSecond[upgradeType];
+
+        setUpgradeInterval(currentUpgradeNameUpper, upgradeType);
+
+        decrementCookies(currentUpgradePrize);
+
+        boughtUpgrades.push({upgradeType: upgradeType, upgradeNumber: upgradeIndex});
+
+        currentUpgrade.remove();
+    }
+    else{
+        console.log('you dont have enought money');
+        console.log(instaCookieCount);
+        console.log(currentUpgradePrize);
+        console.log(upgradeType, currentIndex);
+    }
+}
+
+
+function setUpgradeInterval(upgradeNameUpper, upgradeIndex){
+    let infoPerText = document.querySelector(`.item${upgradeNameUpper} .infoPerSec`);
+
+    let itemBuildCount = (buildCountArr[upgradeIndex]);
+    let currentProduction = buildingsPerSecond[upgradeIndex] * itemBuildCount;
+
+    infoPerText.innerText = formatNum(currentProduction, 3);
+
+    totalCookiesPerSecArr[upgradeIndex] = (Math.round(buildingsPerSecond[upgradeIndex] * itemBuildCount * 10) / 10);
+    totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
+
+    cookiePerSecText.innerText = formatNum(totalCookiesPerSec, 3);
+
+    setIncrementingInterval(upgradeNameUpper, upgradeIndex, itemBuildCount);
+}
+
+
+// FUNCTION FOR INCREMENTING COOKIE - SET INTERVAL
+function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCount){
+    let infoProducesCookies = document.querySelector(`.item${buildingNameUpper} .infoProduces`);
 
     // Cookie incrementing
     if(runningIntervalsArr[buildingIndex] === true){
@@ -1121,6 +1276,7 @@ function setBuildingInterval(buildingNameUpper, buildingIndex){
 
         if((1000 / (startNum / smallerStartNum)) > 6){
             cursorInterval = setInterval(() => {
+                console.log(1000 / (startNum / smallerStartNum));
                 totalCookies += smallerStartNum;
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
@@ -1147,6 +1303,7 @@ function setBuildingInterval(buildingNameUpper, buildingIndex){
             }
 
             cursorInterval = setInterval(() => {
+                console.log(1000 / Math.round(startNum / smallerStartNum));
                 totalCookies += smallerStartNum;
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
@@ -1159,51 +1316,4 @@ function setBuildingInterval(buildingNameUpper, buildingIndex){
             }, (1000 / (Math.round(startNum / smallerStartNum))));
         }
     }
-}
-
-
-
-// BUILDING UPGRADES
-const upgradeContainer = document.querySelector('.upgrade__container');
-
-let firstUpgradeInfo = upgradesInfo[0];
-console.log(upgradesInfo[0]);
-
-
-let upgradeHtml = `
-    <div class="upgrade__bx">
-        <img src="./res/img/icons.png" alt="" class="upgrade__item" draggable="false" style="object-position: -5px -3px;">
-        <div class="item__desc">
-            <div class="desc__top">
-                <img src="./res/img/icons.png" alt="" class="desc__icon" draggable="false"  style="object-position: -5px -3px;">
-                <div class="desc__nameBx">
-                    <p class="desc__name">${firstUpgradeInfo[1]}</p>
-                    <p class="desc__own">Aktualizovat</p>
-                </div>
-                <div class="desc__countBx">
-                    <img src="./res/img/money.png" alt="" class="desc__countImg" draggable="false">
-                    <p class="desc__count prizeGreen">${firstUpgradeInfo[2]}</p>
-                </div>
-            </div>
-            <p class="desc__upgTitle">${firstUpgradeInfo[3]}</p>
-            <p class="desc__upgClick">Kliknutím kupte</p>
-        </div>
-    </div>
-`;
-
-upgradeContainer.insertAdjacentHTML('beforeend', upgradeHtml);
-
-updateUpgrades();
-
-
-function updateUpgrades(){
-    updateMoovingUpgradeDesc();
-
-    let currentUpgrades = document.querySelectorAll('.upgrade__container .upgrade__bx');
-
-    currentUpgrades.forEach((upgrade, index) => {
-        upgrade.addEventListener('click', () => {
-            console.log('clicked on ' + index);
-        })
-    })
 }
