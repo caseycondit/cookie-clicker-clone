@@ -733,6 +733,8 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
                 <h4 class="item__name">???</h4>
                 <h4 class="item__name itmNameDis">${name}</h4>
                 <div class="item__info">
+                    <p class="info__amount infoAmountOne">x<span>10</span></p>
+                    <p class="info__amount infoAmountTwo">x<span>100</span></p>
                     <p class="info__prize prizeGreen">
                         <img src="./res/img/money.png" alt="" class="prize__icon" draggable="false">
                         <span class="info__prizeText">${prize}</span>
@@ -781,6 +783,7 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
 
 // MOOVING BUILDING DESCRIPTION, TRIGGERING ALSO BUY ITEMS
 let buildings = function(){ return document.querySelectorAll('.buy__item')};
+let multiSelection = false;
 
 
 function buildingsMoovingDesc(){
@@ -819,6 +822,8 @@ function buildingsMoovingDesc(){
 }
 
 function buyItemBuilding(e){
+    if(multiSelection) return;
+
     let building = e.currentTarget.buildingInfo[0];
     
     const buildingsArray = Array.prototype.slice.call(buildings());
@@ -832,7 +837,6 @@ function buyItemBuilding(e){
 
         // Cookie count
         decrementCookies(buildPrizesArr[buildingIndex]);
-        checkItemPrize();
         buyBuilding(buildingsArray[buildingIndex], buildCountArr[buildingIndex], buildingIndex);
 
         if(runningCookieInterval === true) disableCookieInterval = true;
@@ -849,6 +853,8 @@ function buyItemBuilding(e){
         itemCountText.innerText = buildCountArr[buildingIndex];
 
         showUpgrades();
+        checkItemPrize();
+        checkUpgradePrize();
     }
     else{
         console.log("you dont have enought money");
@@ -868,12 +874,23 @@ function decrementCookies(cookies){
 
 
 // CHECK ITEM COST - IF THERE IS ENOUGHT COOKIES, THE PRIZE TEXT WILL BE GREEN AND VICE-VERSA
+let multiplied;
+
 function checkItemPrize(){
+    let checkMultipliedPrize;
+
+    if(multiplied === 10 || multiplied === 100){
+        checkMultipliedPrize = multiplied;
+    }
+    else{
+        checkMultipliedPrize = 1;
+    }
+
     buildings().forEach((building) => {
         const buildingsArray = Array.prototype.slice.call(buildings());
         let buildingIndex = buildingsArray.indexOf(building);
 
-        if(instaCookieCount < buildPrizesArr[buildingIndex]){
+        if(instaCookieCount < (buildPrizesArr[buildingIndex] * checkMultipliedPrize)){
             building.classList.add('noEnoughtCookies');
         }
         else{
@@ -900,7 +917,7 @@ function generateRandomGrandma(){
     };
 }
 
-function buyBuilding(building, buildingCount, buildingIndex){
+function buyBuilding(building, buildingCount, buildingIndex, buildCountPlus){
     let buildingNameUpper = building.classList[1].replace('item', '');
     let buildingNameLow = building.classList[1].replace('item', '').toLowerCase();
 
@@ -910,7 +927,7 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         currentCursor.style.display = "block";
 
-        setBuildingInterval(buildingNameUpper, buildingIndex);
+        setBuildingInterval(buildingNameUpper, buildingIndex, buildCountPlus);
     }
 
     // Create buildings background - only grandmas
@@ -929,7 +946,7 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         middleBuildingsBx.insertAdjacentHTML('afterbegin', grandmaBx);
 
-        setBuildingInterval(buildingNameUpper, buildingIndex);
+        setBuildingInterval(buildingNameUpper, buildingIndex, buildCountPlus);
     }
     
     // Create buildings background - not cursor and grandmas
@@ -946,7 +963,7 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         currentBuildingContainer.insertAdjacentHTML('beforeend', buildingBx);
 
-        setBuildingInterval(buildingNameUpper, buildingIndex);
+        setBuildingInterval(buildingNameUpper, buildingIndex, buildCountPlus);
     }
 
     // IF THERE IS BUILDING BACKGROUND - just add building
@@ -963,7 +980,7 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         grandmaBuildingBx.insertAdjacentHTML('beforeend', newGrandma);
 
-        setBuildingInterval(buildingNameUpper, buildingIndex);
+        setBuildingInterval(buildingNameUpper, buildingIndex, buildCountPlus);
     }
 
 
@@ -978,7 +995,7 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         currentBuildingBg.insertAdjacentHTML('beforeend', newBuilding);
 
-        setBuildingInterval(buildingNameUpper, buildingIndex);
+        setBuildingInterval(buildingNameUpper, buildingIndex, buildCountPlus);
     }
 }
 
@@ -1060,21 +1077,21 @@ const cookiePerSecText = document.querySelector('.cookie__secText');
 let totalCookiesPerSecArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 let totalCookiesPerSec = 0;
 
-function setBuildingInterval(buildingNameUpper, buildingIndex){
-    // console.log(buildingNameUpper, buildingIndex);
+function setBuildingInterval(buildingNameUpper, buildingIndex, buildCountPlus){
+    let currentBuildCountPlus;
+
+    buildCountPlus === undefined ? currentBuildCountPlus = 1 : currentBuildCountPlus = 0;
 
     let infoItemCount = document.querySelector(`.item${buildingNameUpper} .infoCount`);
     let infoPerSec = document.querySelector(`.item${buildingNameUpper} .infoPerSec`);
 
-    let itemBuildCount = (buildCountArr[buildingIndex] + 1);
+    let itemBuildCount = (buildCountArr[buildingIndex] + currentBuildCountPlus);
 
     infoItemCount.innerText = itemBuildCount;
     infoPerSec.innerText = formatNum((itemBuildCount * buildingsPerSecond[buildingIndex]), 3);
 
     // Count all buildings production per second and display it in text under cookie
     totalCookiesPerSecArr[buildingIndex] = (Math.round(buildingsPerSecond[buildingIndex] * itemBuildCount * 10) / 10);
-
-    console.log(totalCookiesPerSecArr);
 
     totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
 
@@ -1098,7 +1115,7 @@ function showUpgrades(){
         if(building > 0 && index < 17){
             upgradesInfo[index].arr.forEach((info, upgradeIndex) => {
                 // Index = top info, buildcountarr = downInfo
-                if(info[4] === buildCountArr[index]){
+                if(info[4] <= buildCountArr[index]){
                     createUpgrade = true;
 
                     displayedUpgrades.forEach((displayed) => {
@@ -1189,6 +1206,8 @@ function buyUpgrade(e){
         let currentUpgradeNameUpper = currentUpgradeName.charAt(0).toUpperCase() + currentUpgradeName.slice(1)
         let productionPerText = currentBuilding.querySelector('.desc__info span');
 
+        if(runningCookieInterval === true) disableCookieInterval = true;
+
         buildingsPerSecond[upgradeType] += buildingsPerSecond[upgradeType];
 
         productionPerText.innerText = buildingsPerSecond[upgradeType];
@@ -1250,6 +1269,7 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
             cookieCountText.innerText = formatNum(instaCookieCount, 3);
     
             checkItemPrize();
+            checkUpgradePrize();
         }, (1000 / (Math.round(buildingsPerSecond[buildingIndex] * itemBuildCount * 10) / 10)));
     }
     else{
@@ -1286,6 +1306,7 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
                 checkItemPrize();
+                checkUpgradePrize();
             }, (1000 / (startNum / smallerStartNum)));
         }
         else{
@@ -1313,7 +1334,155 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
                 checkItemPrize();
+                checkUpgradePrize();
             }, (1000 / (Math.round(startNum / smallerStartNum))));
         }
+    }
+}
+
+
+
+// BUYING MORE BUILDINGS
+const selectionTypes = document.querySelectorAll('.selection__text');
+const selectionAmount = document.querySelectorAll('.selection__number');
+
+let activeType = document.querySelector('.selection__text.active');
+let activeAmount = document.querySelector('.selection__number.active');
+
+toggleActive(selectionTypes);
+toggleActive(selectionAmount);
+
+function toggleActive(elements){
+    elements.forEach((select) => {
+        select.addEventListener('click', () => {
+            elements.forEach((selects) => {
+                selects.classList.remove('active');
+            })
+            
+            select.classList.add('active');
+
+            if(elements.length === 3){
+                toggleAmounts(select)
+            }
+            else{
+                toggleTypes(select);
+            }
+        })
+    })
+}
+
+let selectType = "buy";
+
+function toggleAmounts(select){
+    let selectNumber = parseInt(select.getAttribute('data-amount'));
+
+    // Show select number in buildings
+    if(selectNumber === 10){
+        itemBx.classList.add('selectionOneActive');
+        itemBx.classList.remove('selectionTwoActive');
+
+        multiSelection = true;
+        multiplied = 10;
+
+        showChangedPrize(10);
+    }
+    else if(selectNumber === 100){
+        itemBx.classList.remove('selectionOneActive');
+        itemBx.classList.add('selectionTwoActive');
+
+        multiSelection = true;
+        multiplied = 100;
+
+        showChangedPrize(100);
+    }
+    else{
+        itemBx.classList.remove('selectionOneActive');
+        itemBx.classList.remove('selectionTwoActive');
+
+        multiSelection = false;
+        multiplied = 1;
+
+        showChangedPrize(1);
+    }
+}
+
+function toggleTypes(select){
+    let selectType = select.getAttribute('data-select-type');
+
+    if(selectType === "sell"){
+        itemBx.classList.add('selectionBuy');
+    }
+    else{
+        itemBx.classList.remove('selectionBuy');
+    }
+}
+
+function showChangedPrize(amount){
+    if(selectType === "buy"){
+        buildings().forEach((building, index) => {
+            building.removeEventListener('click', buyMultiBuildings);
+
+            let infoPrizeText = building.querySelector('.info__prizeText');
+            let descPrizeText = building.querySelector('.desc__count');
+
+            let multipliedPrize = buildPrizesArr[index] * amount;
+
+            infoPrizeText.innerText = multipliedPrize;
+            descPrizeText.innerText = multipliedPrize;
+
+            checkItemPrize();
+            checkUpgradePrize();
+
+            if(amount !== 1){
+                building.addEventListener('click', buyMultiBuildings, false);
+                building.multiBuildingInfo = [building, amount, index];
+            }
+        })
+    }
+}
+
+function buyMultiBuildings(building){
+    let currentBuilding = building.currentTarget.multiBuildingInfo[0];
+    let currentAmount = building.currentTarget.multiBuildingInfo[1];
+    let currentIndex = building.currentTarget.multiBuildingInfo[2];
+
+    let multipliedPrize = buildPrizesArr[currentIndex] * currentAmount;
+
+    if(instaCookieCount >= multipliedPrize){
+        let infoPrizeText = currentBuilding.querySelector('.info__prizeText');
+        let descPrizeText = currentBuilding.querySelector('.desc__count');
+        let itemCountText = currentBuilding.querySelector('.item__count');
+
+        // Cookie count
+        decrementCookies(multipliedPrize);
+        checkItemPrize();
+        checkUpgradePrize();
+
+
+        if(runningCookieInterval === true) disableCookieInterval = true;
+
+        // Prize
+        for (let i = 0; i < currentAmount; i++) {
+            let minusMultipliedCookies = Math.round((buildPrizesArr[currentIndex] / 5));
+            buildPrizesArr[currentIndex] += minusMultipliedCookies;
+
+            buildCountArr[currentIndex] += 1;
+
+            buyBuilding(currentBuilding, buildCountArr[currentIndex], currentIndex, 0);
+        }
+
+        infoPrizeText.innerText = formatNum(buildPrizesArr[currentIndex], 3);
+        descPrizeText.innerText = formatNum(buildPrizesArr[currentIndex], 3);
+
+        showChangedPrize(currentAmount);
+
+        // Count
+        itemCountText.innerText = buildCountArr[currentIndex];
+
+        showUpgrades();
+    }
+    else{
+        console.log('you dont have enought money');
+        console.log(`you have: ${instaCookieCount}, but you need: ${multipliedPrize}`);
     }
 }

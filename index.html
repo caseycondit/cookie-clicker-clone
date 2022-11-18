@@ -104,12 +104,12 @@
             <p class="buy__info">Budovy</p>
             <div class="buy__selection">
                 <div class="selection__textBx">
-                    <p class="selection__text active">Koupit</p>
-                    <p class="selection__text">Prodat</p>
+                    <p class="selection__text active" data-select-type="buy">Koupit</p>
+                    <p class="selection__text" data-select-type="sell">Prodat</p>
                 </div>
-                <p class="selection__number active">1</p>
-                <p class="selection__number">10</p>
-                <p class="selection__number">100</p>
+                <p class="selection__number active" data-amount=1>1</p>
+                <p class="selection__number" data-amount=10>10</p>
+                <p class="selection__number" data-amount=100>100</p>
             </div>
             <div class="buy__itemBx">
                 <!-- Cursor -->
@@ -119,6 +119,8 @@
                         <h4 class="item__name">???</h4>
                         <h4 class="item__name itmNameDis">Kurzor</h4>
                         <div class="item__info">
+                            <p class="info__amount infoAmountOne">x<span>10</span></p>
+                            <p class="info__amount infoAmountTwo">x<span>100</span></p>
                             <p class="info__prize prizeGreen">
                                 <img src="./res/img/money.png" alt="" class="prize__icon" draggable="false">
                                 <span class="info__prizeText">15</span>
@@ -168,6 +170,8 @@
                         <h4 class="item__name">???</h4>
                         <h4 class="item__name itmNameDis">Babička</h4>
                         <div class="item__info">
+                            <p class="info__amount infoAmountOne">x<span>10</span></p>
+                            <p class="info__amount infoAmountTwo">x<span>100</span></p>
                             <p class="info__prize prizeGreen">
                                 <img src="./res/img/money.png" alt="" class="prize__icon" draggable="false">
                                 <span class="info__prizeText">100</span>

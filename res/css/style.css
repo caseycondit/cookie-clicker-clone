@@ -1105,6 +1105,10 @@ h1,h2,h3,h4,h5,h6,p{
 .buy__item:active{
     box-shadow: 0px 0px 16px #000 inset, inset 0 0 0 100px #00000033;
 }
+.buy__itemBx.selectionBuy .buy__item{
+    box-shadow: inset 0 0 8px 8px #ff00007d;
+}
+
 .item__icon{
     width: 64px;
     height: 64px;
@@ -1132,12 +1136,20 @@ h1,h2,h3,h4,h5,h6,p{
     flex-direction: row;
 }
 .info__amount{
+    display: none;
     margin-right: 4px;
     font-size: 13px;
     font-variant: small-caps;
     color: #ffc;
     text-shadow: 2px 2px 6px black;
 }
+.buy__itemBx.selectionOneActive .info__amount.infoAmountOne{
+    display: block;
+}
+.buy__itemBx.selectionTwoActive .info__amount.infoAmountTwo{
+    display: block;
+}
+
 .info__prize{
     display: flex;
     align-items: center;
