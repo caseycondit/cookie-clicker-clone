@@ -1028,6 +1028,19 @@ h1,h2,h3,h4,h5,h6,p{
 .upgrade__bx:hover .upgrade__item{
     transform: translateY(-1px);
 }
+.upgrade__bx::after{
+    content: '';
+    display: none;
+    width: 100%;
+    height: 100%;
+    grid-row: 1;
+    grid-column: 1;
+    background-color: #0000008c;
+}
+.upgrade__bx.noEnoughtCookies::after{
+    display: block;
+}
+
 .upgrade__item{
     width: 50px;
     height: 47px;
@@ -1046,7 +1059,7 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .buy__selection{
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     align-items: center;
     background-color: #000000a6;
     padding: 2px 20px 2px 6px;
@@ -1058,8 +1071,15 @@ h1,h2,h3,h4,h5,h6,p{
 }
 .selection__number{
     font-size: 15px;
-    justify-self: flex-start;
+    justify-self: center;
 }
+.selection__number.selectNumberAll{
+    display: none;
+}
+.buy__selection.selectionSell .selection__number.selectNumberAll{
+    display: block;
+}
+
 .selection__number, .selection__text{
     color: rgba(255, 255, 255, 0.5);
     transition: color 150ms ease-in-out, text-shadow 150ms ease-in-out;
@@ -1295,6 +1315,9 @@ h1,h2,h3,h4,h5,h6,p{
     border-radius: 50%;
     background-color: #aaa;
     pointer-events: none;
+}
+.buy__item.buildingProductionDis .desc__info.descInfoProduction{
+    display: none !important;
 }
 .infoReinfBx{
     background-color: black;

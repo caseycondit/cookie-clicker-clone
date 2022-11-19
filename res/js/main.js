@@ -288,6 +288,7 @@ function cookieClickIncrease(){
     checkEnabledItems();
     checkItemPrize();
     checkUpgradePrize();
+    showChangedPrize();
 
     remainingIntervalCount++;
 
@@ -760,7 +761,7 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
 
                 <ul class="desc__infoBx">
                     <li class="desc__info">každé ${name.toLowerCase()} produkuje <span class="whiteT">${productionPerSec} keksy</span> za sekundu</li>
-                    <li class="desc__info">
+                    <li class="desc__info descInfoProduction">
                         <span class="infoCount">5</span>
                         ${name.toLowerCase()} produkuje
                         <span class="infoPerSec whiteT">0.5</span>
@@ -784,6 +785,7 @@ function generateNewBuilding(name, buildClass, prize, citation, productionPerSec
 // MOOVING BUILDING DESCRIPTION, TRIGGERING ALSO BUY ITEMS
 let buildings = function(){ return document.querySelectorAll('.buy__item')};
 let multiSelection = false;
+let noCheck = false;
 
 
 function buildingsMoovingDesc(){
@@ -829,7 +831,7 @@ function buyItemBuilding(e){
     const buildingsArray = Array.prototype.slice.call(buildings());
     
     let buildingIndex = buildingsArray.indexOf(building); // 0
-    
+
     if(instaCookieCount >= buildPrizesArr[buildingIndex]){
         let infoPrizeText = building.querySelector('.info__prizeText');
         let descPrizeText = building.querySelector('.desc__count');
@@ -874,9 +876,11 @@ function decrementCookies(cookies){
 
 
 // CHECK ITEM COST - IF THERE IS ENOUGHT COOKIES, THE PRIZE TEXT WILL BE GREEN AND VICE-VERSA
-let multiplied;
+let multiplied = 1;
 
 function checkItemPrize(){
+    if(noCheck) return;
+
     let checkMultipliedPrize;
 
     if(multiplied === 10 || multiplied === 100){
@@ -934,6 +938,8 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         currentCursor.style.display = "block";
 
+        building.classList.remove('buildingProductionDis');
+        
         setBuildingInterval(buildingNameUpper, buildingIndex);
     }
 
@@ -953,6 +959,8 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         middleBuildingsBx.insertAdjacentHTML('afterbegin', grandmaBx);
 
+        building.classList.remove('buildingProductionDis');
+        
         setBuildingInterval(buildingNameUpper, buildingIndex);
     }
     
@@ -970,6 +978,8 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
         currentBuildingContainer.insertAdjacentHTML('beforeend', buildingBx);
 
+        building.classList.remove('buildingProductionDis');
+        
         setBuildingInterval(buildingNameUpper, buildingIndex);
     }
 
@@ -978,13 +988,13 @@ function buyBuilding(building, buildingCount, buildingIndex){
     else if(buildingCount > 0 && buildingNameLow === "grandma"){
         let grandmaBuildingBx = middleBuildingsBx.querySelector('.buildGrandma .build__grandmaContainer');
         let grandmaInfo = generateRandomGrandma();
-
+        
         let newGrandma = `
-            <div class="grandmaImgBx" style="--graNum: ${buildingCount + 1}; --graName: '${grandmaInfo.name}, věk ${grandmaInfo.age}'">
-                <img src="./res/img/buildings/grandma.png" alt="" draggable="false">
-            </div>
+        <div class="grandmaImgBx" style="--graNum: ${buildingCount + 1}; --graName: '${grandmaInfo.name}, věk ${grandmaInfo.age}'">
+        <img src="./res/img/buildings/grandma.png" alt="" draggable="false">
+        </div>
         `;
-
+        
         grandmaBuildingBx.insertAdjacentHTML('beforeend', newGrandma);
 
         setBuildingInterval(buildingNameUpper, buildingIndex);
@@ -1258,6 +1268,8 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
         clearInterval(buildingIntervals[buildingIndex]);
     }
 
+    if(itemBuildCount === 0) return;
+
     runningIntervalsArr[buildingIndex] = true;
 
 
@@ -1349,9 +1361,6 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
 const selectionTypes = document.querySelectorAll('.selection__text');
 const selectionAmount = document.querySelectorAll('.selection__number');
 
-let activeType = document.querySelector('.selection__text.active');
-let activeAmount = document.querySelector('.selection__number.active');
-
 toggleActive(selectionTypes);
 toggleActive(selectionAmount);
 
@@ -1364,8 +1373,8 @@ function toggleActive(elements){
             
             select.classList.add('active');
 
-            if(elements.length === 3){
-                toggleAmounts(select)
+            if(elements.length === 4){
+                toggleAmounts(select);
             }
             else{
                 toggleTypes(select);
@@ -1387,7 +1396,7 @@ function toggleAmounts(select){
         multiSelection = true;
         multiplied = 10;
 
-        showChangedPrize(10);
+        showChangedPrize();
     }
     else if(selectNumber === 100){
         itemBx.classList.remove('selectionOneActive');
@@ -1396,41 +1405,82 @@ function toggleAmounts(select){
         multiSelection = true;
         multiplied = 100;
 
-        showChangedPrize(100);
+        showChangedPrize();
+    }
+    else if(selectNumber === 1000){
+        itemBx.classList.remove('selectionOneActive');
+        itemBx.classList.remove('selectionTwoActive');
+
+        multiSelection = true;
+        multiplied = 1000;
+
+        showChangedPrize();
+    }
+    else if(selectNumber === 1 && selectType === "sell"){
+        itemBx.classList.remove('selectionOneActive');
+        itemBx.classList.remove('selectionTwoActive');
+    
+        multiSelection = true;
+        multiplied = 1;
+    
+        showChangedPrize();
     }
     else{
         itemBx.classList.remove('selectionOneActive');
         itemBx.classList.remove('selectionTwoActive');
-
+    
         multiSelection = false;
         multiplied = 1;
-
-        showChangedPrize(1);
+    
+        showChangedPrize();
     }
 }
 
+
+const buyMoreSelection = document.querySelector('.buy__selection');
+
 function toggleTypes(select){
-    let selectType = select.getAttribute('data-select-type');
+    selectType = select.getAttribute('data-select-type');
 
     if(selectType === "sell"){
         itemBx.classList.add('selectionBuy');
+        buyMoreSelection.classList.add('selectionSell');
+        showChangedPrize();
+        multiSelection = true;
+        noCheck = true;
     }
     else{
+        if(multiplied === 1000){
+            multiplied = 1;
+
+            selectionAmount.forEach((selectAmount) => {
+                selectAmount.classList.remove('active');
+            })
+
+            selectionAmount[0].classList.add('active');
+        }
+
         itemBx.classList.remove('selectionBuy');
+        buyMoreSelection.classList.remove('selectionSell');
+        showChangedPrize();
+        multiSelection = false;
+        noCheck = false;
+        checkItemPrize();
     }
 }
 
-function showChangedPrize(amount){
+function showChangedPrize(){
     if(selectType === "buy"){
         buildings().forEach((building, index) => {
             building.removeEventListener('click', buyMultiBuildings);
+            building.removeEventListener('click', sellBuildings);
 
             let infoPrizeText = building.querySelector('.info__prizeText');
             let descPrizeText = building.querySelector('.desc__count');
             let multipliedPrize = buildPrizesArr[index];
 
             
-            for (let i = 1; i < amount; i++) {
+            for (let i = 1; i < multiplied; i++) {
                 multipliedPrize += (buildPrizesArr[index] + (Math.floor(multipliedPrize / 5)));
             }
             
@@ -1440,14 +1490,64 @@ function showChangedPrize(amount){
             checkItemPrize();
             checkUpgradePrize();
 
-            if(amount !== 1){
+            if(multiplied !== 1){
                 building.addEventListener('click', buyMultiBuildings, false);
-                building.multiBuildingInfo = [building, amount, index];
+                building.multiBuildingInfo = [building, multiplied, index];
             }
         })
     }
+    else{
+        buildings().forEach((building, index) => {
+            building.removeEventListener('click', sellBuildings);
+            building.removeEventListener('click', buyMultiBuildings);
+
+            let infoPrizeText = building.querySelector('.info__prizeText');
+            let descPrizeText = building.querySelector('.desc__count');
+            let sellPrize = 0;
+
+            for (let i = 0; i < buildCountArr[index]; i++) {
+                sellPrize += (Math.floor(buildPrizesArr[index] / 4));
+            }
+
+            let updatedMultiply;
+
+            if(multiplied === 1000){
+                updatedMultiply = buildCountArr[index];
+            }
+            else if(buildCountArr[index] > multiplied){
+                updatedMultiply = multiplied
+            }
+            else{
+                updatedMultiply = buildCountArr[index];
+            }
+
+            let devidedSellPrize = sellPrize / buildCountArr[index];
+            let updatedSellPrize = devidedSellPrize * updatedMultiply;
+            let finalSellPrize;
+
+            isNaN(updatedSellPrize) ? finalSellPrize = 0 : finalSellPrize = updatedSellPrize;
+            
+            infoPrizeText.innerText = formatNum(finalSellPrize, 3);
+            descPrizeText.innerText = formatNum(finalSellPrize, 3);
+
+            // If there is no building, add class
+            if(buildCountArr[index] === 0){
+                building.classList.add('noEnoughtCookies');
+            }
+            else{
+                building.classList.remove('noEnoughtCookies');
+            }
+
+            if(buildCountArr[index] > 0){
+                building.addEventListener('click', sellBuildings, false);
+                building.sellInfo = [building, index, updatedMultiply, finalSellPrize];
+            }
+       })
+    }
 }
 
+
+// BUYING MULTIPLE BUILDINGS
 function buyMultiBuildings(building){
     let currentBuilding = building.currentTarget.multiBuildingInfo[0];
     let currentAmount = building.currentTarget.multiBuildingInfo[1];
@@ -1461,8 +1561,6 @@ function buyMultiBuildings(building){
 
 
     if(instaCookieCount >= multipliedPrize){
-        console.log(instaCookieCount, multipliedPrize);
-
         let infoPrizeText = currentBuilding.querySelector('.info__prizeText');
         let descPrizeText = currentBuilding.querySelector('.desc__count');
         let itemCountText = currentBuilding.querySelector('.item__count');
@@ -1502,4 +1600,98 @@ function buyMultiBuildings(building){
 }
 
 
-// SELING BUILDINGS
+// SELLING BUILDINGS
+function sellBuildings(e){
+    let sellBuilding =  e.currentTarget.sellInfo[0];
+    let sellIndex = e.currentTarget.sellInfo[1];
+    let sellBuildingCount = e.currentTarget.sellInfo[2];
+    let sellPrize = e.currentTarget.sellInfo[3];
+
+    let sellBuildingNameUpper = sellBuilding.classList[1].replace('item', '');
+
+    if(runningCookieInterval === true) disableCookieInterval = true;
+
+    // Add sell prize to cookie count
+    totalCookies += sellPrize;
+    cookieCount += sellPrize;
+    instaCookieCount += sellPrize;
+
+    cookieCountText.innerText = formatNum(instaCookieCount, 3);
+
+    // Deduct buildings
+    let oldBuildCount = buildCountArr[sellIndex];
+    buildCountArr[sellIndex] -= sellBuildingCount;
+    showChangedPrize();
+
+    setIncrementingInterval(sellBuildingNameUpper, sellIndex, buildCountArr[sellIndex]);
+
+    // Upgrade info
+    let descInfoProductionBx = sellBuilding.querySelector('.desc__info.descInfoProduction');
+    let descInfoPer = descInfoProductionBx.querySelector('.infoPerSec');
+    let itemCountText = sellBuilding.querySelector('.item__count');
+    let descInfoCount = sellBuilding.querySelector('.infoCount');
+
+    let currentProduction = buildingsPerSecond[sellIndex] * buildCountArr[sellIndex];
+
+    // Count all buildings production per second and display it in text under cookie
+    totalCookiesPerSecArr[sellIndex] = (Math.round(buildingsPerSecond[sellIndex] * buildCountArr[sellIndex] * 10) / 10);
+
+    totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
+
+
+    cookiePerSecText.innerText = formatNum(totalCookiesPerSec, 3);
+
+    // Delete cursor
+    if(sellIndex === 0){
+        for (let i = 0; i < sellBuildingCount; i++) {
+            console.log(oldBuildCount - i);
+            let lastCursor = document.querySelector(`.cookie__upgrade.id${(oldBuildCount - i) - 1}`);
+    
+            lastCursor.style.display = "none";
+        }
+    }
+
+    if(buildCountArr[sellIndex] <= 0 && sellBuildingCount === oldBuildCount){
+        // If there is no building
+        sellBuilding.classList.add('buildingProductionDis');
+        itemCountText.innerText = "";
+
+        if(sellIndex === 1){
+            // Grandma
+            let deleteGrandmaBg = document.querySelector('.buildBx.buildGrandma');
+
+            deleteGrandmaBg.remove();
+        }
+        else if(sellIndex !== 0){
+            let deleteBuildingBg = document.querySelector(`.buildBx.build${sellBuildingNameUpper}`);
+
+            deleteBuildingBg.remove();
+        }
+    }
+    else{
+        // If there is min one building
+        sellBuilding.classList.remove('buildingProductionDis');
+    
+        descInfoPer.innerText = formatNum(currentProduction, 3);
+        itemCountText.innerText = buildCountArr[sellIndex];
+        descInfoCount.innerText = buildCountArr[sellIndex];
+
+        // Just delete building
+        if(sellIndex === 1){
+            // Grandma
+            for (let i = 0; i < sellBuildingCount; i++) {
+                console.log(i);
+                let lastGrandma = document.querySelector('.buildContainer.build__grandmaContainer .grandmaImgBx:last-child');
+    
+                lastGrandma.remove();
+            }
+        }
+        else if(sellIndex !== 0){
+            for (let i = 0; i < sellBuildingCount; i++) {
+                let lastBuilding = document.querySelector(`.build__${sellBuildingNameUpper.toLowerCase()}Container img:last-child`);
+    
+                lastBuilding.remove();                
+            }
+        }
+    }
+}
