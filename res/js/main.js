@@ -107,6 +107,17 @@ function loadDataFromStorage(){
 
 
 
+// AUDIO
+let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
+let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
+let buildingClick1 = new Audio('./res/img/sounds/buildingClick1.mp3');
+let buildingClick2 = new Audio('./res/img/sounds/buildingClick2.mp3');
+
+clickInSound.volume = 0.16;
+clickOutSound.volume = 0.16;
+buildingClick1.volume = 0.35;
+buildingClick2.volume = 0.3;
+
 // GAME
 const cookie = document.querySelector('.cookie__img');
 const cookieContainer = document.querySelector('.cookie');
@@ -369,10 +380,6 @@ function customBNameValidation(){
 
 
 // COOKIE CLICKING
-let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
-let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
-clickInSound.volume = 0.16;
-clickOutSound.volume = 0.16;
 let intervalsCount = 0;
 let intervalsCountArray = [];
 let cookieClickStep = 1000;
@@ -566,51 +573,10 @@ let itemFarm,
     itemCortex;
 
 
-let itemCursorCount = 0,
-    itemGrandmaCount = 0,
-    itemFarmCount = 0,
-    itemMineCount = 0,
-    itemFactoryCount = 0,
-    itemBankCount = 0,
-    itemTempleCount = 0,
-    itemWizardCount = 0,
-    itemShipCount = 0,
-    itemAlchemyCount = 0,
-    itemPortalCount = 0,
-    itemTimeCount = 0,
-    itemCondenserCount = 0,
-    itemPrismCount = 0,
-    itemChanceCount = 0,
-    itemEngineCount = 0,
-    itemJsconsoleCount = 0,
-    itemIdleCount = 0,
-    itemCortexCount = 0;
-
-let buildCountArr = [itemCursorCount, itemGrandmaCount, itemFarmCount, itemMineCount, itemFactoryCount, itemBankCount, itemTempleCount, itemWizardCount, itemShipCount, itemAlchemyCount, itemPortalCount, itemTimeCount, itemCondenserCount, itemPrismCount, itemChanceCount, itemEngineCount, itemJsconsoleCount, itemIdleCount, itemCortexCount];
-
+let buildCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 // Total cookies produces by each building
-let itemCursorCookieCount = 0,
-    itemGrandmaCookieCount = 0,
-    itemFarmCookieCount = 0,
-    itemMineCookieCount = 0,
-    itemFactoryCookieCount = 0,
-    itemBankCookieCount = 0,
-    itemTempleCookieCount = 0,
-    itemWizardCookieCount = 0,
-    itemShipCookieCount = 0,
-    itemAlchemyCookieCount = 0,
-    itemPortalCookieCount = 0,
-    itemTimeCookieCount = 0,
-    itemCondenserCookieCount = 0,
-    itemPrismCookieCount = 0,
-    itemChanceCookieCount = 0,
-    itemEngineCookieCount = 0,
-    itemJsconsoleCookieCount = 0,
-    itemIdleCookieCount = 0,
-    itemCortexCookieCount = 0;
-
-let buildCookieCount = [itemCursorCookieCount, itemGrandmaCookieCount, itemFarmCookieCount, itemMineCookieCount, itemFactoryCookieCount, itemBankCookieCount, itemTempleCookieCount, itemWizardCookieCount, itemShipCookieCount, itemAlchemyCookieCount, itemPortalCookieCount, itemTimeCookieCount, itemCondenserCookieCount, itemPrismCookieCount, itemChanceCookieCount, itemEngineCookieCount, itemJsconsoleCookieCount, itemIdleCookieCount, itemCortexCookieCount];
+let buildCookieCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
 
 
@@ -1140,50 +1106,11 @@ function buyBuilding(building, buildingCount, buildingIndex){
 
 // BUILDING INTERVALS
 // Variables - check if there is interval
-let runningCursorInterval = false,
-    runningGrandmaInterval = false,
-    runningFarmInterval = false,
-    runningMineInterval = false,
-    runningFactoryInterval = false,
-    runningBankInterval = false,
-    runningTempleInterval = false,
-    runningWizardInterval = false,
-    runningShipInterval = false,
-    runningAlchemyInterval = false,
-    runningPortalInterval = false,
-    runningTimeInterval = false,
-    runningCondenserInterval = false,
-    runningPrismInterval = false,
-    runningChanceInterval = false,
-    runningEngineInterval = false,
-    runningJsconsoleInterval = false,
-    runningIdleInterval = false,
-    runningCortexInterval = false;
+let runningIntervalsArr = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 
-let runningIntervalsArr = [runningCursorInterval, runningGrandmaInterval, runningFarmInterval, runningMineInterval, runningFactoryInterval, runningBankInterval, runningTempleInterval, runningWizardInterval, runningShipInterval, runningAlchemyInterval, runningPortalInterval, runningTimeInterval, runningCondenserInterval, runningPrismInterval, runningChanceInterval, runningEngineInterval, runningJsconsoleInterval, runningIdleInterval, runningCortexInterval];
 
 // Variables for each building interval
-let cursorInterval = false,
-    grandmaInterval = false,
-    farmInterval = false,
-    mineInterval = false,
-    factoryInterval = false,
-    bankInterval = false,
-    templeInterval = false,
-    wizardInterval = false,
-    shipInterval = false,
-    alchemyInterval = false,
-    portalInterval = false,
-    timeInterval = false,
-    condenserInterval = false,
-    prismInterval = false,
-    chanceInterval = false,
-    engineInterval = false,
-    jsconsoleInterval = false,
-    idleInterval = false,
-    cortexInterval = false;
-
-let buildingIntervals = [cursorInterval, grandmaInterval, farmInterval, mineInterval, factoryInterval, bankInterval, templeInterval, wizardInterval, shipInterval, alchemyInterval, portalInterval, timeInterval, condenserInterval, prismInterval, chanceInterval, engineInterval, jsconsoleInterval, idleInterval, cortexInterval];
+let buildingIntervals = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
 
 // Variables for buildings - cookies per second
 let cursorPerSecond = 0.1,
@@ -1437,16 +1364,16 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
         let smallerStartNum = parseInt(finalNumber);
 
         if((1000 / (startNum / smallerStartNum)) > 6){
-            cursorInterval = setInterval(() => {
+            buildingIntervals[0] = setInterval(() => {
                 console.log(1000 / (startNum / smallerStartNum));
                 totalCookies += smallerStartNum;
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
                 localStorage.setItem('cookieCount', instaCookieCount);
                 localStorage.setItem('totalCookieCount', totalCookies);
-                itemCursorCookieCount += smallerStartNum;
+                buildCookieCount[0] += smallerStartNum;
 
-                infoProducesCookies.innerText = formatNum(itemCursorCookieCount, 3);
+                infoProducesCookies.innerText = formatNum(buildCookieCount[0], 3);
                 cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
                 updateCurrentComments();
@@ -1468,16 +1395,16 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 }
             }
 
-            cursorInterval = setInterval(() => {
+            buildingIntervals[0] = setInterval(() => {
                 console.log(1000 / Math.round(startNum / smallerStartNum));
                 totalCookies += smallerStartNum;
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
                 localStorage.setItem('cookieCount', instaCookieCount);
                 localStorage.setItem('totalCookieCount', totalCookies);
-                itemCursorCookieCount += smallerStartNum;
+                buildCookieCount[0] += smallerStartNum;
 
-                infoProducesCookies.innerText = formatNum(itemCursorCookieCount, 3);
+                infoProducesCookies.innerText = formatNum(buildCookieCount[0], 3);
                 cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
                 updateCurrentComments();
@@ -1935,6 +1862,8 @@ const middleBxsArr = [
 
 middleBxsArr[1].forEach((attrBtn, index) => {
     attrBtn.addEventListener('click', () => {
+        insertMiddlebxData(index);
+
         middleBxsArr[0].forEach((middleSec, secIndex) => {
             if(secIndex !== index) middleSec.style.display = "none";
         })
@@ -1955,3 +1884,91 @@ middleBxsArr[1].forEach((attrBtn, index) => {
         })
     })
 })
+
+
+// Insert data into each building info
+function insertMiddlebxData(index){
+    if(index === 1){
+        // OPTION SECTION
+        let middleDeleteBtn = middleBxsArr[0][index].querySelector('.basic__deleteBtn');
+        let middleMuteBtn = middleBxsArr[0][index].querySelector('.sett__volumeBtn');
+
+        // Delete all progress
+        middleDeleteBtn.addEventListener('click', () => {
+            // if(runningCookieInterval === true) disableCookieInterval = true;
+            
+            // totalCookies = 0;
+            // cookieCount = 0;
+            // instaCookieCount = 0;
+
+            // buildCountArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            // buildCookieCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            // buildPrizesArr = [cursorPrize, grandmaPrize, farmPrize, minePrize, factoryPrize, bankPrize, templePrize, wizardPrize, shipPrize, alchemyPrize, portalPrize, timePrize, condenserPrize, prismPrize, chancePrize, enginePrize, jsconsolePrize, idlePrize, cortexPrize];
+            // runningIntervalsArr = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+            // buildingIntervals = [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false];
+            // buildingsPerSecond = [cursorPerSecond, grandmaPerSecond, farmPerSecond, minePerSecond, factoryPerSecond, bankPerSecond, templePerSecond, wizardPerSecond, shipPerSecond, alchemyPerSecond, portalPerSecond, timePerSecond, condenserPerSecond, prismPerSecond, chancePerSecond, enginePerSecond, jsconsolePerSecond, idlePerSecond, cortexPerSecond];
+            // boughtUpgrades = [];
+            // displayedUpgrades = [];
+
+            // for(let i=0; i<100; i++){
+            //     window.clearInterval(i);
+            // }
+
+            // checkEnabledItems();
+            // showChangedPrize();
+            // showUpgrades();
+            // checkItemPrize();
+            // checkUpgradePrize();
+
+            localStorage.removeItem('bakeryName');
+            localStorage.removeItem('cookieCount');
+            localStorage.removeItem('totalCookieCount');
+            localStorage.removeItem('buildingsArr');
+            localStorage.removeItem('upgradesArr');
+
+            window.location = window.location;
+        })
+
+        // Mute audio
+        middleMuteBtn.addEventListener('click', () => {
+            let middleMuteText = middleMuteBtn.querySelector('span');
+
+            if(middleBxsArr[0][index].classList.contains('mutedAudio')){
+                middleBxsArr[0][index].classList.remove('mutedAudio');
+                middleMuteText.innerText = "Zapnuto";
+
+                clickInSound.volume = 0.16;
+                clickOutSound.volume = 0.16;
+                buildingClick1.volume = 0.35;
+                buildingClick2.volume = 0.3;
+            }
+            else{
+                middleBxsArr[0][index].classList.add('mutedAudio');
+                middleMuteText.innerText = "Vypnuto";
+
+                clickInSound.volume = 0;
+                clickOutSound.volume = 0;
+                buildingClick1.volume = 0;
+                buildingClick2.volume = 0;
+            }
+        })
+    }
+    else{
+        // ATTRIBUTES SECTION
+        let middleTotalCookieText = document.querySelector('.basicTotalCookies');
+        let middleCurrentCookieText = document.querySelector('.basicCurrentCookies');
+        let middleBuildingsText = document.querySelector('.basicTotalBuildings');
+        let middleCookiesPerText = document.querySelector('.basicCookiePerSec');
+        let middleBasicCookiePerClick = document.querySelector('.basicCookiePerClick');
+
+        let totalBuildingCount = buildCountArr.reduce((a, b) => a + b, 0);
+
+        totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
+        
+        middleTotalCookieText.innerText = formatNum(instaCookieCount, 3);
+        middleCurrentCookieText.innerText = formatNum(totalCookies, 3);
+        middleBuildingsText.innerText = totalBuildingCount;
+        middleCookiesPerText.innerText = totalCookiesPerSec;
+        middleBasicCookiePerClick.innerText = cookieClickStep;
+    }
+}
