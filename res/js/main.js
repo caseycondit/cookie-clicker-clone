@@ -1,14 +1,24 @@
 import { bakeryNames } from "./bakeryNames.js";
 import { grandmaNames } from "./grandmaNames.js";
 import { upgradesInfo } from "./upgradesInfo.js";
+import { comments } from "./comments.js";
 
 
+
+let totalCookies = 0;
 
 // LOAD DATA FROM LOCALSTORAGE
 let onLoadBakeryName;
-if(localStorage.getItem('bakeryName')){
-    onLoadBakeryName = localStorage.getItem('bakeryName');
-    loadDataFromStorage();
+if(
+    localStorage.getItem('bakeryName') &&
+    localStorage.getItem('cookieCount') &&
+    localStorage.getItem('totalCookieCount') &&
+    !isNaN(localStorage.getItem('cookieCount')) &&
+    !isNaN(localStorage.getItem('totalCookieCount'))
+    ){
+        onLoadBakeryName = localStorage.getItem('bakeryName');
+        totalCookies = parseInt(localStorage.getItem('totalCookieCount'));
+        loadDataFromStorage();
 }
 
 function loadDataFromStorage(){
@@ -101,7 +111,6 @@ function loadDataFromStorage(){
 const cookie = document.querySelector('.cookie__img');
 const cookieContainer = document.querySelector('.cookie');
 const cookieCountText = document.querySelector('.cookie__count');
-let totalCookies = 0;
 let cookieCount = 0;
 let instaCookieCount = 0;
 
@@ -390,10 +399,12 @@ function cookieClickIncrease(){
     totalCookies += cookieClickStep;
     remainingCookies += cookieClickStep;
     localStorage.setItem('cookieCount', instaCookieCount);
+    localStorage.setItem('totalCookieCount', totalCookies);
     checkEnabledItems();
     checkItemPrize();
     checkUpgradePrize();
     showChangedPrize();
+    updateCurrentComments();
 
     remainingIntervalCount++;
 
@@ -977,6 +988,9 @@ function decrementCookies(cookies){
     cookieCount -= cookies;
     instaCookieCount -= cookies;
     localStorage.setItem('cookieCount', instaCookieCount);
+    localStorage.setItem('totalCookieCount', totalCookies);
+
+    updateCurrentComments();
 
     cookieCountText.innerText = formatNum(cookieCount, 3);
 }
@@ -1388,11 +1402,14 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
             cookieCount += 1;
             instaCookieCount += 1;
             localStorage.setItem('cookieCount', instaCookieCount);
+            localStorage.setItem('totalCookieCount', totalCookies);
             buildCookieCount[buildingIndex] += 1;
     
             infoProducesCookies.innerText = formatNum(buildCookieCount[buildingIndex], 3);
             cookieCountText.innerText = formatNum(instaCookieCount, 3);
     
+            
+            updateCurrentComments();
             checkItemPrize();
             checkUpgradePrize();
         }, (1000 / (Math.round(buildingsPerSecond[buildingIndex] * itemBuildCount * 10) / 10)));
@@ -1426,11 +1443,13 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
                 localStorage.setItem('cookieCount', instaCookieCount);
+                localStorage.setItem('totalCookieCount', totalCookies);
                 itemCursorCookieCount += smallerStartNum;
 
                 infoProducesCookies.innerText = formatNum(itemCursorCookieCount, 3);
                 cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
+                updateCurrentComments();
                 checkItemPrize();
                 checkUpgradePrize();
             }, (1000 / (startNum / smallerStartNum)));
@@ -1455,11 +1474,13 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
                 localStorage.setItem('cookieCount', instaCookieCount);
+                localStorage.setItem('totalCookieCount', totalCookies);
                 itemCursorCookieCount += smallerStartNum;
 
                 infoProducesCookies.innerText = formatNum(itemCursorCookieCount, 3);
                 cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
+                updateCurrentComments();
                 checkItemPrize();
                 checkUpgradePrize();
             }, (1000 / (Math.round(startNum / smallerStartNum))));
@@ -1729,6 +1750,9 @@ function sellBuildings(e){
     cookieCount += sellPrize;
     instaCookieCount += sellPrize;
     localStorage.setItem('cookieCount', instaCookieCount);
+    localStorage.setItem('totalCookieCount', totalCookies);
+
+    updateCurrentComments();
 
     cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
@@ -1812,10 +1836,76 @@ function sellBuildings(e){
 }
 
 
-/*
-Localstorage
-    name - done
-    instaCookieCount - done
-    List of all buildings - done
-    list of all upgrades
-*/
+
+// COMMENTS
+// Generate random comment
+let currentCommentsArr = [];
+    
+function updateCurrentComments(){
+    currentCommentsArr = [];
+
+    comments.forEach((comment) => {
+        if(totalCookies >= comment[1]){
+            currentCommentsArr.push(comment);
+        }
+    })
+}
+
+updateCurrentComments();
+
+function generateRandomComment(){
+    let randomCommentNumber = Math.floor(Math.random() * currentCommentsArr.length);
+
+    let randomComment = currentCommentsArr[randomCommentNumber][2];
+
+    return randomComment;
+}
+
+// Change comments
+const attrCitatesText = document.querySelectorAll('.attr__citate');
+
+attrCitatesText.forEach((attrCitate) => {
+    attrCitate.innerText = generateRandomComment();
+    attrCitate.addEventListener('click', changeComments);
+})
+
+let commentInterval = setInterval(() => {
+    changeComments();
+}, 5000);
+
+let runningCommentAnimation = false;
+
+function changeComments(){
+    console.log(currentCommentsArr);
+    if(runningCommentAnimation === true) return;
+    clearInterval(commentInterval);
+    runningCommentAnimation = true;
+
+    let index;
+    let updatedIndex;
+
+    if(attrCitatesText[0].classList.contains('activeOnLoad') || attrCitatesText[0].classList.contains('activeCitate')){
+        index = 0;
+    }
+    else{
+        index = 1;
+    }
+    
+    index === 1 ? updatedIndex = 0 : updatedIndex = 1;
+
+    attrCitatesText[index].classList.remove('activeOnLoad');
+    attrCitatesText[index].classList.remove('activeCitate');
+    attrCitatesText[index].classList.add('inactiveCitate');
+    
+    attrCitatesText[updatedIndex].classList.remove('inactiveOnLoad');
+    attrCitatesText[updatedIndex].classList.remove('inactiveCitate');
+    attrCitatesText[updatedIndex].classList.add('activeCitate');
+    
+    setTimeout(() => {
+        attrCitatesText[index].innerText = generateRandomComment();
+        runningCommentAnimation = false;
+        commentInterval = setInterval(() => {
+            changeComments();
+        }, 5000);
+    }, 300);
+}

@@ -329,16 +329,82 @@ h1,h2,h3,h4,h5,h6,p{
     color: white;
 }
 
-.attr__citate{
-    color: #e5e5e5;
-    font-size: 16px;
-    margin-top: 16px;
+.attr__citateBx{
+    display: grid;
     height: max-content;
+    padding-inline: 4px;
+    margin-top: 16px;
+    font-size: 16px;
+}
+.attr__citate{
+    position: relative;
+    grid-column: 1;
+    grid-row: 1;
+    color: #e5e5e5;
+    text-align: center;
     transition: text-shadow 200ms ease-in-out;
+}
+.attr__citate.activeOnLoad{
+    top: 0;
+    opacity: 1;
+    visibility: visible;
+}
+.attr__citate.inactiveOnLoad{
+    top: 24px;
+    opacity: 0;
+    visibility: hidden;
+}
+.attr__citate.activeCitate{
+    animation: attrCitateIn 300ms ease-in-out forwards;
+}
+.attr__citate.inactiveCitate{
+    animation: attrCitateOut 300ms ease-in-out forwards;
 }
 .attr__citate:hover{
     text-shadow: 6px 6px 5px black;
 }
+
+@keyframes attrCitateIn {
+    0%{
+        top: 24px;
+        opacity: 0;
+        visibility: hidden;
+    }
+    1%{
+        top: 24px;
+        opacity: 0;
+        visibility: visible;
+    }
+    100%{
+        top: 0;
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+@keyframes attrCitateOut{
+    0%{
+        top: 0;
+        opacity: 1;
+        visibility: visible;
+    }
+    90%{
+        top: -10px;
+        opacity: 0;
+        visibility: visible;
+    }
+    91%{
+        top: -10px;
+        opacity: 0;
+        visibility: hidden;
+    }
+    100%{
+        top: 24px;
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
 
 /* middle between */
 .middle__between{
