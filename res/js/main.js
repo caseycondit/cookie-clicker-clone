@@ -277,21 +277,21 @@ function updateMoovingUpgradeDesc(){
         upgrade.addEventListener('mouseenter', (e) => {
             upgradeDesc.style.display = "block";
     
-            if(e.clientY >= 228){
-                upgradeDesc.style.top = 69 + "%";
+            if(e.clientY <= 166){
+                upgradeDesc.style.top = 0 + "px";
             }
             else{
-                upgradeDesc.style.top = (e.clientY - 92) + "px";
+                upgradeDesc.style.top = (e.clientY - 165) + "px";
             }
         })
     
         upgrade.addEventListener('mousemove', (e) => {
     
-            if(e.clientY >= 228){
-                upgradeDesc.style.top = 69 + "%";
+            if(e.clientY <= 166){
+                upgradeDesc.style.top = 0 + "px";
             }
             else{
-                upgradeDesc.style.top = (e.clientY - 92) + "px";
+                upgradeDesc.style.top = (e.clientY - 165) + "px";
             }
         })
     
@@ -1404,7 +1404,6 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
 
         if((1000 / (startNum / smallerStartNum)) > 6){
             buildingIntervals[0] = setInterval(() => {
-                console.log(1000 / (startNum / smallerStartNum));
                 totalCookies += smallerStartNum;
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
@@ -1435,7 +1434,6 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
             }
 
             buildingIntervals[0] = setInterval(() => {
-                console.log(1000 / Math.round(startNum / smallerStartNum));
                 totalCookies += smallerStartNum;
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
