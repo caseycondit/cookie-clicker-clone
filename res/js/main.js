@@ -1,4 +1,4 @@
-import { bakeryNames } from "./bakeryNames.js";
+// import { bakeryNames } from "./bakeryNames.js";
 import { grandmaNames } from "./grandmaNames.js";
 import { upgradesInfo } from "./upgradesInfo.js";
 import { comments } from "./comments.js";
@@ -27,7 +27,7 @@ function loadDataFromStorage(){
         instaCookieCount = parseInt(localStorage.getItem('cookieCount'));
         cookieCount = parseInt(localStorage.getItem('cookieCount'));
 
-        cookieCountText.innerText = formatNum(instaCookieCount, 3);
+        cookieCountText.innerText = formatNum(instaCookieCount);
         
         // All functions to update game
         checkEnabledItems();
@@ -56,8 +56,8 @@ function loadDataFromStorage(){
                         let minusCookies = Math.round(buildPrizesArr[index] / 5);
                         buildPrizesArr[index] += minusCookies;
                         
-                        infoPrizeText.innerText = formatNum(buildPrizesArr[index], 3);
-                        descPrizeText.innerText = formatNum(buildPrizesArr[index], 3);
+                        infoPrizeText.innerText = formatNum(buildPrizesArr[index]);
+                        descPrizeText.innerText = formatNum(buildPrizesArr[index]);
                         
                         // Count
                         buildCountArr[index]++;
@@ -93,6 +93,10 @@ function loadDataFromStorage(){
                 buildingsPerSecond[storageUpgradeType] += buildingsPerSecond[storageUpgradeType];
     
                 productionPerText.innerText = buildingsPerSecond[storageUpgradeType];
+
+                if(storageUpgradeType == 0){
+                    cookieClickStep *= 2;
+                }
     
                 setUpgradeInterval(currentUpgradeNameUpper, storageUpgradeType);
     
@@ -110,13 +114,21 @@ function loadDataFromStorage(){
 // AUDIO
 let clickInSound = new Audio('./res/img/sounds/clickIn.mp3');
 let clickOutSound = new Audio('./res/img/sounds/clickOut.mp3');
-let buildingClick1 = new Audio('./res/img/sounds/buildingClick1.mp3');
-let buildingClick2 = new Audio('./res/img/sounds/buildingClick2.mp3');
+let buildingClickInSound = new Audio('./res/img/sounds/buildingClickIn.mp3');
+let buildingClickOutSound = new Audio('./res/img/sounds/buildingClickOut.mp3');
+let tickInSound = new Audio('./res/img/sounds/tick.mp3');
+let tickOutSound = new Audio('./res/img/sounds/tickOff.mp3');
+let buySound = new Audio('./res/img/sounds/buy.mp3');
+let sellSound = new Audio('./res/img/sounds/sell.mp3');
 
 clickInSound.volume = 0.16;
 clickOutSound.volume = 0.16;
-buildingClick1.volume = 0.35;
-buildingClick2.volume = 0.3;
+buildingClickInSound.volume = 0.35;
+buildingClickOutSound.volume = 0.3;
+tickInSound.volume = 0.3;
+tickOutSound.volume = 0.3;
+buySound.volume = 0.35;
+sellSound.volume = 0.4;
 
 // GAME
 const cookie = document.querySelector('.cookie__img');
@@ -126,7 +138,7 @@ let cookieCount = 0;
 let instaCookieCount = 0;
 
 // FORMAT NUMBERS
-function formatNum(num, digits){
+function formatNum(num){
     let lookup = [
         { value: 1, symbol: ""},
         { value: 1e6, symbol: " milion"},
@@ -162,7 +174,7 @@ function formatNum(num, digits){
         return num.toLocaleString('en-Us');
     }
     else if(item){
-        return (num / item.value).toFixed(digits).replace(rx, "$1") + item.symbol;
+        return (num / item.value).toFixed(3).replace(rx, "$1") + item.symbol;
     }
     else{
         return "0";
@@ -302,7 +314,15 @@ const customCloseIcon = document.querySelector('.custom__close');
 const customBakeryError = document.querySelector('.custom__error');
 
 function randomBakeryName(){
-    return bakeryNames[(Math.random() * bakeryNames.length) | 0];
+    let firstHalfName = ["Kouzelná", "Fantastická", "Luxusní", "Troufalá", "Elegantní", "Hezká", "Rozkošná", "Pirátská", "Ninjovská", "Zombie", "Robotí", "Radikální", "Městská", "Super", "Pořádná", "Sladká", "Děsná", "Dvojitá", "Trojitá", "Turbo", "Techno", "Disko", "Elektro", "Tančící", "Divotvorná", "Mutantí", "Vesmírná", "Vědecká", "Středověká", "Budoucí", "Kapitánská", "Vousatá", "Rozmilá", "Maličká", "Veliká", "Ohnivá", "Vodní", "Zmrzlá", "Kovová", "Plastová", "Pevná", "Tekutá", "Plesnivá", "Blýskavá", "Šťastná", "Šťastná malá", "Slizká", "Chutná", "Delikátní", "Hladová", "Chamtivá", "Smrtonosná", "Profesorská", "Doktorská", "Mocná", "Čokoládová", "Drobivá", "Čoklitová", "Spravedlivá", "Slavná", "Mnemonická", "Psychická", "Šílená", "Uspěchaná", "Bláznivá", "Královská", "El", "Von"]
+    let secondHalfName = ["Keks", "Sušenka", "Muffin", "Koláček", "Dortík", "Palačinka", "Střípek", "Rozeta", "Aparát", "Loutka", "Palčák", "Ponožka", "Konvice", "Záhada", "Pekař", "Kuchař", "Babička", "Klik", "Klikač", "Raketa", "Továrna", "Portál", "Stroj", "Experiment", "Příšera", "Panika", "Lupič", "Bandita", "Kořist", "Brambora", "Pizza", "Burger", "Klobása", "Karbanátek", "Špageta", "Makaron", "Koťátko", "Štěňátko", "Žirafa", "Zebra", "Papoušek", "Delfín", "Kachňátko", "Lenochod", "Želva", "Goblin", "Skřítek", "Gnóm", "Počítač", "Pirátská", "Ninjovská", "Zombie", "Robotí"]
+
+    let firstNameNum = Math.round(Math.random() * firstHalfName.length);
+    let secondNameNum = Math.round(Math.random() * secondHalfName.length);
+
+    let randomCombineBakeryName = firstHalfName[firstNameNum] + " " + secondHalfName[secondNameNum];
+
+    return randomCombineBakeryName;
 };
 
 if(!onLoadBakeryName){
@@ -316,6 +336,7 @@ bakeryName.innerText = onLoadBakeryName;
 
 // Bakery event listeners
 bakeryNameBx.addEventListener('click', () => {
+    tickInSound.play();
     customBakery.style.animation = "fadeIn 200ms ease-in-out forwards";
     newBakeryName ? customBInput.value = newBakeryName : customBInput.value = onLoadBakeryName;
 
@@ -333,10 +354,17 @@ customBakery.addEventListener('click', (e) => {
     }
 })
 
-customEscBtn.addEventListener('click', customBakeryEsc);
-customCloseIcon.addEventListener('click', customBakeryEsc);
+customEscBtn.addEventListener('click', () => {
+    tickOutSound.play();
+    customBakeryEsc();
+});
+customCloseIcon.addEventListener('click', () => {
+    tickOutSound.play();
+    customBakeryEsc();
+});
 
 customRandomBtn.addEventListener('click', () => {
+    tickInSound.play();
     customBInput.value = randomBakeryName();
 })
 
@@ -349,6 +377,7 @@ customBInput.addEventListener('keydown', (e) => {
 // Bakery functions
 function checkBakeryEsc(e){
     if(e.key === "Escape"){
+        tickOutSound.play();
         customBakeryEsc();
     }
 }
@@ -364,6 +393,7 @@ function customBakeryEsc(){
 }
 
 function customBNameValidation(){
+    tickInSound.play();
     if(customBInput.value.length <= 2){
         customBakeryError.style.display = "block";
     }
@@ -382,7 +412,7 @@ function customBNameValidation(){
 // COOKIE CLICKING
 let intervalsCount = 0;
 let intervalsCountArray = [];
-let cookieClickStep = 1000;
+let cookieClickStep = 1;
 let remainingCookies = 0;
 let remainingIntervalCount = 0;
 let disableCookieInterval = false;
@@ -438,7 +468,7 @@ function cookieClickIncrease(){
             intervalI += numberIncrement;
         }
 
-        cookieCountText.innerText = formatNum(cookieCount, 3);
+        cookieCountText.innerText = formatNum(cookieCount);
 
         if(intervalI >= cookieClickStep){
             clearInterval(window['cookieAddInterval' + intervalsCountArray[0]]);
@@ -452,7 +482,7 @@ function cookieClickIncrease(){
 
                 cookieCount -= remainingIntervalCount * numDiff;
 
-                cookieCountText.innerText = formatNum(cookieCount, 3);
+                cookieCountText.innerText = formatNum(cookieCount);
             }
         }
         if(disableCookieInterval === true){
@@ -462,7 +492,7 @@ function cookieClickIncrease(){
 
             cookieCount += remainingCookies;
             remainingCookies = 0;
-            cookieCountText.innerText = formatNum(cookieCount, 3);
+            cookieCountText.innerText = formatNum(cookieCount);
             // console.log(cookieCount);
         }
     });
@@ -485,7 +515,7 @@ function cookieClickEffect(e){
     let topPos = e.pageY;
 
     let newP = document.createElement('p');
-    newP.innerText = `+${formatNum(cookieClickStep, 3)}`;
+    newP.innerText = `+${formatNum(cookieClickStep)}`;
     newP.classList.add('floatingCookieEffect');
 
     let randomPLeft = Math.floor(Math.random() * ((leftPos + 2) - (leftPos - 2) + 1) + (leftPos - 2))
@@ -582,7 +612,7 @@ let buildCookieCount = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 function checkEnabledItems(){
     // Autoclick
-    if(instaCookieCount >= 15 && itemCursor.classList.contains('itemDisabled')){
+    if(totalCookies >= 15 && itemCursor.classList.contains('itemDisabled')){
         itemCursor.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newFarmHtml);
@@ -592,7 +622,7 @@ function checkEnabledItems(){
     }
 
     // Grandma
-    if(instaCookieCount >= 100 && itemGrandma.classList.contains('itemDisabled')){
+    if(totalCookies >= 100 && itemGrandma.classList.contains('itemDisabled')){
         itemGrandma.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newMineHtml);
@@ -602,7 +632,7 @@ function checkEnabledItems(){
     }
 
     // Farm
-    if(instaCookieCount >= 1100 && itemFarm.classList.contains('itemDisabled')){
+    if(totalCookies >= 1100 && itemFarm.classList.contains('itemDisabled')){
         itemFarm.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newFactoryHtml);
@@ -612,7 +642,7 @@ function checkEnabledItems(){
     }
 
     // Mine
-    if(instaCookieCount >= 12000 && itemMine.classList.contains('itemDisabled')){
+    if(totalCookies >= 12000 && itemMine.classList.contains('itemDisabled')){
         itemMine.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newBankHtml);
@@ -622,7 +652,7 @@ function checkEnabledItems(){
     }
 
     // Factory
-    if(instaCookieCount >= 130000 && itemFactory.classList.contains('itemDisabled')){
+    if(totalCookies >= 130000 && itemFactory.classList.contains('itemDisabled')){
         itemFactory.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newTempleHtml);
@@ -632,7 +662,7 @@ function checkEnabledItems(){
     }
 
     // Bank
-    if(instaCookieCount >= 1400000 && itemBank.classList.contains('itemDisabled')){
+    if(totalCookies >= 1400000 && itemBank.classList.contains('itemDisabled')){
         itemBank.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newWizardHtml);
@@ -642,7 +672,7 @@ function checkEnabledItems(){
     }
 
     // Temple
-    if(instaCookieCount >= 20000000 && itemTemple.classList.contains('itemDisabled')){
+    if(totalCookies >= 20000000 && itemTemple.classList.contains('itemDisabled')){
         itemTemple.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newShipHtml);
@@ -652,7 +682,7 @@ function checkEnabledItems(){
     }
 
     // Wizard
-    if(instaCookieCount >= 330000000 && itemWizard.classList.contains('itemDisabled')){
+    if(totalCookies >= 330000000 && itemWizard.classList.contains('itemDisabled')){
         itemWizard.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newAlchemyHtml);
@@ -662,7 +692,7 @@ function checkEnabledItems(){
     }
 
     // Ship
-    if(instaCookieCount >= 5100000000 && itemShip.classList.contains('itemDisabled')){
+    if(totalCookies >= 5100000000 && itemShip.classList.contains('itemDisabled')){
         itemShip.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newPortalHtml);
@@ -672,7 +702,7 @@ function checkEnabledItems(){
     }
 
     // Alchemy
-    if(instaCookieCount >= 75000000000 && itemAlchemy.classList.contains('itemDisabled')){
+    if(totalCookies >= 75000000000 && itemAlchemy.classList.contains('itemDisabled')){
         itemAlchemy.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newTimeHtml);
@@ -682,7 +712,7 @@ function checkEnabledItems(){
     }
 
     // Portal
-    if(instaCookieCount >= 1000000000000 && itemPortal.classList.contains('itemDisabled')){
+    if(totalCookies >= 1000000000000 && itemPortal.classList.contains('itemDisabled')){
         itemPortal.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newCondenserHtml);
@@ -692,7 +722,7 @@ function checkEnabledItems(){
     }
 
     // Time
-    if(instaCookieCount >= 14000000000000 && itemTime.classList.contains('itemDisabled')){
+    if(totalCookies >= 14000000000000 && itemTime.classList.contains('itemDisabled')){
         itemTime.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newPrismHtml);
@@ -702,7 +732,7 @@ function checkEnabledItems(){
     }
 
     // Condenser
-    if(instaCookieCount >= 170000000000000 && itemCondenser.classList.contains('itemDisabled')){
+    if(totalCookies >= 170000000000000 && itemCondenser.classList.contains('itemDisabled')){
         itemCondenser.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newChanceHtml);
@@ -712,7 +742,7 @@ function checkEnabledItems(){
     }
 
     // Prism
-    if(instaCookieCount >= 2100000000000000 && itemPrism.classList.contains('itemDisabled')){
+    if(totalCookies >= 2100000000000000 && itemPrism.classList.contains('itemDisabled')){
         itemPrism.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newEngineHtml);
@@ -722,7 +752,7 @@ function checkEnabledItems(){
     }
 
     // Chance
-    if(instaCookieCount >= 26000000000000000 && itemChance.classList.contains('itemDisabled')){
+    if(totalCookies >= 26000000000000000 && itemChance.classList.contains('itemDisabled')){
         itemChance.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newJsconsoleHtml);
@@ -732,7 +762,7 @@ function checkEnabledItems(){
     }
 
     // Engine
-    if(instaCookieCount >= 310000000000000000 && itemEngine.classList.contains('itemDisabled')){
+    if(totalCookies >= 310000000000000000 && itemEngine.classList.contains('itemDisabled')){
         itemEngine.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newIdleHtml);
@@ -742,7 +772,7 @@ function checkEnabledItems(){
     }
 
     // Jsconsole
-    if(instaCookieCount >= 71000000000000000000 && itemJsconsole.classList.contains('itemDisabled')){
+    if(totalCookies >= 71000000000000000000 && itemJsconsole.classList.contains('itemDisabled')){
         itemJsconsole.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newCortexHtml);
@@ -752,13 +782,13 @@ function checkEnabledItems(){
     }
 
     // Idle
-    if(instaCookieCount >= 12000000000000000000000 && itemIdle.classList.contains('itemDisabled')){
+    if(totalCookies >= 12000000000000000000000 && itemIdle.classList.contains('itemDisabled')){
         itemIdle.classList.remove('itemDisabled');
         buildingsMoovingDesc();
     }
 
     // Cortex
-    if(instaCookieCount >= 1900000000000000000000000 && itemCortex.classList.contains('itemDisabled')){
+    if(totalCookies >= 1900000000000000000000000 && itemCortex.classList.contains('itemDisabled')){
         itemCortex.classList.remove('itemDisabled');
         buildingsMoovingDesc();
     }
@@ -786,27 +816,28 @@ let cursorPrize = 15,
     idlePrize = 12000000000000000000000,
     cortexPrize = 1900000000000000000000000;
 
+let startBuildPrizesArr = [cursorPrize, grandmaPrize, farmPrize, minePrize, factoryPrize, bankPrize, templePrize, wizardPrize, shipPrize, alchemyPrize, portalPrize, timePrize, condenserPrize, prismPrize, chancePrize, enginePrize, jsconsolePrize, idlePrize, cortexPrize];
 let buildPrizesArr = [cursorPrize, grandmaPrize, farmPrize, minePrize, factoryPrize, bankPrize, templePrize, wizardPrize, shipPrize, alchemyPrize, portalPrize, timePrize, condenserPrize, prismPrize, chancePrize, enginePrize, jsconsolePrize, idlePrize, cortexPrize];
 
 
 // Generate all buildings
-const newFarmHtml = generateNewBuilding("Farma", "Farm", formatNum(farmPrize, 3), "Tady se z keksových semínek pěstují keksové rostliny.", "234.4", 3, -101);
-const newMineHtml = generateNewBuilding("Důl", "Mine", formatNum(minePrize, 3), "Těží sušenkové těsto a čokoládové střípky.", "1,065", 4, -148);
-const newFactoryHtml = generateNewBuilding("Továrna", "Factory", formatNum(factoryPrize, 3), "Produkuje velké množství keksů.", "5,893", 5, -196);
-const newBankHtml = generateNewBuilding("Banka", "Bank", formatNum(bankPrize, 3), "Generuje keksy z úroku.", "31,733", 6, -726);
-const newTempleHtml = generateNewBuilding("Chrám", "Temple", formatNum(templePrize, 3), "Plné vzácné, starodávné čokolády.", "176,802", 7, -774);
-const newWizardHtml = generateNewBuilding("Čarodějná věž", "Wizard", formatNum(wizardPrize, 3), "Vyvolává keksy pomocí kouzel.", "997,347", 8, -821);
-const newShipHtml = generateNewBuilding("Dodávka", "Ship", formatNum(shipPrize, 3), "Přiváží čerstvé keksy z keksové planety.", "2.947 milion", 9, -244);
-const newAlchemyHtml = generateNewBuilding("Alchymistická laboratoř", "Alchemy", formatNum(alchemyPrize, 3), "Přetváří zlato na keksy.", "36.267 milion", 10, -292);
-const newPortalHtml = generateNewBuilding("Portál", "Portal", formatNum(portalPrize, 3), "Otevírá brány do Keksmíru.", "113.335 milion", 11, -340);
-const newTimeHtml = generateNewBuilding("Stroj času", "Time", formatNum(timePrize, 3), "Přinášejte keksy z minulosti, které ještě nikdo nesnědl.", "736.677 milion", 12, -387);
-const newCondenserHtml = generateNewBuilding("Antihmotový kondenzátor", "Condenser", formatNum(condenserPrize, 3), "Kondenzuje antihmotu ve vesmíru na keksy.", "4.873 bilion", 13, -628);
-const newPrismHtml = generateNewBuilding("Prizma", "Prism", formatNum(prismPrize, 3), "Samotné světlo přeměňuje na keksy.", "32.867", 14, -674);
-const newChanceHtml = generateNewBuilding("Šancovač", "Chance", formatNum(chancePrize, 3), "Generuje keksy jen tak z ničeho, čistě na bázi štěstí.", "238.003 bilion", 15, -914);
-const newEngineHtml = generateNewBuilding("Fraktální motor", "Engine", formatNum(enginePrize, 3), "Přeměňuje keksy na ještě více keksů.", "1.7 trillion", 16, -966);
-const newJsconsoleHtml = generateNewBuilding("Konzole javascript", "Jsconsole", formatNum(jsconsolePrize, 3), "Vytváří keksy přímo v kódu, ve kterém je psána tato hra.", "6.233 trillion", 17, -1541);
-const newIdleHtml = generateNewBuilding("Nečinný vesmír", "Idle", formatNum(idlePrize, 3), "Vedle našeho vesmíru existuje i několik dalších, nečinných vesmírů. Konečně jste objevili způsob, jak se nabourat do jejich produkce a cokoliv, co vyrábějí, přeměnit na keksy.", "47.034 trillion", 18, -1590);
-const newCortexHtml = generateNewBuilding("Kortexový pekař", "Cortex", formatNum(cortexPrize, 3), "Tyto umělé mozky o velikosti planety jsou schopné zhmotnit sny o keksech. Čas a prostor jsou nepodstatné. Realita je svévolná.", "101.506 septillion", 19, -1637);
+const newFarmHtml = generateNewBuilding("Farma", "Farm", formatNum(farmPrize), "Tady se z keksových semínek pěstují keksové rostliny.", "234.4", 3, -101);
+const newMineHtml = generateNewBuilding("Důl", "Mine", formatNum(minePrize), "Těží sušenkové těsto a čokoládové střípky.", "1,065", 4, -148);
+const newFactoryHtml = generateNewBuilding("Továrna", "Factory", formatNum(factoryPrize), "Produkuje velké množství keksů.", "5,893", 5, -196);
+const newBankHtml = generateNewBuilding("Banka", "Bank", formatNum(bankPrize), "Generuje keksy z úroku.", "31,733", 6, -726);
+const newTempleHtml = generateNewBuilding("Chrám", "Temple", formatNum(templePrize), "Plné vzácné, starodávné čokolády.", "176,802", 7, -774);
+const newWizardHtml = generateNewBuilding("Čarodějná věž", "Wizard", formatNum(wizardPrize), "Vyvolává keksy pomocí kouzel.", "997,347", 8, -821);
+const newShipHtml = generateNewBuilding("Dodávka", "Ship", formatNum(shipPrize), "Přiváží čerstvé keksy z keksové planety.", "2.947 milion", 9, -244);
+const newAlchemyHtml = generateNewBuilding("Alchymistická laboratoř", "Alchemy", formatNum(alchemyPrize), "Přetváří zlato na keksy.", "36.267 milion", 10, -292);
+const newPortalHtml = generateNewBuilding("Portál", "Portal", formatNum(portalPrize), "Otevírá brány do Keksmíru.", "113.335 milion", 11, -340);
+const newTimeHtml = generateNewBuilding("Stroj času", "Time", formatNum(timePrize), "Přinášejte keksy z minulosti, které ještě nikdo nesnědl.", "736.677 milion", 12, -387);
+const newCondenserHtml = generateNewBuilding("Antihmotový kondenzátor", "Condenser", formatNum(condenserPrize), "Kondenzuje antihmotu ve vesmíru na keksy.", "4.873 bilion", 13, -628);
+const newPrismHtml = generateNewBuilding("Prizma", "Prism", formatNum(prismPrize), "Samotné světlo přeměňuje na keksy.", "32.867", 14, -674);
+const newChanceHtml = generateNewBuilding("Šancovač", "Chance", formatNum(chancePrize), "Generuje keksy jen tak z ničeho, čistě na bázi štěstí.", "238.003 bilion", 15, -914);
+const newEngineHtml = generateNewBuilding("Fraktální motor", "Engine", formatNum(enginePrize), "Přeměňuje keksy na ještě více keksů.", "1.7 trillion", 16, -966);
+const newJsconsoleHtml = generateNewBuilding("Konzole javascript", "Jsconsole", formatNum(jsconsolePrize), "Vytváří keksy přímo v kódu, ve kterém je psána tato hra.", "6.233 trillion", 17, -1541);
+const newIdleHtml = generateNewBuilding("Nečinný vesmír", "Idle", formatNum(idlePrize), "Vedle našeho vesmíru existuje i několik dalších, nečinných vesmírů. Konečně jste objevili způsob, jak se nabourat do jejich produkce a cokoliv, co vyrábějí, přeměnit na keksy.", "47.034 trillion", 18, -1590);
+const newCortexHtml = generateNewBuilding("Kortexový pekař", "Cortex", formatNum(cortexPrize), "Tyto umělé mozky o velikosti planety jsou schopné zhmotnit sny o keksech. Čas a prostor jsou nepodstatné. Realita je svévolná.", "101.506 septillion", 19, -1637);
 
 function generateNewBuilding(name, buildClass, prize, citation, productionPerSec, buldingIndex, descIconPos){
     return (`
@@ -915,6 +946,8 @@ function buyItemBuilding(e){
     let buildingIndex = buildingsArray.indexOf(building); // 0
 
     if(instaCookieCount >= buildPrizesArr[buildingIndex]){
+        buySound.play();
+
         let infoPrizeText = building.querySelector('.info__prizeText');
         let descPrizeText = building.querySelector('.desc__count');
         let itemCountText = building.querySelector('.item__count');
@@ -929,8 +962,8 @@ function buyItemBuilding(e){
         let minusCookies = Math.round(buildPrizesArr[buildingIndex] / 5);
         buildPrizesArr[buildingIndex] += minusCookies;
         
-        infoPrizeText.innerText = formatNum(buildPrizesArr[buildingIndex], 3);
-        descPrizeText.innerText = formatNum(buildPrizesArr[buildingIndex], 3);
+        infoPrizeText.innerText = formatNum(buildPrizesArr[buildingIndex]);
+        descPrizeText.innerText = formatNum(buildPrizesArr[buildingIndex]);
         
         // Count
         buildCountArr[buildingIndex]++;
@@ -958,7 +991,7 @@ function decrementCookies(cookies){
 
     updateCurrentComments();
 
-    cookieCountText.innerText = formatNum(cookieCount, 3);
+    cookieCountText.innerText = formatNum(cookieCount);
 }
 
 
@@ -1149,14 +1182,14 @@ function setBuildingInterval(buildingNameUpper, buildingIndex){
     let itemBuildCount = (buildCountArr[buildingIndex] + 1);
 
     infoItemCount.innerText = itemBuildCount;
-    infoPerSec.innerText = formatNum((itemBuildCount * buildingsPerSecond[buildingIndex]), 3);
+    infoPerSec.innerText = formatNum((itemBuildCount * buildingsPerSecond[buildingIndex]));
 
     // Count all buildings production per second and display it in text under cookie
     totalCookiesPerSecArr[buildingIndex] = (Math.round(buildingsPerSecond[buildingIndex] * itemBuildCount * 10) / 10);
 
     totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
 
-    cookiePerSecText.innerText = formatNum(totalCookiesPerSec, 3);
+    cookiePerSecText.innerText = formatNum(totalCookiesPerSec);
     
     // Show information
     buildings()[buildingIndex].classList.add('descInfoEnabled');
@@ -1200,7 +1233,7 @@ function showUpgrades(){
                                         </div>
                                         <div class="desc__countBx">
                                             <img src="./res/img/money.png" alt="" class="desc__countImg" draggable="false">
-                                            <p class="desc__count prizeGreen">${formatNum(info[2], 3)}</p>
+                                            <p class="desc__count prizeGreen">${formatNum(info[2])}</p>
                                         </div>
                                     </div>
                                     <p class="desc__upgTitle">${(info[3])}</p>
@@ -1262,6 +1295,8 @@ function buyUpgrade(e){
     let currentUpgradePrize = upgradesInfo[upgradeType].arr[upgradeIndex][2];
 
     if(instaCookieCount >= currentUpgradePrize){
+        buySound.play();
+
         let currentBuilding = buildings()[upgradeType];
         let currentUpgradeName = upgradesInfo[upgradeType].type;
         let currentUpgradeNameUpper = currentUpgradeName.charAt(0).toUpperCase() + currentUpgradeName.slice(1)
@@ -1272,6 +1307,10 @@ function buyUpgrade(e){
         buildingsPerSecond[upgradeType] += buildingsPerSecond[upgradeType];
 
         productionPerText.innerText = buildingsPerSecond[upgradeType];
+
+        if(upgradeType == 0){
+            cookieClickStep *= 2;
+        }
 
         setUpgradeInterval(currentUpgradeNameUpper, upgradeType);
 
@@ -1298,12 +1337,12 @@ function setUpgradeInterval(upgradeNameUpper, upgradeIndex){
     let itemBuildCount = (buildCountArr[upgradeIndex]);
     let currentProduction = buildingsPerSecond[upgradeIndex] * itemBuildCount;
 
-    infoPerText.innerText = formatNum(currentProduction, 3);
+    infoPerText.innerText = formatNum(currentProduction);
 
     totalCookiesPerSecArr[upgradeIndex] = (Math.round(buildingsPerSecond[upgradeIndex] * itemBuildCount * 10) / 10);
     totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
 
-    cookiePerSecText.innerText = formatNum(totalCookiesPerSec, 3);
+    cookiePerSecText.innerText = formatNum(totalCookiesPerSec);
 
     setIncrementingInterval(upgradeNameUpper, upgradeIndex, itemBuildCount);
 }
@@ -1332,8 +1371,8 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
             localStorage.setItem('totalCookieCount', totalCookies);
             buildCookieCount[buildingIndex] += 1;
     
-            infoProducesCookies.innerText = formatNum(buildCookieCount[buildingIndex], 3);
-            cookieCountText.innerText = formatNum(instaCookieCount, 3);
+            infoProducesCookies.innerText = formatNum(buildCookieCount[buildingIndex]);
+            cookieCountText.innerText = formatNum(instaCookieCount);
     
             
             updateCurrentComments();
@@ -1373,8 +1412,8 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 localStorage.setItem('totalCookieCount', totalCookies);
                 buildCookieCount[0] += smallerStartNum;
 
-                infoProducesCookies.innerText = formatNum(buildCookieCount[0], 3);
-                cookieCountText.innerText = formatNum(instaCookieCount, 3);
+                infoProducesCookies.innerText = formatNum(buildCookieCount[0]);
+                cookieCountText.innerText = formatNum(instaCookieCount);
 
                 updateCurrentComments();
                 checkItemPrize();
@@ -1404,8 +1443,8 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 localStorage.setItem('totalCookieCount', totalCookies);
                 buildCookieCount[0] += smallerStartNum;
 
-                infoProducesCookies.innerText = formatNum(buildCookieCount[0], 3);
-                cookieCountText.innerText = formatNum(instaCookieCount, 3);
+                infoProducesCookies.innerText = formatNum(buildCookieCount[0]);
+                cookieCountText.innerText = formatNum(instaCookieCount);
 
                 updateCurrentComments();
                 checkItemPrize();
@@ -1427,6 +1466,8 @@ toggleActive(selectionAmount);
 function toggleActive(elements){
     elements.forEach((select) => {
         select.addEventListener('click', () => {
+            tickInSound.play();
+
             elements.forEach((selects) => {
                 selects.classList.remove('active');
             })
@@ -1538,14 +1579,16 @@ function showChangedPrize(){
             let infoPrizeText = building.querySelector('.info__prizeText');
             let descPrizeText = building.querySelector('.desc__count');
             let multipliedPrize = buildPrizesArr[index];
+            let newBuildPrize = startBuildPrizesArr[index];
 
-            
-            for (let i = 1; i < multiplied; i++) {
-                multipliedPrize += (buildPrizesArr[index] + (Math.floor(multipliedPrize / 5)));
+            for (let i = 0; i < buildCountArr[index]; i++) {
+                newBuildPrize += (Math.floor(newBuildPrize / 5));
             }
-            
-            infoPrizeText.innerText = formatNum(multipliedPrize, 3);
-            descPrizeText.innerText = formatNum(multipliedPrize, 3);
+
+            buildPrizesArr[index] = newBuildPrize
+        
+            infoPrizeText.innerText = formatNum(buildPrizesArr[index]);
+            descPrizeText.innerText = formatNum(buildPrizesArr[index]);
 
             checkItemPrize();
             checkUpgradePrize();
@@ -1587,8 +1630,8 @@ function showChangedPrize(){
 
             isNaN(updatedSellPrize) ? finalSellPrize = 0 : finalSellPrize = updatedSellPrize;
             
-            infoPrizeText.innerText = formatNum(finalSellPrize, 3);
-            descPrizeText.innerText = formatNum(finalSellPrize, 3);
+            infoPrizeText.innerText = formatNum(finalSellPrize);
+            descPrizeText.innerText = formatNum(finalSellPrize);
 
             // If there is no building, add class
             if(buildCountArr[index] === 0){
@@ -1630,6 +1673,7 @@ function buyMultiBuildings(building){
         checkItemPrize();
         checkUpgradePrize();
 
+        buySound.play();
 
         if(runningCookieInterval === true) disableCookieInterval = true;
 
@@ -1644,8 +1688,8 @@ function buyMultiBuildings(building){
             localStorage.setItem('buildingsArr', JSON.stringify(buildCountArr));
         }
 
-        infoPrizeText.innerText = formatNum(buildPrizesArr[currentIndex], 3);
-        descPrizeText.innerText = formatNum(buildPrizesArr[currentIndex], 3);
+        infoPrizeText.innerText = formatNum(buildPrizesArr[currentIndex]);
+        descPrizeText.innerText = formatNum(buildPrizesArr[currentIndex]);
 
         showChangedPrize(currentAmount);
 
@@ -1663,6 +1707,8 @@ function buyMultiBuildings(building){
 
 // SELLING BUILDINGS
 function sellBuildings(e){
+    sellSound.play();
+
     let sellBuilding =  e.currentTarget.sellInfo[0];
     let sellIndex = e.currentTarget.sellInfo[1];
     let sellBuildingCount = e.currentTarget.sellInfo[2];
@@ -1681,12 +1727,14 @@ function sellBuildings(e){
 
     updateCurrentComments();
 
-    cookieCountText.innerText = formatNum(instaCookieCount, 3);
+    cookieCountText.innerText = formatNum(instaCookieCount);
 
     // Deduct buildings
     let oldBuildCount = buildCountArr[sellIndex];
+
     buildCountArr[sellIndex] -= sellBuildingCount;
     localStorage.setItem('buildingsArr', JSON.stringify(buildCountArr));
+
     showChangedPrize();
 
     setIncrementingInterval(sellBuildingNameUpper, sellIndex, buildCountArr[sellIndex]);
@@ -1704,13 +1752,12 @@ function sellBuildings(e){
 
     totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
 
+    cookiePerSecText.innerText = formatNum(totalCookiesPerSec);
 
-    cookiePerSecText.innerText = formatNum(totalCookiesPerSec, 3);
 
     // Delete cursor
     if(sellIndex === 0){
         for (let i = 0; i < sellBuildingCount; i++) {
-            console.log(oldBuildCount - i);
             let lastCursor = document.querySelector(`.cookie__upgrade.id${(oldBuildCount - i) - 1}`);
     
             lastCursor.style.display = "none";
@@ -1738,7 +1785,7 @@ function sellBuildings(e){
         // If there is min one building
         sellBuilding.classList.remove('buildingProductionDis');
     
-        descInfoPer.innerText = formatNum(currentProduction, 3);
+        descInfoPer.innerText = formatNum(currentProduction);
         itemCountText.innerText = buildCountArr[sellIndex];
         descInfoCount.innerText = buildCountArr[sellIndex];
 
@@ -1776,6 +1823,13 @@ function updateCurrentComments(){
             currentCommentsArr.push(comment);
         }
     })
+
+    if(totalCookies > 10){
+        currentCommentsArr.shift();
+    }
+    if(totalCookies > 100){
+        currentCommentsArr.shift();
+    }
 }
 
 updateCurrentComments();
@@ -1870,9 +1924,11 @@ middleBxsArr[1].forEach((attrBtn, index) => {
 
         if(middleBxsArr[0][index].style.display === "block"){
             middleBxsArr[0][index].style.display = "none";
+            buildingClickOutSound.play();
         }
         else{
             middleBxsArr[0][index].style.display = "block";
+            buildingClickInSound.play();
         }
 
         let currentMiddleEsc = middleBxsArr[0][index].querySelector('.middle__escBx');
@@ -1880,6 +1936,7 @@ middleBxsArr[1].forEach((attrBtn, index) => {
         currentMiddleEsc.addEventListener('click', () => {
             middleBxsArr[0].forEach((middleBxs) => {
                 middleBxs.style.display = "none";
+                buildingClickOutSound.play();
             })
         })
     })
@@ -1895,6 +1952,7 @@ function insertMiddlebxData(index){
 
         // Delete all progress
         middleDeleteBtn.addEventListener('click', () => {
+            tickInSound.play();
             // if(runningCookieInterval === true) disableCookieInterval = true;
             
             // totalCookies = 0;
@@ -1931,6 +1989,8 @@ function insertMiddlebxData(index){
 
         // Mute audio
         middleMuteBtn.addEventListener('click', () => {
+            tickInSound.play();
+
             let middleMuteText = middleMuteBtn.querySelector('span');
 
             if(middleBxsArr[0][index].classList.contains('mutedAudio')){
@@ -1939,8 +1999,12 @@ function insertMiddlebxData(index){
 
                 clickInSound.volume = 0.16;
                 clickOutSound.volume = 0.16;
-                buildingClick1.volume = 0.35;
-                buildingClick2.volume = 0.3;
+                buildingClickInSound.volume = 0.35;
+                buildingClickOutSound.volume = 0.3;
+                tickInSound.volume = 0.3;
+                tickOutSound.volume = 0.3;
+                buySound.volume = 0.35;
+                sellSound.volume = 0.4;
             }
             else{
                 middleBxsArr[0][index].classList.add('mutedAudio');
@@ -1948,8 +2012,12 @@ function insertMiddlebxData(index){
 
                 clickInSound.volume = 0;
                 clickOutSound.volume = 0;
-                buildingClick1.volume = 0;
-                buildingClick2.volume = 0;
+                buildingClickInSound.volume = 0;
+                buildingClickOutSound.volume = 0;
+                tickInSound.volume = 0;
+                tickOutSound.volume = 0;
+                buySound.volume = 0;
+                sellSound.volume = 0;
             }
         })
     }
@@ -1965,8 +2033,8 @@ function insertMiddlebxData(index){
 
         totalCookiesPerSec = totalCookiesPerSecArr.reduce((a, b) => a + b, 0);
         
-        middleTotalCookieText.innerText = formatNum(instaCookieCount, 3);
-        middleCurrentCookieText.innerText = formatNum(totalCookies, 3);
+        middleTotalCookieText.innerText = formatNum(instaCookieCount);
+        middleCurrentCookieText.innerText = formatNum(totalCookies);
         middleBuildingsText.innerText = totalBuildingCount;
         middleCookiesPerText.innerText = totalCookiesPerSec;
         middleBasicCookiePerClick.innerText = cookieClickStep;
