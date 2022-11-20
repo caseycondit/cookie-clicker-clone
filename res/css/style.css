@@ -967,6 +967,223 @@ h1,h2,h3,h4,h5,h6,p{
 }
 
 
+/* Middle fullBx sections */
+.middle__fullBx{
+    padding: 16px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0e0e0e;
+    z-index: 99999999;
+    display: none;
+}
+.middle__escBx{
+    display: flex;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    position: absolute;
+    top: 8px;
+    right: 16px;
+    cursor: pointer;
+}
+.middle__esc{
+    display: block;
+    position: relative;
+    width: 16px;
+    height: 3px;
+    transform: rotate(45deg);
+    background-color: white;
+}
+.middle__esc::before{
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 16px;
+    height: 3px;
+    transform: rotate(-90deg);
+    background-color: white;
+}
+
+.middle__title{
+    font-size: 32px;
+    font-weight: 900;
+    text-shadow: 1px 1px 3px white;
+    text-align: center;
+    font-variant: small-caps;
+    padding-block: 4px;
+    margin-bottom: 5px;
+    
+    border: 1px solid;
+    border-image: linear-gradient(to left, #111111 30%, #5f5f5f 45%, #111111 70%) 
+    100% 0 100% 0/1px 0 1px 0 stretch;
+}
+.middle__subtitle{
+    font-size: 23px;
+    width: 31%;
+    margin-left: -16px;
+    padding: 3px 0 3px 16px;
+
+    border: 1px solid;
+    border-image: linear-gradient(to left, #111111 30%, #5f5f5f 45%, #5f5f5f 70%) 
+    100% 0 100% 0/1px 0 1px 0 stretch;
+}
+.middle__textBx{
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.7;
+    margin-top: 12px;
+    padding-left: 3px;
+}
+.middle__textBx a{
+    color: #cbcbcb;
+    text-decoration: none;
+    position: relative;
+}
+.middle__textBx a::before{
+    content: '';
+    display: block;
+    position: absolute;
+    width: 50%;
+    height: 1px;
+    left: 50%;
+    bottom: -4px;
+    transform: translateX(-50%);
+    background-color: white;
+    pointer-events: none;
+    transition: width 175ms ease-in-out;
+}
+.middle__textBx a:hover::before{
+    width: 85%;
+}
+
+/* fullbx - about */
+.about__textBx{
+    font-size: 13px;
+    margin-top: 20px;
+    line-height: 2.2;
+}
+
+/* fullbx - option */
+.option__languageText{
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 10px;
+    font-variant: small-caps;
+    color: white;
+}
+.option__language{
+    color: #c6c6c6;
+}
+.option__basic{
+    margin-block: 10px 14px;
+}
+.basic__delete{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.basic__deleteBtn{
+    font-family: 'Merriweather', serif;
+    color: #ee4747;
+    background-color: #0e0e0e;
+    border: 1px solid #ee4747;
+    border-radius: 2px;
+    padding: 2px 10px;
+    width: 148px;
+    font-size: 12px;
+    text-align: right;
+    margin: 0;
+    outline: none;
+    cursor: pointer;
+    transition: color 200ms ease-in-out, border-color 200ms ease-in-out;
+}
+.basic__deleteBtn:hover{
+    color: #e86666;
+    border-color: #e86666;
+}
+.option__text{
+    font-size: 10px;
+    color: #a4a4a4;
+    font-weight: 400;
+    border-bottom: 1px dashed #a4a4a4;
+    margin-left: 6px;
+    padding: 0 2px 2px 6px;
+}
+.option__sett{
+    margin-top: 13px;
+}
+.sett__bx{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+.sett__volumeBtn{
+    font-family: 'Merriweather', serif;
+    color: #c4c4c4;
+    background-color: black;
+    border: 1px solid white;
+    border-color: #ece2b6 #875526 #733726 #dfbc9a;
+    border-radius: 2px;
+    padding: 3px 10px;
+    width: 148px;
+    font-size: 12px;
+    font-weight: 600;
+    font-variant: small-caps;
+    text-align: right;
+    margin: 0;
+    outline: none;
+    cursor: pointer;
+    transition: color 200ms ease-in-out, border-color 200ms ease-in-out;
+}
+.sett__volumeBtn span{
+    text-transform: uppercase;
+}
+.sett__volumeBtn:hover{
+    color: white;
+    border-color: white;
+}
+
+
+/* fullbx - attributes */
+.attributes__basic{
+    display: flex;
+    flex-direction: column;
+    row-gap: 6px;
+    margin-top: 10px;
+}
+.basic__text{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    min-height: 17px;
+    font-size: 12px;
+    font-weight: 800;
+    color: #a9a9a9;
+}
+.basic__text .prize__icon{
+    margin-right: 0;
+    margin-left: 5px;
+}
+.basicWhitePrize{
+    color: white;
+    margin-left: 2px;
+    font-size: 13px;
+}
+.basicWhite{
+    color: white;
+    margin-left: 5px;
+    font-weight: 400;
+}
+.basic__text:last-of-type{
+    margin-top: 18px;
+}
+
+
+
 
 /* Store section */
 .store{

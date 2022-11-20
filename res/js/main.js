@@ -1876,7 +1876,6 @@ let commentInterval = setInterval(() => {
 let runningCommentAnimation = false;
 
 function changeComments(){
-    console.log(currentCommentsArr);
     if(runningCommentAnimation === true) return;
     clearInterval(commentInterval);
     runningCommentAnimation = true;
@@ -1909,3 +1908,50 @@ function changeComments(){
         }, 5000);
     }, 300);
 }
+
+
+
+// MIDDLE FULL BXS (ABOUT, OPTIONS, ATTRIBUTES)
+const middleAbout = document.querySelector('.middle__about');
+const middleOption = document.querySelector('.middle__option');
+const middleAttributes = document.querySelector('.middle__attributes');
+
+const attrOptionBtn = document.querySelector('.attr__roundedBtn.attrOption');
+const attrAttributesBtn = document.querySelector('.attr__cleanBtn.attrAttributes');
+const attrAboutBtn = document.querySelector('.attr__cleanBtn.attrAbout');
+
+const middleBxsArr = [
+    [
+        middleAbout,
+        middleOption,
+        middleAttributes
+    ],
+    [
+        attrAboutBtn,
+        attrOptionBtn,
+        attrAttributesBtn
+    ]
+]
+
+middleBxsArr[1].forEach((attrBtn, index) => {
+    attrBtn.addEventListener('click', () => {
+        middleBxsArr[0].forEach((middleSec, secIndex) => {
+            if(secIndex !== index) middleSec.style.display = "none";
+        })
+
+        if(middleBxsArr[0][index].style.display === "block"){
+            middleBxsArr[0][index].style.display = "none";
+        }
+        else{
+            middleBxsArr[0][index].style.display = "block";
+        }
+
+        let currentMiddleEsc = middleBxsArr[0][index].querySelector('.middle__escBx');
+
+        currentMiddleEsc.addEventListener('click', () => {
+            middleBxsArr[0].forEach((middleBxs) => {
+                middleBxs.style.display = "none";
+            })
+        })
+    })
+})
