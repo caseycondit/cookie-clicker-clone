@@ -3,6 +3,101 @@ import { grandmaNames } from "./grandmaNames.js";
 import { upgradesInfo } from "./upgradesInfo.js";
 
 
+
+// LOAD DATA FROM LOCALSTORAGE
+let onLoadBakeryName;
+if(localStorage.getItem('bakeryName')){
+    onLoadBakeryName = localStorage.getItem('bakeryName');
+    loadDataFromStorage();
+}
+
+function loadDataFromStorage(){
+    window.addEventListener('load', () => {
+        // Cookie count
+        instaCookieCount = parseInt(localStorage.getItem('cookieCount'));
+        cookieCount = parseInt(localStorage.getItem('cookieCount'));
+
+        cookieCountText.innerText = formatNum(instaCookieCount, 3);
+        
+        // All functions to update game
+        checkEnabledItems();
+        showChangedPrize();
+
+        // Buildings
+        let storageBuildings = JSON.parse(localStorage.getItem('buildingsArr'));
+        
+        if(storageBuildings !== null){
+            storageBuildings.forEach((storageBuilding, index) => {
+                if(storageBuilding > 0){
+                    for (let i = 0; i < storageBuilding; i++) {
+                        let buildingsArray = Array.prototype.slice.call(buildings());
+    
+                        let currentStorageBuilding = buildingsArray[index];                    
+    
+                        let infoPrizeText = currentStorageBuilding.querySelector('.info__prizeText');
+                        let descPrizeText = currentStorageBuilding.querySelector('.desc__count');
+                        let itemCountText = currentStorageBuilding.querySelector('.item__count');
+    
+                        buyBuilding(buildingsArray[index], buildCountArr[index], index);
+    
+                        if(runningCookieInterval === true) disableCookieInterval = true;
+    
+                        // Prize
+                        let minusCookies = Math.round(buildPrizesArr[index] / 5);
+                        buildPrizesArr[index] += minusCookies;
+                        
+                        infoPrizeText.innerText = formatNum(buildPrizesArr[index], 3);
+                        descPrizeText.innerText = formatNum(buildPrizesArr[index], 3);
+                        
+                        // Count
+                        buildCountArr[index]++;
+                        itemCountText.innerText = buildCountArr[index];
+                    }
+                }
+            })
+        }
+
+        showUpgrades();
+        checkItemPrize();
+        checkUpgradePrize();
+
+
+        // Upgrades
+        let storageUpgrades = JSON.parse(localStorage.getItem('upgradesArr'));
+
+        if(storageUpgrades !== null){
+            storageUpgrades.forEach((storageUpgrade) => {
+                let storageUpgradeType = storageUpgrade.upgradeType;
+                let storageUpgradeNumber = storageUpgrade.upgradeNumber;
+    
+                let currentStorageUpgrade = document.querySelector(`[data-type="${storageUpgradeType}"][data-index="${storageUpgradeNumber}"]`);
+    
+                // Buy upgrade
+                let currentBuilding = buildings()[storageUpgradeType];
+                let currentUpgradeName = upgradesInfo[storageUpgradeType].type;
+                let currentUpgradeNameUpper = currentUpgradeName.charAt(0).toUpperCase() + currentUpgradeName.slice(1)
+                let productionPerText = currentBuilding.querySelector('.desc__info span');
+    
+                if(runningCookieInterval === true) disableCookieInterval = true;
+    
+                buildingsPerSecond[storageUpgradeType] += buildingsPerSecond[storageUpgradeType];
+    
+                productionPerText.innerText = buildingsPerSecond[storageUpgradeType];
+    
+                setUpgradeInterval(currentUpgradeNameUpper, storageUpgradeType);
+    
+                boughtUpgrades.push({upgradeType: storageUpgradeType, upgradeNumber: storageUpgradeNumber});
+    
+                currentStorageUpgrade.remove();
+            })
+        }
+    })
+}
+
+
+
+
+// GAME
 const cookie = document.querySelector('.cookie__img');
 const cookieContainer = document.querySelector('.cookie');
 const cookieCountText = document.querySelector('.cookie__count');
@@ -70,7 +165,9 @@ let cookieSize = 256;
 let numberOfBoxes = 20;
 let cookieId = 0;
 
-window.onload = () => {
+createCursors();
+
+function createCursors(){
     // Create boxes for cursors
     for (let i = 0; i < numberOfBoxes; i++) {
         let newCursorBx = document.createElement("div");
@@ -188,14 +285,19 @@ function randomBakeryName(){
     return bakeryNames[(Math.random() * bakeryNames.length) | 0];
 };
 
-let onLoadBakeryName = randomBakeryName();
+if(!onLoadBakeryName){
+    onLoadBakeryName = randomBakeryName();
+    localStorage.setItem('bakeryName', onLoadBakeryName);
+}
+
+let newBakeryName;
 bakeryName.innerText = onLoadBakeryName;
 
 
 // Bakery event listeners
 bakeryNameBx.addEventListener('click', () => {
     customBakery.style.animation = "fadeIn 200ms ease-in-out forwards";
-    customBInput.value = onLoadBakeryName;
+    newBakeryName ? customBInput.value = newBakeryName : customBInput.value = onLoadBakeryName;
 
     setTimeout(() => {
         customBInput.focus();
@@ -248,7 +350,9 @@ function customBNameValidation(){
     else{
         customBakeryError.style.display = "none";
 
+        localStorage.setItem('bakeryName', customBInput.value);
         bakeryName.innerText = customBInput.value;
+        newBakeryName = customBInput.value;
 
         customBakeryEsc();
     }
@@ -285,6 +389,7 @@ function cookieClickIncrease(){
     instaCookieCount += cookieClickStep;
     totalCookies += cookieClickStep;
     remainingCookies += cookieClickStep;
+    localStorage.setItem('cookieCount', instaCookieCount);
     checkEnabledItems();
     checkItemPrize();
     checkUpgradePrize();
@@ -510,7 +615,7 @@ function checkEnabledItems(){
     }
 
     // Grandma
-    else if(instaCookieCount >= 100 && itemGrandma.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 100 && itemGrandma.classList.contains('itemDisabled')){
         itemGrandma.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newMineHtml);
@@ -520,7 +625,7 @@ function checkEnabledItems(){
     }
 
     // Farm
-    else if(instaCookieCount >= 1100 && itemFarm.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 1100 && itemFarm.classList.contains('itemDisabled')){
         itemFarm.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newFactoryHtml);
@@ -530,7 +635,7 @@ function checkEnabledItems(){
     }
 
     // Mine
-    else if(instaCookieCount >= 12000 && itemMine.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 12000 && itemMine.classList.contains('itemDisabled')){
         itemMine.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newBankHtml);
@@ -540,7 +645,7 @@ function checkEnabledItems(){
     }
 
     // Factory
-    else if(instaCookieCount >= 130000 && itemFactory.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 130000 && itemFactory.classList.contains('itemDisabled')){
         itemFactory.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newTempleHtml);
@@ -550,7 +655,7 @@ function checkEnabledItems(){
     }
 
     // Bank
-    else if(instaCookieCount >= 1400000 && itemBank.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 1400000 && itemBank.classList.contains('itemDisabled')){
         itemBank.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newWizardHtml);
@@ -560,7 +665,7 @@ function checkEnabledItems(){
     }
 
     // Temple
-    else if(instaCookieCount >= 20000000 && itemTemple.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 20000000 && itemTemple.classList.contains('itemDisabled')){
         itemTemple.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newShipHtml);
@@ -570,7 +675,7 @@ function checkEnabledItems(){
     }
 
     // Wizard
-    else if(instaCookieCount >= 330000000 && itemWizard.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 330000000 && itemWizard.classList.contains('itemDisabled')){
         itemWizard.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newAlchemyHtml);
@@ -580,7 +685,7 @@ function checkEnabledItems(){
     }
 
     // Ship
-    else if(instaCookieCount >= 5100000000 && itemShip.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 5100000000 && itemShip.classList.contains('itemDisabled')){
         itemShip.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newPortalHtml);
@@ -590,7 +695,7 @@ function checkEnabledItems(){
     }
 
     // Alchemy
-    else if(instaCookieCount >= 75000000000 && itemAlchemy.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 75000000000 && itemAlchemy.classList.contains('itemDisabled')){
         itemAlchemy.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newTimeHtml);
@@ -600,7 +705,7 @@ function checkEnabledItems(){
     }
 
     // Portal
-    else if(instaCookieCount >= 1000000000000 && itemPortal.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 1000000000000 && itemPortal.classList.contains('itemDisabled')){
         itemPortal.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newCondenserHtml);
@@ -610,7 +715,7 @@ function checkEnabledItems(){
     }
 
     // Time
-    else if(instaCookieCount >= 14000000000000 && itemTime.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 14000000000000 && itemTime.classList.contains('itemDisabled')){
         itemTime.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newPrismHtml);
@@ -620,7 +725,7 @@ function checkEnabledItems(){
     }
 
     // Condenser
-    else if(instaCookieCount >= 170000000000000 && itemCondenser.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 170000000000000 && itemCondenser.classList.contains('itemDisabled')){
         itemCondenser.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newChanceHtml);
@@ -630,7 +735,7 @@ function checkEnabledItems(){
     }
 
     // Prism
-    else if(instaCookieCount >= 2100000000000000 && itemPrism.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 2100000000000000 && itemPrism.classList.contains('itemDisabled')){
         itemPrism.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newEngineHtml);
@@ -640,7 +745,7 @@ function checkEnabledItems(){
     }
 
     // Chance
-    else if(instaCookieCount >= 26000000000000000 && itemChance.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 26000000000000000 && itemChance.classList.contains('itemDisabled')){
         itemChance.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newJsconsoleHtml);
@@ -650,7 +755,7 @@ function checkEnabledItems(){
     }
 
     // Engine
-    else if(instaCookieCount >= 310000000000000000 && itemEngine.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 310000000000000000 && itemEngine.classList.contains('itemDisabled')){
         itemEngine.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newIdleHtml);
@@ -660,7 +765,7 @@ function checkEnabledItems(){
     }
 
     // Jsconsole
-    else if(instaCookieCount >= 71000000000000000000 && itemJsconsole.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 71000000000000000000 && itemJsconsole.classList.contains('itemDisabled')){
         itemJsconsole.classList.remove('itemDisabled');
 
         itemBx.insertAdjacentHTML('beforeend', newCortexHtml);
@@ -670,13 +775,13 @@ function checkEnabledItems(){
     }
 
     // Idle
-    else if(instaCookieCount >= 12000000000000000000000 && itemIdle.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 12000000000000000000000 && itemIdle.classList.contains('itemDisabled')){
         itemIdle.classList.remove('itemDisabled');
         buildingsMoovingDesc();
     }
 
     // Cortex
-    else if(instaCookieCount >= 1900000000000000000000000 && itemCortex.classList.contains('itemDisabled')){
+    if(instaCookieCount >= 1900000000000000000000000 && itemCortex.classList.contains('itemDisabled')){
         itemCortex.classList.remove('itemDisabled');
         buildingsMoovingDesc();
     }
@@ -852,6 +957,7 @@ function buyItemBuilding(e){
         
         // Count
         buildCountArr[buildingIndex]++;
+        localStorage.setItem('buildingsArr', JSON.stringify(buildCountArr));
         itemCountText.innerText = buildCountArr[buildingIndex];
 
         showUpgrades();
@@ -870,6 +976,7 @@ buildingsMoovingDesc();
 function decrementCookies(cookies){
     cookieCount -= cookies;
     instaCookieCount -= cookies;
+    localStorage.setItem('cookieCount', instaCookieCount);
 
     cookieCountText.innerText = formatNum(cookieCount, 3);
 }
@@ -1231,6 +1338,8 @@ function buyUpgrade(e){
 
         boughtUpgrades.push({upgradeType: upgradeType, upgradeNumber: upgradeIndex});
 
+        localStorage.setItem('upgradesArr', JSON.stringify(boughtUpgrades)); // JSON.parse to get this
+
         currentUpgrade.remove();
     }
     else{
@@ -1278,6 +1387,7 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
             totalCookies += 1;
             cookieCount += 1;
             instaCookieCount += 1;
+            localStorage.setItem('cookieCount', instaCookieCount);
             buildCookieCount[buildingIndex] += 1;
     
             infoProducesCookies.innerText = formatNum(buildCookieCount[buildingIndex], 3);
@@ -1315,6 +1425,7 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 totalCookies += smallerStartNum;
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
+                localStorage.setItem('cookieCount', instaCookieCount);
                 itemCursorCookieCount += smallerStartNum;
 
                 infoProducesCookies.innerText = formatNum(itemCursorCookieCount, 3);
@@ -1343,6 +1454,7 @@ function setIncrementingInterval(buildingNameUpper, buildingIndex, itemBuildCoun
                 totalCookies += smallerStartNum;
                 cookieCount += smallerStartNum;
                 instaCookieCount += smallerStartNum;
+                localStorage.setItem('cookieCount', instaCookieCount);
                 itemCursorCookieCount += smallerStartNum;
 
                 infoProducesCookies.innerText = formatNum(itemCursorCookieCount, 3);
@@ -1581,6 +1693,7 @@ function buyMultiBuildings(building){
             buyBuilding(currentBuilding, buildCountArr[currentIndex], currentIndex);
 
             buildCountArr[currentIndex] += 1;
+            localStorage.setItem('buildingsArr', JSON.stringify(buildCountArr));
         }
 
         infoPrizeText.innerText = formatNum(buildPrizesArr[currentIndex], 3);
@@ -1615,12 +1728,14 @@ function sellBuildings(e){
     totalCookies += sellPrize;
     cookieCount += sellPrize;
     instaCookieCount += sellPrize;
+    localStorage.setItem('cookieCount', instaCookieCount);
 
     cookieCountText.innerText = formatNum(instaCookieCount, 3);
 
     // Deduct buildings
     let oldBuildCount = buildCountArr[sellIndex];
     buildCountArr[sellIndex] -= sellBuildingCount;
+    localStorage.setItem('buildingsArr', JSON.stringify(buildCountArr));
     showChangedPrize();
 
     setIncrementingInterval(sellBuildingNameUpper, sellIndex, buildCountArr[sellIndex]);
@@ -1695,3 +1810,12 @@ function sellBuildings(e){
         }
     }
 }
+
+
+/*
+Localstorage
+    name - done
+    instaCookieCount - done
+    List of all buildings - done
+    list of all upgrades
+*/
